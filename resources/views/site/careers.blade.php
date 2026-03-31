@@ -64,6 +64,12 @@
             class="site-careers-job bg-white border border-gray-200 p-6 rounded-xl hover:border-blue-300 hover:shadow-lg transition-all group cursor-pointer opacity-0 -translate-x-[50px] duration-500 ease-out will-change-[opacity,transform]"
             style="transition-delay: {{ 300 + $index * 100 }}ms"
             :class="careersInView ? '!opacity-100 !translate-x-0' : ''"
+            role="button"
+            tabindex="0"
+            :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
+            @click="toggleJob({{ $index }})"
+            @keydown.enter.prevent="toggleJob({{ $index }})"
+            @keydown.space.prevent="toggleJob({{ $index }})"
           >
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div class="flex-1">
@@ -98,21 +104,40 @@
                 <span class="px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
                   {{ $job['department'] }}
                 </span>
-                <a
-                  href="{{ route('site.contact') }}"
+                <button
+                  type="button"
                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all flex items-center gap-2 group-hover:gap-3"
+                  @click.stop="openApplyModal('{{ addslashes($job['title']) }}')"
                 >
                   Apply
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
                     <path d="M5 12h14" />
                     <path d="m12 5 7 7-7 7" />
                   </svg>
-                </a>
+                </button>
               </div>
+            </div>
+
+            {{-- Expanded description --}}
+            <div
+              class="mt-5 pt-5 border-t border-gray-100 text-gray-700"
+              x-show="activeJobIndex === {{ $index }}"
+              x-transition.opacity.duration.150ms
+              x-cloak
+            >
+              @if(!empty($job['description']))
+                <p class="leading-relaxed">{{ $job['description'] }}</p>
+              @else
+                <p class="leading-relaxed">
+                  Interested in this role? Click <span class="font-semibold">Apply</span> and include the job title in your message to receive the full description and requirements.
+                </p>
+              @endif
             </div>
           </div>
         @endforeach
       </div>
+
+      <x-job-apply-modal />
 
       {{-- CTA --}}
       <div
@@ -123,12 +148,13 @@
         <p class="text-gray-600 mb-4">
           Don't see a position that matches your skills?
         </p>
-        <a
-          href="{{ route('site.contact') }}"
+        <button
+          type="button"
           class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl"
+          @click="openApplyModal('', false)"
         >
           Send Us Your Resume
-        </a>
+        </button>
       </div>
     </div>
   </section>

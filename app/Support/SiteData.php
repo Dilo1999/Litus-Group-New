@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Company;
+use App\Models\JobOpening;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
@@ -265,6 +266,36 @@ class SiteData
 
     public static function careerOpenings(): array
     {
+        if (! Schema::hasTable('job_openings')) {
+            return self::legacyCareerOpenings();
+        }
+
+        if (! JobOpening::query()->where('is_active', true)->exists()) {
+            return [];
+        }
+
+        return JobOpening::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (JobOpening $j) => [
+                'id' => (string) $j->id,
+                'title' => $j->title,
+                'company' => $j->company,
+                'location' => $j->location,
+                'type' => $j->type,
+                'department' => $j->department,
+                'description' => $j->description,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected static function legacyCareerOpenings(): array
+    {
         return [
             [
                 'title' => 'Senior Automotive Technician',
@@ -272,6 +303,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Automotive',
+                'description' => null,
             ],
             [
                 'title' => 'Hotel Manager',
@@ -279,6 +311,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Hospitality',
+                'description' => null,
             ],
             [
                 'title' => 'Network Engineer',
@@ -286,6 +319,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Technology',
+                'description' => null,
             ],
             [
                 'title' => 'Construction Project Manager',
@@ -293,6 +327,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Construction',
+                'description' => null,
             ],
             [
                 'title' => 'Sales Executive',
@@ -300,6 +335,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Sales',
+                'description' => null,
             ],
             [
                 'title' => 'Logistics Coordinator',
@@ -307,6 +343,7 @@ class SiteData
                 'location' => 'Maldives',
                 'type' => 'Full-time',
                 'department' => 'Logistics',
+                'description' => null,
             ],
         ];
     }

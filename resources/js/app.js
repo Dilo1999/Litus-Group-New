@@ -10,10 +10,30 @@ document.addEventListener('alpine:init', () => {
   /** Careers — matches Careers.tsx useInView(once, margin -100px); skip animation if reduced motion. */
   Alpine.data('careersPage', () => ({
     careersInView: false,
+    activeJobIndex: null,
+    showApplyModal: false,
+    applyJobTitle: '',
+    applyJobTitleLocked: true,
     init() {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         this.careersInView = true;
       }
+    },
+    toggleJob(index) {
+      if (typeof index !== 'number') return;
+      this.activeJobIndex = this.activeJobIndex === index ? null : index;
+    },
+    openApplyModal(title, lockTitle = true) {
+      this.applyJobTitle = title || '';
+      this.applyJobTitleLocked = lockTitle !== false;
+      this.showApplyModal = true;
+      document.documentElement.classList.add('overflow-y-hidden');
+    },
+    closeApplyModal() {
+      this.showApplyModal = false;
+      this.applyJobTitle = '';
+      this.applyJobTitleLocked = true;
+      document.documentElement.classList.remove('overflow-y-hidden');
     },
   }));
 
