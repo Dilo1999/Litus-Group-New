@@ -18,6 +18,7 @@ class SiteController extends Controller
     public function ourCompanies()
     {
         $divisionOrder = [
+            'corporate',
             'logistics-shipping',
             'automotive',
             'trading',

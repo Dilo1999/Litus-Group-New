@@ -6,6 +6,7 @@
   $divisions = $divisions ?? SiteData::divisions();
   $companies = $companies ?? SiteData::companies();
   $divisionOrder = $divisionOrder ?? [
+    'corporate',
     'logistics-shipping',
     'automotive',
     'trading',

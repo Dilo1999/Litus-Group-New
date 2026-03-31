@@ -16,6 +16,21 @@
         </a>
 
         <a
+            href="{{ \App\Filament\Pages\Sales\OurCompaniesSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">Our Companies</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Manage information and details for our company listings.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
             href="{{ \App\Filament\Pages\Sales\AboutUsSales::getUrl() }}"
             class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
         >

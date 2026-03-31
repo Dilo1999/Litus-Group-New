@@ -4,6 +4,15 @@
 @php
   $company = $company ?? null;
   $heroLogo = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null);
+  $aboutImageRaw = $company['about_image'] ?? null;
+  $aboutImageUrl = null;
+  if (filled($aboutImageRaw)) {
+    if (str_starts_with($aboutImageRaw, 'http://') || str_starts_with($aboutImageRaw, 'https://')) {
+      $aboutImageUrl = $aboutImageRaw;
+    } elseif (str_starts_with($aboutImageRaw, 'companies/')) {
+      $aboutImageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($aboutImageRaw);
+    }
+  }
 @endphp
 
 {{-- Matches src/app/pages/CompanyPage.tsx --}}
@@ -92,27 +101,33 @@
           <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             About {{ $company['name'] }}
           </h2>
-          <p class="text-lg text-gray-600 mb-6 leading-relaxed">
-            {{ $company['description'] }}
-          </p>
-          <p class="text-lg text-gray-600 leading-relaxed">
-            As a proud member of the LITUS Group family, {{ $company['name'] }} brings decades of expertise and a commitment to excellence that sets us apart in the industry. We leverage the strength and resources of our parent organization to deliver exceptional value to our clients.
-          </p>
+          @if(filled($company['description'] ?? null))
+            <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+              {{ $company['description'] }}
+            </p>
+          @endif
+          @if(filled($company['description_secondary'] ?? null))
+            <p class="text-lg text-gray-600 leading-relaxed">
+              {{ $company['description_secondary'] }}
+            </p>
+          @endif
         </div>
 
-        <div
-          class="site-company-motion-about-right relative will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
-          style="transition-delay: 200ms"
-          :class="aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
-        >
-          <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="https://images.unsplash.com/photo-1630487656049-6db93a53a7e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHRlYW0lMjBtZWV0aW5nJTIwb2ZmaWNlfGVufDF8fHx8MTc3MTY3OTUyNnww&ixlib=rb-4.1.0&q=80&w=1080"
-              alt="{{ $company['name'] }}"
-              class="w-full h-full object-cover"
-            />
+        @if(filled($aboutImageUrl))
+          <div
+            class="site-company-motion-about-right relative will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+            style="transition-delay: 200ms"
+            :class="aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
+          >
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src="{{ $aboutImageUrl }}"
+                alt="{{ $company['name'] }}"
+                class="w-full h-full object-cover"
+              />
+            </div>
           </div>
-        </div>
+        @endif
       </div>
     </div>
   </section>

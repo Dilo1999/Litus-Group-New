@@ -1,11 +1,21 @@
 <x-filament::page>
-    <x-filament::card>
-        <div class="space-y-2">
-            <div class="text-2xl font-bold">Home</div>
-            <div class="text-sm text-gray-600 dark:text-gray-300">
-                This is the sales/customization page for your Home page.
-            </div>
+    <form wire:submit.prevent="save" class="space-y-6">
+        {{ $this->form }}
+
+        <div class="flex flex-wrap items-center gap-3">
+            <x-filament::button type="submit">
+                Save
+            </x-filament::button>
+
+            <x-filament::button
+                type="button"
+                color="danger"
+                outlined
+                wire:click="removeHeroImage"
+            >
+                Remove image
+            </x-filament::button>
         </div>
-    </x-filament::card>
+    </form>
 </x-filament::page>
 
