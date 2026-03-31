@@ -52,6 +52,7 @@ class HomeSales extends Page implements HasForms
                         ->disk('public')
                         ->directory('site/home/hero')
                         ->visibility('public')
+                        ->preserveFilenames()
                         ->image()
                         ->imagePreviewHeight('180')
                         ->maxSize(4096)

@@ -12,11 +12,10 @@
   ];
   $displayCompanies = array_slice($companies ?? [], 0, 8);
 
-  $defaultHeroUrl = 'https://images.unsplash.com/photo-1760246964044-1384f71665b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBvZmZpY2UlMjBidWlsZGluZyUyMG1vZGVybnxlbnwxfHx8fDE3NzE1NzAwODN8MA&ixlib=rb-4.1.0&q=80&w=1080';
   $heroImagePath = \App\Models\SiteSetting::getValue('home.hero.image_path');
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
-    : $defaultHeroUrl;
+    : null;
 @endphp
 
 <div>
@@ -26,11 +25,13 @@
     class="relative min-h-screen flex items-center justify-center overflow-hidden"
   >
     <div class="absolute inset-0 z-0">
-      <img
-        src="{{ $heroImageUrl }}"
-        alt="Modern corporate building"
-        class="w-full h-full object-cover"
-      />
+      @if(filled($heroImageUrl))
+        <img
+          src="{{ $heroImageUrl }}"
+          alt="Modern corporate building"
+          class="w-full h-full object-cover"
+        />
+      @endif
       <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
     </div>
 
