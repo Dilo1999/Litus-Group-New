@@ -190,6 +190,17 @@ class SiteData
         return $cached;
     }
 
+    public static function blogPostBySlug(string $slug): ?array
+    {
+        foreach (self::blogPosts() as $post) {
+            if (($post['slug'] ?? null) === $slug) {
+                return $post;
+            }
+        }
+
+        return null;
+    }
+
     public static function blogCategories(): array
     {
         return ['All', 'Company News', 'Logistics', 'Hospitality', 'Construction', 'Technology', 'Automotive', 'Retail', 'Team', 'Growth', 'Collaboration'];
@@ -268,16 +279,12 @@ class SiteData
     public static function careerOpenings(): array
     {
         if (! Schema::hasTable('job_openings')) {
-            return self::legacyCareerOpenings();
-        }
-
-        if (! JobOpening::query()->where('is_active', true)->exists()) {
             return [];
         }
 
         return JobOpening::query()
             ->where('is_active', true)
-            ->orderBy('sort_order')
+            ->orderBy('created_at')
             ->orderBy('id')
             ->get()
             ->map(fn (JobOpening $j) => [
@@ -290,63 +297,6 @@ class SiteData
                 'description' => $j->description,
             ])
             ->all();
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    protected static function legacyCareerOpenings(): array
-    {
-        return [
-            [
-                'title' => 'Senior Automotive Technician',
-                'company' => 'LITUS Service Center',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Automotive',
-                'description' => null,
-            ],
-            [
-                'title' => 'Hotel Manager',
-                'company' => 'Zaha Residence & Hotels',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Hospitality',
-                'description' => null,
-            ],
-            [
-                'title' => 'Network Engineer',
-                'company' => 'LITUS Connect',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Technology',
-                'description' => null,
-            ],
-            [
-                'title' => 'Construction Project Manager',
-                'company' => 'LITUS Constructions',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Construction',
-                'description' => null,
-            ],
-            [
-                'title' => 'Sales Executive',
-                'company' => 'LITUS Automobiles',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Sales',
-                'description' => null,
-            ],
-            [
-                'title' => 'Logistics Coordinator',
-                'company' => 'LITUS Shipping',
-                'location' => 'Maldives',
-                'type' => 'Full-time',
-                'department' => 'Logistics',
-                'description' => null,
-            ],
-        ];
     }
 
     public static function team(): array

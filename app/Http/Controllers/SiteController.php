@@ -73,6 +73,17 @@ class SiteController extends Controller
         ]);
     }
 
+    public function blogArticle(string $slug)
+    {
+        $post = SiteData::blogPostBySlug($slug);
+        abort_if(! $post, 404);
+
+        return view('site.blog-article', [
+            'title' => ($post['title'] ?? 'Article') . ' | LITUS Group',
+            'post' => $post,
+        ]);
+    }
+
     public function eventGallery(string $slug)
     {
         $events = SiteData::galleryEvents();

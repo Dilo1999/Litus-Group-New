@@ -58,12 +58,9 @@ class JobOpeningResource extends Resource
                         ->required()
                         ->maxLength(255),
                     Textarea::make('description')
+                        ->label('Job Description')
                         ->rows(6)
                         ->columnSpanFull(),
-                    TextInput::make('sort_order')
-                        ->numeric()
-                        ->default(0)
-                        ->required(),
                     Toggle::make('is_active')
                         ->label('Active')
                         ->inline(false)
@@ -77,8 +74,9 @@ class JobOpeningResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('sort_order')
-                    ->label('#')
+                TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
                     ->sortable(),
                 TextColumn::make('title')
                     ->searchable()
@@ -104,7 +102,7 @@ class JobOpeningResource extends Resource
                     ->sortable()
                     ->toggleable(),
             ])
-            ->defaultSort('sort_order')
+            ->defaultSort('created_at')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -124,7 +122,7 @@ class JobOpeningResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->orderBy('sort_order')->orderBy('id');
+        return parent::getEloquentQuery()->orderBy('created_at')->orderBy('id');
     }
 }
 

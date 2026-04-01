@@ -27,7 +27,7 @@ class CareersSales extends Page implements HasForms
     public function mount(): void
     {
         $openings = JobOpening::query()
-            ->orderBy('sort_order')
+            ->orderBy('created_at')
             ->orderBy('id')
             ->get()
             ->map(fn (JobOpening $j) => [
@@ -39,7 +39,6 @@ class CareersSales extends Page implements HasForms
                 'department' => $j->department,
                 'description' => $j->description,
                 'is_active' => (bool) $j->is_active,
-                'sort_order' => (int) $j->sort_order,
             ])
             ->all();
 
@@ -66,13 +65,12 @@ class CareersSales extends Page implements HasForms
     {
         return [
             Forms\Components\Section::make('Job openings')
-                ->description('Add, edit, reorder, activate/deactivate, or delete job vacancies shown on the public Careers page.')
+                ->description('Add, edit, activate/deactivate, or delete job vacancies. The public Careers page lists openings in the order they were created.')
                 ->schema([
                     Forms\Components\Repeater::make('openings')
                         ->label('Vacancies')
                         ->defaultItems(0)
                         ->collapsible()
-                        ->orderable()
                         ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                         ->schema([
                             Forms\Components\Hidden::make('id'),
@@ -93,6 +91,7 @@ class CareersSales extends Page implements HasForms
                                 ->required()
                                 ->maxLength(255),
                             Forms\Components\Textarea::make('description')
+                                ->label('Job Description')
                                 ->rows(4)
                                 ->columnSpanFull()
                                 ->helperText('Shown when the vacancy row is expanded on the Careers page.'),
@@ -113,7 +112,7 @@ class CareersSales extends Page implements HasForms
 
         $keptIds = [];
 
-        foreach (array_values($items) as $index => $item) {
+        foreach (array_values($items) as $item) {
             $id = $item['id'] ?? null;
 
             $payload = [
@@ -124,7 +123,6 @@ class CareersSales extends Page implements HasForms
                 'department' => $item['department'] ?? '',
                 'description' => $item['description'] ?? null,
                 'is_active' => (bool)($item['is_active'] ?? true),
-                'sort_order' => $index + 1,
             ];
 
             if ($id) {

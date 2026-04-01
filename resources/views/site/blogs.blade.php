@@ -81,7 +81,10 @@
         >
           <template x-if="featuredPost">
             <div>
-              <div class="bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-2xl transition-all group cursor-pointer">
+              <a
+                class="block bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-2xl transition-all group"
+                :href="'{{ url('/blogs') }}/' + featuredPost.slug"
+              >
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
                   <div class="relative overflow-hidden aspect-[4/3] lg:aspect-auto">
                     <img :src="featuredPost.image" :alt="featuredPost.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -107,13 +110,13 @@
                         <span x-text="featuredPost.readTime"></span>
                       </div>
                     </div>
-                    <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2 w-fit">
+                    <div class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2 w-fit">
                       Read Full Article
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a>
             </div>
           </template>
         </div>
@@ -130,7 +133,10 @@
               :style="'transition-delay: ' + (index * 100) + 'ms'"
               :class="gridInView ? '!opacity-100 !translate-y-0' : ''"
             >
-              <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group cursor-pointer h-full flex flex-col">
+              <a
+                class="block bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group h-full flex flex-col"
+                :href="'{{ url('/blogs') }}/' + post.slug"
+              >
                 <div class="relative overflow-hidden aspect-[16/10]">
                   <img :src="post.image" :alt="post.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
@@ -155,7 +161,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </a>
             </div>
           </template>
         </div>

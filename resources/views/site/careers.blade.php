@@ -1,11 +1,8 @@
 @extends('layouts.site')
 
 @section('content')
-@php
-  $jobOpenings = $jobOpenings ?? \App\Support\SiteData::careerOpenings();
-@endphp
-
-{{-- Matches src/app/pages/CareersPage.tsx + src/app/components/Careers.tsx --}}
+@php($jobOpenings = $jobOpenings ?? [])
+{{-- Active rows from job_openings (SiteData::careerOpenings); no static fallbacks --}}
 <div class="pt-20">
   <section id="careers" class="py-24 bg-white" data-careers-page x-data="careersPage()">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,22 +51,26 @@
         </div>
       </div>
 
-      {{-- Job Openings --}}
+      {{-- Job Openings (active records from job_openings only) --}}
       <div class="space-y-4">
         <h3 class="text-2xl font-bold text-gray-900 mb-6">
           Current Openings
         </h3>
-        @foreach($jobOpenings as $index => $job)
+        @forelse($jobOpenings as $index => $job)
           <div
-            class="site-careers-job bg-white border border-gray-200 p-6 rounded-xl hover:border-blue-300 hover:shadow-lg transition-all group cursor-pointer opacity-0 -translate-x-[50px] duration-500 ease-out will-change-[opacity,transform]"
+            class="site-careers-job bg-white border border-gray-200 p-6 rounded-xl hover:border-blue-300 hover:shadow-lg transition-all group opacity-0 -translate-x-[50px] duration-500 ease-out will-change-[opacity,transform] @if(!empty($job['description'])) cursor-pointer @endif"
             style="transition-delay: {{ 300 + $index * 100 }}ms"
             :class="careersInView ? '!opacity-100 !translate-x-0' : ''"
-            role="button"
-            tabindex="0"
-            :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
-            @click="toggleJob({{ $index }})"
-            @keydown.enter.prevent="toggleJob({{ $index }})"
-            @keydown.space.prevent="toggleJob({{ $index }})"
+            @if(!empty($job['description']))
+              role="button"
+              tabindex="0"
+              :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
+              @click="toggleJob({{ $index }})"
+              @keydown.enter.prevent="toggleJob({{ $index }})"
+              @keydown.space.prevent="toggleJob({{ $index }})"
+            @else
+              role="article"
+            @endif
           >
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div class="flex-1">
@@ -118,23 +119,23 @@
               </div>
             </div>
 
-            {{-- Expanded description --}}
-            <div
-              class="mt-5 pt-5 border-t border-gray-100 text-gray-700"
-              x-show="activeJobIndex === {{ $index }}"
-              x-transition.opacity.duration.150ms
-              x-cloak
-            >
-              @if(!empty($job['description']))
-                <p class="leading-relaxed">{{ $job['description'] }}</p>
-              @else
-                <p class="leading-relaxed">
-                  Interested in this role? Click <span class="font-semibold">Apply</span> and include the job title in your message to receive the full description and requirements.
-                </p>
-              @endif
-            </div>
+            @if(!empty($job['description']))
+              {{-- Expanded description (from DB only) --}}
+              <div
+                class="mt-5 pt-5 border-t border-gray-100 text-gray-700"
+                x-show="activeJobIndex === {{ $index }}"
+                x-transition.opacity.duration.150ms
+                x-cloak
+              >
+                <p class="leading-relaxed whitespace-pre-line">{{ $job['description'] }}</p>
+              </div>
+            @endif
           </div>
-        @endforeach
+        @empty
+          <p class="text-gray-600 py-4">
+            There are no open positions at the moment. Please check back later.
+          </p>
+        @endforelse
       </div>
 
       <x-job-apply-modal />

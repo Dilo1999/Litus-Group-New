@@ -38,6 +38,7 @@ Route::get('/team', [SiteController::class, 'team'])->name('site.team');
 Route::get('/careers', [SiteController::class, 'careers'])->name('site.careers');
 
 Route::get('/blogs', [SiteController::class, 'blogs'])->name('site.blogs');
+Route::get('/blogs/{slug}', [SiteController::class, 'blogArticle'])->name('site.blog-article');
 Route::get('/events/{slug}', [SiteController::class, 'eventGallery'])->name('site.event');
 
 Route::get('/contact', [SiteController::class, 'contact'])->name('site.contact');
