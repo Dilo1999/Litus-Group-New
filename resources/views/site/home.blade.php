@@ -207,15 +207,22 @@
           </a>
         </x-site.motion>
 
-        <x-site.motion variant="fade-right" :delay="200" :duration="800">
-          <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="https://images.unsplash.com/photo-1630487656049-6db93a53a7e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600"
-              alt="Business team meeting"
-              class="w-full h-full object-cover"
-            />
-          </div>
-        </x-site.motion>
+        @php
+          $whyChooseImagePath = \App\Models\SiteSetting::getValue('home.why_choose.image_path');
+          $whyChooseImageUrl = $whyChooseImagePath ? \Illuminate\Support\Facades\Storage::disk('public')->url($whyChooseImagePath) : null;
+        @endphp
+
+        @if($whyChooseImageUrl)
+          <x-site.motion variant="fade-right" :delay="200" :duration="800">
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+              <img
+                src="{{ $whyChooseImageUrl }}"
+                alt="Why Choose LITUS Group"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </x-site.motion>
+        @endif
       </div>
     </div>
   </section>

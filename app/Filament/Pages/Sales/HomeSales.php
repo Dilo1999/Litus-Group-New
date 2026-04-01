@@ -29,6 +29,7 @@ class HomeSales extends Page implements HasForms
     {
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('home.hero.image_path'),
+            'why_choose_image_path' => SiteSetting::getValue('home.why_choose.image_path'),
         ]);
     }
 
@@ -59,6 +60,22 @@ class HomeSales extends Page implements HasForms
                         ->helperText('PNG/JPG/WebP. Recommended: 1920×1080.'),
                 ])
                 ->columns(1),
+
+            Forms\Components\Section::make('Why Choose image')
+                ->description('Upload or replace the image shown in the “Why Choose LITUS Group” section on the Home page.')
+                ->schema([
+                    Forms\Components\FileUpload::make('why_choose_image_path')
+                        ->label('Section image')
+                        ->disk('public')
+                        ->directory('site/home/why-choose')
+                        ->visibility('public')
+                        ->preserveFilenames()
+                        ->image()
+                        ->imagePreviewHeight('180')
+                        ->maxSize(4096)
+                        ->helperText('PNG/JPG/WebP. Recommended: 1600×1200.'),
+                ])
+                ->columns(1),
         ];
     }
 
@@ -79,6 +96,15 @@ class HomeSales extends Page implements HasForms
         }
 
         SiteSetting::setValue('home.hero.image_path', $nextPath);
+
+        $prevWhyChoose = SiteSetting::getValue('home.why_choose.image_path');
+        $nextWhyChoose = $state['why_choose_image_path'] ?? null;
+
+        if ($prevWhyChoose && $prevWhyChoose !== $nextWhyChoose) {
+            Storage::disk('public')->delete($prevWhyChoose);
+        }
+
+        SiteSetting::setValue('home.why_choose.image_path', $nextWhyChoose);
 
         $this->notify('success', 'Hero image updated.');
     }
