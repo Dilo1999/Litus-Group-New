@@ -170,7 +170,7 @@
     x-transition:leave="transition-[transform,opacity] duration-350 ease-[cubic-bezier(0.45,0,0.55,1)]"
     x-transition:leave-start="opacity-100 translate-x-0"
     x-transition:leave-end="opacity-0 translate-x-full"
-    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white lg:hidden"
+    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white/90 backdrop-blur-md lg:hidden"
     @keydown.escape.window="mobileOpen = false"
   >
     <div class="flex min-h-[5rem] shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
