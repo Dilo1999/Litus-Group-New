@@ -82,21 +82,49 @@
         </p>
       @endif
 
-      <div class="[&>p]:mb-[1.4rem] [&>p]:text-[1.05rem] [&>p]:leading-[1.85] [&>p]:text-gray-600 [&>p]:[overflow-wrap:anywhere] max-[480px]:[&>p]:text-base">
-        <p>
-          At LITUS Group, we continuously invest in long-term partnerships, operational excellence, and innovation across our diversified portfolio. This update highlights the momentum behind our teams and the progress being made across key initiatives.
-        </p>
+      @php
+        $blocks = is_array($post['content_blocks'] ?? null)
+          ? ($post['content_blocks'] ?? [])
+          : [];
+      @endphp
 
-        <div class="my-10 rounded-r-xl border-l-[3px] border-blue-600 bg-[#eef3fc] px-8 py-7 max-[480px]:my-7 max-[480px]:px-5 max-[480px]:py-5">
-          <p class="m-0 font-serif text-xl italic leading-relaxed text-[#1e3a6e] max-[480px]:text-[1.1rem]">
-            &ldquo;We are committed to building resilient businesses that create lasting value for our partners and communities.&rdquo;
-          </p>
+      @if(count($blocks) > 0)
+        <div class="space-y-6">
+          @foreach($blocks as $block)
+            @php
+              $type = $block['type'] ?? null;
+              $data = $block['data'] ?? [];
+            @endphp
+
+            @if($type === 'paragraph')
+              @php
+                $text = $data['text'] ?? null;
+                if (!is_string($text) || $text === '') {
+                    $text = isset($data['html']) && is_string($data['html']) ? strip_tags($data['html']) : '';
+                }
+              @endphp
+              @if($text !== '')
+                <p class="text-[1.05rem] leading-[1.85] text-gray-600 [overflow-wrap:anywhere] whitespace-pre-line max-[480px]:text-base">
+                  {{ $text }}
+                </p>
+              @endif
+            @elseif($type === 'quote')
+              <div class="rounded-r-xl border-l-[3px] border-blue-600 bg-[#eef3fc] px-8 py-7 max-[480px]:px-5 max-[480px]:py-5">
+                <p class="m-0 font-serif text-xl italic leading-relaxed text-[#1e3a6e] max-[480px]:text-[1.1rem] whitespace-pre-line">
+                  “{{ $data['text'] ?? '' }}”
+                </p>
+                @if(!empty($data['attribution']))
+                  <p class="mt-4 text-sm font-medium text-[#1e3a6e]/80">— {{ $data['attribution'] }}</p>
+                @endif
+              </div>
+            @endif
+          @endforeach
         </div>
-
-        <p>
-          If you'd like to learn more or explore collaboration opportunities, our team would be happy to connect and share additional details relevant to your interests.
-        </p>
-      </div>
+      @elseif(!empty($post['content']))
+        <div class="[&>p]:mb-[1.4rem] [&>p]:text-[1.05rem] [&>p]:leading-[1.85] [&>p]:text-gray-600 [&>p]:[overflow-wrap:anywhere] max-[480px]:[&>p]:text-base whitespace-pre-line">
+          {{ $post['content'] }}
+        </div>
+      @endif
 
       <div class="my-9 flex items-center gap-3" aria-hidden="true">
         <span class="h-px flex-1 bg-[#e5e2db]"></span>

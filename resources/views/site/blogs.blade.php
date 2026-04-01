@@ -88,9 +88,6 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
                   <div class="relative overflow-hidden aspect-[4/3] lg:aspect-auto">
                     <img :src="featuredPost.image" :alt="featuredPost.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div class="absolute top-6 left-6">
-                      <div class="inline-block bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">Featured</div>
-                    </div>
                   </div>
                   <div class="p-8 lg:p-12 flex flex-col justify-center">
                     <div class="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4 w-fit" x-text="featuredPost.category"></div>

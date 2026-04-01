@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Company;
+use App\Models\BlogPost;
 use App\Models\JobOpening;
 use App\Models\TeamMember;
 use Illuminate\Support\Facades\Schema;
@@ -182,28 +183,93 @@ class SiteData
 
     public static function blogPosts(): array
     {
-        static $cached = null;
-        if ($cached === null) {
-            $cached = require __DIR__ . '/data/blog_posts.php';
+        if (! Schema::hasTable('blog_posts')) {
+            return [];
         }
 
-        return $cached;
+        return BlogPost::query()
+            ->where('is_active', true)
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->get()
+            ->map(function (BlogPost $p): array {
+                $image = $p->image;
+                if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+                    $image = Storage::disk('public')->url($image);
+                }
+
+                $date = $p->published_at?->format('F j, Y') ?? $p->created_at?->format('F j, Y');
+
+                return [
+                    'id' => (string) $p->id,
+                    'category' => $p->category ?? 'General',
+                    'title' => $p->title,
+                    'excerpt' => $p->excerpt ?? '',
+                    'content' => $p->content,
+                    'content_blocks' => $p->content_blocks,
+                    'image' => $image,
+                    'author' => $p->author ?? '',
+                    'date' => $date,
+                    'readTime' => $p->read_time ?? '',
+                    'slug' => $p->slug,
+                ];
+            })
+            ->all();
     }
 
     public static function blogPostBySlug(string $slug): ?array
     {
-        foreach (self::blogPosts() as $post) {
-            if (($post['slug'] ?? null) === $slug) {
-                return $post;
-            }
+        if (! Schema::hasTable('blog_posts')) {
+            return null;
         }
 
-        return null;
+        $p = BlogPost::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $p) {
+            return null;
+        }
+
+        $image = $p->image;
+        if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+            $image = Storage::disk('public')->url($image);
+        }
+
+        $date = $p->published_at?->format('F j, Y') ?? $p->created_at?->format('F j, Y');
+
+        return [
+            'id' => (string) $p->id,
+            'category' => $p->category ?? 'General',
+            'title' => $p->title,
+            'excerpt' => $p->excerpt ?? '',
+            'content' => $p->content,
+            'content_blocks' => $p->content_blocks,
+            'image' => $image,
+            'author' => $p->author ?? '',
+            'date' => $date,
+            'readTime' => $p->read_time ?? '',
+            'slug' => $p->slug,
+        ];
     }
 
     public static function blogCategories(): array
     {
-        return ['All', 'Company News', 'Logistics', 'Hospitality', 'Construction', 'Technology', 'Automotive', 'Retail', 'Team', 'Growth', 'Collaboration'];
+        if (! Schema::hasTable('blog_posts')) {
+            return ['All'];
+        }
+
+        $cats = BlogPost::query()
+            ->where('is_active', true)
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->all();
+
+        return array_values(array_unique(array_merge(['All'], $cats)));
     }
 
     public static function galleryEvents(): array
