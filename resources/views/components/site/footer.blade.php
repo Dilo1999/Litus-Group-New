@@ -33,7 +33,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-12">
       <div class="lg:col-span-1">
         <a href="{{ route('site.home') }}" class="inline-block mb-4">
-          <x-site.logo variant="light" size="sm" />
+          <x-site.logo variant="light" size="lg" />
         </a>
         <p class="text-gray-400 mb-6 leading-relaxed">
           Building excellence across diverse industries in the Maldives.
