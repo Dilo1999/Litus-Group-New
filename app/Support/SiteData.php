@@ -2,10 +2,12 @@
 
 namespace App\Support;
 
-use App\Models\Company;
 use App\Models\BlogPost;
+use App\Models\Company;
+use App\Models\GalleryEvent;
 use App\Models\JobOpening;
 use App\Models\TeamMember;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,7 +29,7 @@ class SiteData
             return Storage::disk('public')->url($basename);
         }
 
-        return asset('assets/logo/' . rawurlencode($basename));
+        return asset('assets/logo/'.rawurlencode($basename));
     }
 
     /** Header/footer brand mark. */
@@ -62,7 +64,7 @@ class SiteData
         static $cache = null;
 
         if ($cache === null) {
-            $cache = require __DIR__ . '/data/companies_default.php';
+            $cache = require __DIR__.'/data/companies_default.php';
         }
 
         return array_map(
@@ -178,7 +180,7 @@ class SiteData
 
     public static function featuredCompanies(): array
     {
-        return array_values(array_filter(self::companies(), fn ($c) => (bool)($c['featured'] ?? false)));
+        return array_values(array_filter(self::companies(), fn ($c) => (bool) ($c['featured'] ?? false)));
     }
 
     public static function blogPosts(): array
@@ -194,7 +196,7 @@ class SiteData
             ->get()
             ->map(function (BlogPost $p): array {
                 $image = $p->image;
-                if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+                if ($image && ! str_starts_with($image, 'http://') && ! str_starts_with($image, 'https://')) {
                     $image = Storage::disk('public')->url($image);
                 }
 
@@ -233,7 +235,7 @@ class SiteData
         }
 
         $image = $p->image;
-        if ($image && !str_starts_with($image, 'http://') && !str_starts_with($image, 'https://')) {
+        if ($image && ! str_starts_with($image, 'http://') && ! str_starts_with($image, 'https://')) {
             $image = Storage::disk('public')->url($image);
         }
 
@@ -274,7 +276,69 @@ class SiteData
 
     public static function galleryEvents(): array
     {
+        if (! Schema::hasTable('gallery_events')) {
+            return [];
+        }
+
+        return GalleryEvent::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (GalleryEvent $e): array => self::mapGalleryEvent($e))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function mapGalleryEvent(GalleryEvent $e): array
+    {
+        $cover = self::resolvePublicMediaUrl($e->cover_image);
+        $gallery = collect($e->gallery_images ?? [])
+            ->map(fn ($path) => self::resolvePublicMediaUrl(is_string($path) ? $path : null))
+            ->filter()
+            ->values()
+            ->all();
+
+        $date = '';
+        if (! blank($e->date_display)) {
+            try {
+                $date = Carbon::parse($e->date_display)->format('F j, Y');
+            } catch (\Throwable) {
+                // Backwards compatibility for any older records stored as non-parseable strings.
+                $date = (string) $e->date_display;
+            }
+        }
+
         return [
+            'slug' => $e->slug,
+            'title' => $e->title,
+            'date' => $date,
+            'description' => $e->description ?? '',
+            'image' => $cover ?? '',
+            'image_alt' => $e->image_alt ?? $e->title,
+            'gallery_images' => $gallery,
+        ];
+    }
+
+    private static function resolvePublicMediaUrl(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
+        return Storage::disk('public')->url($value);
+    }
+
+    /** @return list<array<string, string>> */
+    private static function legacyGalleryEvents(): array
+    {
+        return []; /*
             [
                 'slug' => 'annual-general-meeting-2026',
                 'title' => 'Annual General Meeting 2026',
@@ -339,7 +403,7 @@ class SiteData
                 'image' => 'https://images.unsplash.com/photo-1769773297747-bd00e31b33aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwcmVzdGF1cmFudCUyMGRpbmluZ3xlbnwxfHx8fDE3NzQ0Mzg1ODN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
                 'image_alt' => 'Restaurant dining area',
             ],
-        ];
+        ]; */
     }
 
     public static function careerOpenings(): array
@@ -399,4 +463,3 @@ class SiteData
             ->all();
     }
 }
-

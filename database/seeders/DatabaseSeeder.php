@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TeamMembersSeeder::class);
         $this->call(JobOpeningsSeeder::class);
         $this->call(BlogPostSeeder::class);
+        $this->call(GalleryEventSeeder::class);
         $this->call(PageSeoSeeder::class);
         // \App\Models\User::factory(10)->create();
 
