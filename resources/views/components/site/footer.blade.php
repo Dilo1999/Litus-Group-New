@@ -40,7 +40,9 @@
         </p>
         <div class="flex flex-wrap gap-3">
           <a
-            href="#"
+            href="https://www.linkedin.com/company/litus-group-maldives/"
+            target="_blank"
+            rel="noopener noreferrer"
             class="bg-gray-800 hover:bg-blue-600 p-2.5 rounded-lg transition-colors text-gray-300 hover:text-white"
             aria-label="LinkedIn"
           >
@@ -51,16 +53,22 @@
             </svg>
           </a>
           <a
-            href="#"
-            class="bg-gray-800 hover:bg-blue-600 p-2.5 rounded-lg transition-colors text-gray-300 hover:text-white"
-            aria-label="Twitter"
+            href="https://x.com/LITUSmv"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-gray-800 hover:bg-blue-600 p-2.5 rounded-lg transition-colors text-white"
+            aria-label="X"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
-              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" class="block fill-current">
+              <g>
+                <path d="M21.742 21.75l-7.563-11.179 7.056-8.321h-2.456l-5.691 6.714-4.54-6.714H2.359l7.29 10.776L2.25 21.75h2.456l6.035-7.118 4.818 7.118h6.191-.008zM7.739 3.818L18.81 20.182h-2.447L5.29 3.818h2.447z"></path>
+              </g>
             </svg>
           </a>
           <a
-            href="#"
+            href="https://www.facebook.com/litusgroupmv"
+            target="_blank"
+            rel="noopener noreferrer"
             class="bg-gray-800 hover:bg-blue-600 p-2.5 rounded-lg transition-colors text-gray-300 hover:text-white"
             aria-label="Facebook"
           >
@@ -152,10 +160,10 @@
         <p class="text-gray-400 text-sm">
           © {{ $currentYear }} LITUS Group. All rights reserved | Developed by LITUS IT.
         </p>
-        <div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm text-gray-400">
+        <!-- <div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm text-gray-400">
           <a href="#" class="hover:text-blue-500 transition-colors">Privacy Policy</a>
           <a href="#" class="hover:text-blue-500 transition-colors">Terms of Service</a>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

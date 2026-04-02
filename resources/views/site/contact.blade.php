@@ -134,7 +134,7 @@
     :class="mapInView ? '!opacity-100' : ''"
   >
     <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.3011791593975!2d73.50771731477462!3d4.175148547095843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b3f7f5e8f8f8f8f%3A0x8f8f8f8f8f8f8f8f!2sMale%2C%20Maldives!5e0!3m2!1sen!2s!4v1234567890123!5m2!1sen!2s"
+      src="https://www.google.com/maps?q=Mal%C3%A9%2C%20Maldives&z=14&output=embed"
       width="100%"
       height="100%"
       style="border:0"
@@ -149,13 +149,19 @@
         <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">
           Visit Our Office
         </h3>
-        <p class="text-gray-200 flex items-center gap-2">
+        <a
+          href="https://maps.app.goo.gl/4ATBypfyR4cKs5Dj7"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pointer-events-auto inline-flex items-center gap-2 text-gray-200 hover:text-white transition-colors"
+          aria-label="Open location in Google Maps"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          Male', Republic of Maldives
-        </p>
+          <span>Open in Google Maps</span>
+        </a>
       </div>
     </div>
   </section>
