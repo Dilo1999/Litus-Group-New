@@ -32,7 +32,7 @@ class JobOpeningResource extends Resource
 
     protected static ?string $slug = 'job-openings';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'HR';
 
     protected static ?int $navigationSort = 87;
 

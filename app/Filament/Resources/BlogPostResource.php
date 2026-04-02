@@ -31,7 +31,7 @@ class BlogPostResource extends Resource
     protected static ?string $pluralModelLabel = 'Blog Posts';
     protected static ?string $recordTitleAttribute = 'title';
     protected static ?string $slug = 'blog-posts';
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = 'Management';
     protected static ?int $navigationSort = 86;
 
     public static function form(Form $form): Form
