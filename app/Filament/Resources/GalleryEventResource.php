@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\GalleryEventResource\Pages;
 use App\Models\GalleryEvent;
 use Filament\Forms;

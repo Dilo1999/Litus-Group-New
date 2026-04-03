@@ -194,28 +194,7 @@ class SiteData
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->get()
-            ->map(function (BlogPost $p): array {
-                $image = $p->image;
-                if ($image && ! str_starts_with($image, 'http://') && ! str_starts_with($image, 'https://')) {
-                    $image = Storage::disk('public')->url($image);
-                }
-
-                $date = $p->published_at?->format('F j, Y') ?? $p->created_at?->format('F j, Y');
-
-                return [
-                    'id' => (string) $p->id,
-                    'category' => $p->category ?? 'General',
-                    'title' => $p->title,
-                    'excerpt' => $p->excerpt ?? '',
-                    'content' => $p->content,
-                    'content_blocks' => $p->content_blocks,
-                    'image' => $image,
-                    'author' => $p->author ?? '',
-                    'date' => $date,
-                    'readTime' => $p->read_time ?? '',
-                    'slug' => $p->slug,
-                ];
-            })
+            ->map(fn (BlogPost $p): array => self::blogPostToArray($p))
             ->all();
     }
 
@@ -230,10 +209,14 @@ class SiteData
             ->where('is_active', true)
             ->first();
 
-        if (! $p) {
-            return null;
-        }
+        return $p ? self::blogPostToArray($p) : null;
+    }
 
+    /**
+     * @return array<string, mixed>
+     */
+    public static function blogPostToArray(BlogPost $p): array
+    {
         $image = $p->image;
         if ($image && ! str_starts_with($image, 'http://') && ! str_starts_with($image, 'https://')) {
             $image = Storage::disk('public')->url($image);

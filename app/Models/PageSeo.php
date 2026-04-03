@@ -4,18 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GalleryEvent extends Model
+class PageSeo extends Model
 {
     protected $fillable = [
-        'slug',
-        'title',
-        'date_display',
-        'description',
-        'cover_image',
-        'image_alt',
-        'gallery_images',
-        'is_active',
-        'sort_order',
+        'route_name',
         'meta_title',
         'meta_description',
         'og_title',
@@ -28,8 +20,8 @@ class GalleryEvent extends Model
         'robots',
     ];
 
-    protected $casts = [
-        'gallery_images' => 'array',
-        'is_active' => 'boolean',
-    ];
+    public static function forRoute(string $routeName): ?self
+    {
+        return static::query()->where('route_name', $routeName)->first();
+    }
 }

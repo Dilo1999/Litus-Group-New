@@ -18,6 +18,16 @@ class BlogPost extends Model
         'content_blocks',
         'published_at',
         'is_active',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
+        'twitter_title',
+        'twitter_description',
+        'twitter_image',
+        'canonical_url',
+        'robots',
     ];
 
     protected $casts = [

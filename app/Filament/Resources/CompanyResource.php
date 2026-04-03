@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Models\Company;
 use App\Support\SiteData;

@@ -33,6 +33,16 @@ class Company extends Model
         'strengths',
         'featured',
         'sort_order',
+        'meta_title',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
+        'twitter_title',
+        'twitter_description',
+        'twitter_image',
+        'canonical_url',
+        'robots',
     ];
 
     protected $casts = [

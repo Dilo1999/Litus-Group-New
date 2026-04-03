@@ -11,11 +11,11 @@ return [
          * The default configurations to be used by the meta generator.
          */
         'defaults' => [
-            'title' => 'Al Zaha General Trading',
+            'title' => 'LITUS Group',
             'titleBefore' => false,
-            'description' => 'Premium sourcing and supply chain solutions from Dubai. End-to-end logistics, consulting, and procurement for resorts, construction, retail, and industrial sectors.',
-            'separator' => ' – ',
-            'keywords' => ['sourcing', 'supply chain', 'logistics', 'Dubai', 'procurement'],
+            'description' => 'LITUS Group is a diversified business group with operations across logistics, automotive, trading, construction, technology, retail, and hospitality.',
+            'separator' => ' | ',
+            'keywords' => ['LITUS Group', 'Maldives', 'logistics', 'automotive', 'hospitality', 'trading'],
             'canonical' => 'current',
             'robots' => false, // Set to 'all', 'none' or any combination of index/noindex and follow/nofollow
         ],
@@ -38,11 +38,11 @@ return [
          * The default configurations to be used by the opengraph generator.
          */
         'defaults' => [
-            'title' => 'Al Zaha General Trading',
-            'description' => 'Premium sourcing and supply chain solutions from Dubai.',
+            'title' => 'LITUS Group',
+            'description' => 'LITUS Group is a diversified business group operating across multiple industries in the Maldives and the wider region.',
             'url' => null,
             'type' => 'website',
-            'site_name' => 'Al Zaha General Trading',
+            'site_name' => 'LITUS Group',
             'images' => [],
         ],
     ],
@@ -60,8 +60,8 @@ return [
          * The default configurations to be used by the json-ld generator.
          */
         'defaults' => [
-            'title' => 'Al Zaha General Trading',
-            'description' => 'Premium sourcing and supply chain solutions from Dubai.',
+            'title' => 'LITUS Group',
+            'description' => 'LITUS Group is a diversified business group with operations across logistics, automotive, trading, construction, technology, retail, and hospitality.',
             'url' => 'current',
             'type' => 'WebPage',
             'images' => [],

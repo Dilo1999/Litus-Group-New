@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
 use Filament\Forms;
@@ -130,6 +131,7 @@ class BlogPostResource extends Resource
                         ->helperText('Add normal content and/or quote sections. Cover image is used for images.'),
                 ])
                 ->columns(2),
+            SeoFields::section(),
         ]);
     }
 
