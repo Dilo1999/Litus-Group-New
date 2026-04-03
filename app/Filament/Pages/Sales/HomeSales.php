@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Sales;
 
+use App\Filament\Concerns\BlocksHrAccess;
 use App\Filament\Pages\PageCustomization;
 use App\Models\SiteSetting;
 use Filament\Forms;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeSales extends Page implements HasForms
 {
+    use BlocksHrAccess;
     use InteractsWithForms;
 
     protected static bool $shouldRegisterNavigation = false;
@@ -27,6 +29,8 @@ class HomeSales extends Page implements HasForms
 
     public function mount(): void
     {
+        $this->abortIfHr();
+
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('home.hero.image_path'),
             'why_choose_image_path' => SiteSetting::getValue('home.why_choose.image_path'),

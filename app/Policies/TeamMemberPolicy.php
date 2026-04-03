@@ -2,17 +2,17 @@
 
 namespace App\Policies;
 
-use App\Models\GalleryEvent;
+use App\Models\TeamMember;
 use App\Models\User;
 
-class GalleryEventPolicy
+class TeamMemberPolicy
 {
     public function viewAny(User $user): bool
     {
         return $user->isAdmin() || $user->isManagement();
     }
 
-    public function view(User $user, GalleryEvent $model): bool
+    public function view(User $user, TeamMember $teamMember): bool
     {
         return $user->isAdmin() || $user->isManagement();
     }
@@ -22,12 +22,12 @@ class GalleryEventPolicy
         return $user->isAdmin() || $user->isManagement();
     }
 
-    public function update(User $user, GalleryEvent $model): bool
+    public function update(User $user, TeamMember $teamMember): bool
     {
         return $user->isAdmin() || $user->isManagement();
     }
 
-    public function delete(User $user, GalleryEvent $model): bool
+    public function delete(User $user, TeamMember $teamMember): bool
     {
         return $user->isAdmin() || $user->isManagement();
     }

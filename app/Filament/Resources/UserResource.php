@@ -57,11 +57,11 @@ class UserResource extends Resource
                         Select::make('role')
                             ->options([
                                 User::ROLE_ADMIN => 'Admin',
-                                User::ROLE_EDITOR => 'Editor',
-                                User::ROLE_VIEWER => 'Viewer',
+                                User::ROLE_MANAGEMENT => 'Management',
+                                User::ROLE_HR => 'HR',
                             ])
                             ->required()
-                            ->helperText('Admin: full access including Page SEO and Users. Editor: Blog Posts. Viewer: read-only.'),
+                            ->helperText('Admin: full access. Management: Management section only (gallery, blog, team, companies, page customization). HR: HR section only (job openings).'),
                     ])
                     ->columns(1),
             ]);
@@ -80,8 +80,8 @@ class UserResource extends Resource
                 TextColumn::make('role')
                     ->enum([
                         User::ROLE_ADMIN => 'Admin',
-                        User::ROLE_EDITOR => 'Editor',
-                        User::ROLE_VIEWER => 'Viewer',
+                        User::ROLE_MANAGEMENT => 'Management',
+                        User::ROLE_HR => 'HR',
                     ])
                     ->sortable(),
             ])

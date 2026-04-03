@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Sales;
 
+use App\Filament\Concerns\BlocksHrAccess;
 use App\Filament\Pages\PageCustomization;
 use App\Models\TeamMember;
 use Filament\Forms;
@@ -12,6 +13,7 @@ use Filament\Pages\Page;
 
 class TeamSales extends Page implements HasForms
 {
+    use BlocksHrAccess;
     use InteractsWithForms;
 
     protected static bool $shouldRegisterNavigation = false;
@@ -26,6 +28,8 @@ class TeamSales extends Page implements HasForms
 
     public function mount(): void
     {
+        $this->abortIfHr();
+
         $members = TeamMember::query()
             ->orderBy('sort_order')
             ->orderBy('id')

@@ -2,11 +2,14 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Concerns\BlocksHrAccess;
 use Filament\Pages;
 use Filament\Pages\Page;
 
 class PageCustomization extends Page
 {
+    use BlocksHrAccess;
+
     protected static ?string $navigationIcon = 'heroicon-o-template';
 
     protected static ?string $navigationGroup = 'Management';
@@ -20,6 +23,20 @@ class PageCustomization extends Page
     protected static ?string $slug = 'page-customization';
 
     protected static string $view = 'filament.pages.page-customization';
+
+    public function mount(): void
+    {
+        $this->abortIfHr();
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        if (auth()->user()?->isHr()) {
+            return false;
+        }
+
+        return parent::shouldRegisterNavigation();
+    }
 
     public function getBreadcrumbs(): array
     {
