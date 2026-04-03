@@ -30,13 +30,27 @@
           class="site-about-motion-left relative transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
           :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[50px]'"
         >
+          @php
+            $aboutPartnershipPath = \App\Models\SiteSetting::getValue('about.business_partnership.image_path');
+            $aboutPartnershipUrl = $aboutPartnershipPath
+              ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutPartnershipPath)
+              : null;
+          @endphp
           <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src="https://images.unsplash.com/photo-1745847768380-2caeadbb3b71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGhhbmRzaGFrZSUyMHBhcnRuZXJzaGlwfGVufDF8fHx8MTc3MTYyMTc3OXww&ixlib=rb-4.1.0&q=80&w=1080"
-              alt="Business partnership"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+            @if($aboutPartnershipUrl)
+              <img
+                src="{{ $aboutPartnershipUrl }}"
+                alt="Business partnership"
+                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
+              />
+            @else
+              <div
+                class="w-full min-h-[280px] md:min-h-[420px] bg-gradient-to-br from-gray-200 to-gray-300"
+                role="img"
+                aria-label="Business partnership image"
+              ></div>
+            @endif
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent pointer-events-none"></div>
           </div>
           <div
             class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
