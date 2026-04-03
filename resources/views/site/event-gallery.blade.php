@@ -138,8 +138,9 @@
 
       <button
         type="button"
-        class="hidden sm:inline-flex absolute left-3 top-1/2 -translate-y-1/2 items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
-        x-on:click="prev()"
+        x-show="images.length > 1"
+        class="inline-flex absolute left-2 sm:left-3 top-1/2 z-10 -translate-y-1/2 items-center justify-center min-h-[44px] min-w-[44px] w-12 h-12 sm:h-11 sm:w-11 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white transition touch-manipulation"
+        x-on:click.stop="prev()"
         aria-label="Previous image"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -156,8 +157,9 @@
 
       <button
         type="button"
-        class="hidden sm:inline-flex absolute right-3 top-1/2 -translate-y-1/2 items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
-        x-on:click="next()"
+        x-show="images.length > 1"
+        class="inline-flex absolute right-2 sm:right-3 top-1/2 z-10 -translate-y-1/2 items-center justify-center min-h-[44px] min-w-[44px] w-12 h-12 sm:h-11 sm:w-11 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white transition touch-manipulation"
+        x-on:click.stop="next()"
         aria-label="Next image"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
