@@ -2,14 +2,7 @@
 
 @section('content')
 @php
-  $highlights = [
-    ['company' => 'LITUS Group', 'hotline' => '+960 332 2288'],
-    ['company' => 'LITUS Maldives', 'hotline' => '+960 332 2289'],
-    ['company' => 'LITUS Shipping', 'hotline' => '+960 332 2290'],
-    ['company' => 'LITUS Automobiles', 'hotline' => '+960 332 2291'],
-    ['company' => 'LITUS Connect', 'hotline' => '+960 332 2295'],
-    ['company' => 'LITUS Parts', 'hotline' => '+960 332 2293'],
-  ];
+  $highlights = $heroSpotlightHighlights ?? [];
   $displayCompanies = array_slice($companies ?? [], 0, 8);
 
   $heroImagePath = \App\Models\SiteSetting::getValue('home.hero.image_path');
@@ -48,36 +41,43 @@
           LITUS Group delivers world-class services across 16 diverse brands.
         </p>
 
-        <div
-          class="site-hero-card bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mb-10"
-          x-data="heroSpotlight(@js($highlights))"
-        >
-          {{-- AnimatePresence mode="wait": exit 500ms, then swap content, then enter 500ms --}}
+        @if(count($highlights) > 0)
+          {{-- Rotating spotlight: all companies with featured=true (DB order); Alpine cycles when 2+ --}}
           <div
-            x-show="visible"
-            x-transition:enter="transition ease-out duration-500"
-            x-transition:enter-start="opacity-0 translate-y-5"
-            x-transition:enter-end="opacity-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-500"
-            x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 -translate-y-5"
-            class="flex items-center justify-between gap-4 min-h-[3.25rem]"
+            class="site-hero-card bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mb-10"
           >
-            <div class="min-w-0">
-              <!-- <div class="text-sm text-blue-200 mb-1">Featured Company</div> -->
-              <div class="text-2xl font-bold text-white" x-text="items[idx].company"></div>
-            </div>
-            <a
-              class="flex shrink-0 items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all"
-              :href="'tel:' + items[idx].hotline"
+            <div
+              class="min-h-[5.5rem] flex flex-col justify-center"
+              x-data="heroSpotlight(@js($highlights))"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-              </svg>
-              <span x-text="items[idx].hotline"></span>
-            </a>
+              <div
+                x-show="visible"
+                x-transition:enter="hero-spotlight-tx-enter"
+                x-transition:enter-start="hero-spotlight-from-below"
+                x-transition:enter-end="hero-spotlight-at-rest"
+                x-transition:leave="hero-spotlight-tx-leave"
+                x-transition:leave-start="hero-spotlight-at-rest"
+                x-transition:leave-end="hero-spotlight-to-above"
+                class="flex items-center justify-between gap-4"
+              >
+                <div class="min-w-0">
+                  <div class="text-sm text-blue-200 mb-1">Featured Company</div>
+                  <div class="text-2xl font-bold text-white" x-text="items[idx].company"></div>
+                </div>
+                <a
+                  x-show="items[idx].hotline && String(items[idx].hotline).trim().length"
+                  class="flex shrink-0 items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold transition-all"
+                  :href="'tel:' + String(items[idx].hotline).replace(/\s/g, '')"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  <span x-text="items[idx].hotline"></span>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
+        @endif
 
         <div class="site-hero-ctas flex flex-col sm:flex-row gap-4">
           <a

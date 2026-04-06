@@ -5,7 +5,7 @@ import intersect from '@alpinejs/intersect';
 
 Alpine.plugin(intersect);
 
-/** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (exit then enter, 500ms). */
+/** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */
 document.addEventListener('alpine:init', () => {
   /** Careers — matches Careers.tsx useInView(once, margin -100px); skip animation if reduced motion. */
   Alpine.data('careersPage', () => ({
@@ -137,6 +137,8 @@ document.addEventListener('alpine:init', () => {
     idx: 0,
     visible: true,
     _interval: null,
+    _cyclePending: null,
+    _cycling: false,
     init() {
       if (!Array.isArray(items) || items.length === 0) {
         return;
@@ -144,19 +146,33 @@ document.addEventListener('alpine:init', () => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
       }
+      if (items.length < 2) {
+        return;
+      }
       this._interval = window.setInterval(() => this.cycle(), 3000);
     },
     destroy() {
+      if (this._cyclePending) {
+        window.clearTimeout(this._cyclePending);
+      }
       if (this._interval) {
         window.clearInterval(this._interval);
       }
     },
     cycle() {
+      if (this._cycling || !Array.isArray(this.items) || this.items.length < 2) {
+        return;
+      }
+      this._cycling = true;
       this.visible = false;
-      window.setTimeout(() => {
+      if (this._cyclePending) {
+        window.clearTimeout(this._cyclePending);
+      }
+      this._cyclePending = window.setTimeout(() => {
         this.idx = (this.idx + 1) % this.items.length;
         this.visible = true;
-      }, 500);
+        this._cycling = false;
+      }, 520);
     },
   }));
 });

@@ -183,6 +183,40 @@ class SiteData
         return array_values(array_filter(self::companies(), fn ($c) => (bool) ($c['featured'] ?? false)));
     }
 
+    /**
+     * First company marked featured (same order as companies(): sort_order, id).
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function firstFeaturedCompany(): ?array
+    {
+        foreach (self::companies() as $company) {
+            if (! empty($company['featured'])) {
+                return $company;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Featured companies for the home hero rotating spotlight (order matches companies list).
+     *
+     * @return list<array{company: string, hotline: string}>
+     */
+    public static function heroSpotlightHighlights(): array
+    {
+        return array_values(array_map(
+            static function (array $c): array {
+                return [
+                    'company' => (string) ($c['name'] ?? ''),
+                    'hotline' => trim((string) ($c['hotline'] ?? '')),
+                ];
+            },
+            self::featuredCompanies()
+        ));
+    }
+
     public static function blogPosts(): array
     {
         if (! Schema::hasTable('blog_posts')) {

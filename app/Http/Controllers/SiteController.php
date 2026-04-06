@@ -21,7 +21,7 @@ class SiteController extends Controller
 
         return view('site.home', [
             'companies' => SiteData::companies(),
-            'featuredCompanies' => SiteData::featuredCompanies(),
+            'heroSpotlightHighlights' => SiteData::heroSpotlightHighlights(),
         ]);
     }
 

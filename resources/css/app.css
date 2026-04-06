@@ -186,6 +186,34 @@
   }
 }
 
+/* Home hero rotating spotlight — plain CSS (Alpine x-transition + Tailwind utilities is unreliable in v4) */
+.hero-spotlight-tx-enter {
+  transition-property: opacity, transform;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-spotlight-tx-leave {
+  transition-property: opacity, transform;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-spotlight-from-below {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+
+.hero-spotlight-at-rest {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-spotlight-to-above {
+  opacity: 0;
+  transform: translateY(-1.25rem);
+}
+
 .site-hero-title {
   animation: site-fade-in-up 0.8s ease-out 0.2s both;
 }
@@ -235,6 +263,17 @@
   .site-our-companies-hero,
   .site-company-hero {
     animation: none !important;
+  }
+
+  .hero-spotlight-tx-enter,
+  .hero-spotlight-tx-leave {
+    transition: none !important;
+  }
+
+  .hero-spotlight-from-below,
+  .hero-spotlight-to-above {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   [data-home-mission-vision] > div {
