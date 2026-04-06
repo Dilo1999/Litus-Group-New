@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ActivityLog;
 use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
@@ -9,6 +10,7 @@ use App\Models\JobOpening;
 use App\Models\PageSeo;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Policies\ActivityLogPolicy;
 use App\Policies\BlogPostPolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\GalleryEventPolicy;
@@ -26,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
+        ActivityLog::class => ActivityLogPolicy::class,
         BlogPost::class => BlogPostPolicy::class,
         Company::class => CompanyPolicy::class,
         GalleryEvent::class => GalleryEventPolicy::class,
