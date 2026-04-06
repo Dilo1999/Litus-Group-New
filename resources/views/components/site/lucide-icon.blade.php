@@ -9,7 +9,7 @@
   stroke-width="2"
   stroke-linecap="round"
   stroke-linejoin="round"
-  {{ $attributes->merge(['class' => 'w-8 h-8 shrink-0']) }}
+  {{ $attributes->merge(['class' => 'w-8 h-8 shrink-0 block']) }}
   aria-hidden="true"
 >
   @switch($name)

@@ -14,8 +14,8 @@
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div class="site-blogs-hero">
-        <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">Our Blogs</h1>
-        <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Our Blogs</h1>
+        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
           Insights, updates, and stories from across the LITUS Group ecosystem
         </p>
       </div>
@@ -69,7 +69,7 @@
   <section class="py-16 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div x-show="filteredPosts.length === 0" x-cloak class="text-center py-16">
-        <p class="text-xl text-gray-600">No blog posts found matching your criteria.</p>
+        <p class="text-lg md:text-xl text-gray-600">No blog posts found matching your criteria.</p>
       </div>
 
       <div x-show="filteredPosts.length > 0" x-cloak>
@@ -91,7 +91,7 @@
                   </div>
                   <div class="p-8 lg:p-12 flex flex-col justify-center">
                     <div class="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4 w-fit" x-text="featuredPost.category"></div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors" x-text="featuredPost.title"></h2>
+                    <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors" x-text="featuredPost.title"></h2>
                     <p class="text-lg text-gray-600 mb-6 leading-relaxed" x-text="featuredPost.excerpt"></p>
                     <div class="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-500">
                       <div class="flex items-center gap-2">
@@ -220,7 +220,7 @@
         class="site-blogs-gallery-head mb-12 opacity-0 translate-y-5 transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
         :class="galleryInView ? '!opacity-100 !translate-y-0' : ''"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Gallery</h2>
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-2">Gallery</h2>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

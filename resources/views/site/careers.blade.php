@@ -26,10 +26,10 @@
         x-intersect.once.margin.-100px.-100px.-100px.-100px="careersInView = true"
         :class="careersInView ? '!opacity-100 !translate-y-0' : ''"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
           Join Our Team
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Build your career with LITUS Group and be part of our diverse,
           dynamic team across multiple industries
         </p>
@@ -89,7 +89,7 @@
           >
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div class="flex-1">
-                <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                   {{ $job['title'] }}
                 </h4>
                 <div class="flex flex-wrap gap-4 text-gray-600">

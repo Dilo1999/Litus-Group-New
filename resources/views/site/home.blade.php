@@ -30,13 +30,13 @@
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
       <div class="max-w-3xl">
-        <h1 class="site-hero-title text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+        <h1 class="site-hero-title text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
           Taking Diversification
           <br />
           <span class="text-blue-300">To A Whole New Level</span>
         </h1>
 
-        <p class="site-hero-lead text-xl md:text-2xl text-gray-200 mb-10 leading-relaxed">
+        <p class="site-hero-lead text-lg md:text-2xl text-gray-200 mb-10 leading-relaxed">
           From hospitality to construction, automotive to technology –
           LITUS Group delivers world-class services across 16 diverse brands.
         </p>
@@ -125,8 +125,8 @@
         x-intersect.once.margin.-100px.-100px.-100px.-100px="companiesInView = true"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Companies</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Companies</h2>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           16 specialized companies delivering excellence across multiple industries
         </p>
       </div>
@@ -191,7 +191,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <x-site.motion variant="fade-left" :duration="800">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Why Choose LITUS Group</h2>
+          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Why Choose LITUS Group</h2>
           <p class="text-lg text-gray-600 mb-6 leading-relaxed">
             LITUS Group stands as a beacon of diversification and excellence in the Maldives business landscape. With 16 specialized companies spanning multiple industries, we deliver comprehensive solutions that drive growth and create lasting value.
           </p>
@@ -245,8 +245,8 @@
           class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
-          <h3 class="text-3xl font-bold text-white mb-4">Our Mission</h3>
-          <p class="text-lg text-blue-100 leading-relaxed">
+          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
+          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
             To deliver exceptional value across diverse industries through innovation, quality, and unwavering commitment to customer satisfaction.
           </p>
         </div>
@@ -255,8 +255,8 @@
           style="transition-delay: 200ms"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
-          <h3 class="text-3xl font-bold text-white mb-4">Our Vision</h3>
-          <p class="text-lg text-blue-100 leading-relaxed">
+          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Vision</h3>
+          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
             To be the most trusted and diversified business group in the Maldives, setting industry standards and creating sustainable value for all stakeholders.
           </p>
         </div>
@@ -267,8 +267,8 @@
   <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Core Values</h2>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           The LITUS principles that guide everything we do
         </p>
       </x-site.motion>
@@ -302,8 +302,8 @@
   <section class="py-24 bg-blue-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">Our Leadership</h2>
-        <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-8">
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Our Leadership</h2>
+        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
           Meet the visionary leaders driving LITUS Group's success across all sectors
         </p>
         <a
@@ -320,8 +320,8 @@
   <section class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">News & Media</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">News & Media</h2>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Stay updated with the latest stories and insights from across the LITUS Group
         </p>
       </x-site.motion>
@@ -341,8 +341,8 @@
   <section class="py-24 bg-blue-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <x-site.motion variant="fade-up" :duration="800">
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Join Our Team</h2>
-        <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Join Our Team</h2>
+        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
           Build your career with LITUS Group and be part of a dynamic team that's shaping the future across 16 diverse companies
         </p>
         <a
@@ -360,8 +360,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
         <x-site.motion class="flex-1" variant="fade-left-sm" :duration="800">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let's Connect</h2>
-          <p class="text-xl text-gray-600 leading-relaxed">
+          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Let's Connect</h2>
+          <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
             Have questions or interested in our services? Get in touch with us today
           </p>
         </x-site.motion>

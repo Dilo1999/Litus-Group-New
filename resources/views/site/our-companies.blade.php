@@ -20,8 +20,8 @@
 <section class="relative pt-32 pb-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="site-our-companies-hero text-center text-white">
-      <h1 class="text-5xl md:text-6xl font-bold mb-6">Our Companies</h1>
-      <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">Our Companies</h1>
+      <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
         Explore our diverse portfolio of 16 specialized companies delivering excellence across multiple industries
       </p>
     </div>
@@ -56,8 +56,8 @@
               style="transition-delay: {{ $divIndex * 100 }}ms"
             >
               <div class="mb-8">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{{ $division['title'] }}</h2>
-                <p class="text-lg text-gray-600">{{ $division['description'] }}</p>
+                <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-2">{{ $division['title'] }}</h2>
+                <p class="text-base md:text-lg text-gray-600">{{ $division['description'] }}</p>
               </div>
             </div>
 

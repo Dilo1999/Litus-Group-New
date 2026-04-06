@@ -36,8 +36,8 @@
           @endif
         </div>
 
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">{{ $company['name'] }}</h1>
-        <p class="text-2xl text-blue-100 mb-8">{{ $company['tagline'] }}</p>
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ $company['name'] }}</h1>
+        <p class="text-xl md:text-2xl text-blue-100 mb-8">{{ $company['tagline'] }}</p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -98,16 +98,16 @@
           <div class="inline-block px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium mb-4">
             {{ $company['category'] }}
           </div>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             About {{ $company['name'] }}
           </h2>
           @if(filled($company['description'] ?? null))
-            <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+            <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">
               {{ $company['description'] }}
             </p>
           @endif
           @if(filled($company['description_secondary'] ?? null))
-            <p class="text-lg text-gray-600 leading-relaxed">
+            <p class="text-base md:text-lg text-gray-600 leading-relaxed">
               {{ $company['description_secondary'] }}
             </p>
           @endif
@@ -148,13 +148,13 @@
         x-intersect.once.margin.-100px.-100px.-100px.-100px="servicesInView = true"
         :class="servicesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Services</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Services</h2>
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Comprehensive solutions tailored to meet your needs
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach(($company['services'] ?? []) as $index => $service)
           @php
             $svcIcon = \App\Support\CompanyPageIcons::serviceIcon($service);
@@ -165,8 +165,8 @@
             :class="servicesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'"
           >
             {{-- Inner card: hover matches motion.div transition-all in CompanyPage.tsx (separate from 0.5s layout tween) --}}
-            <div class="h-full rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg">
-              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+            <div class="h-full rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg text-center">
+              <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                 <x-site.lucide-icon :name="$svcIcon" class="h-6 w-6 text-blue-600" />
               </div>
               <h3 class="text-lg font-bold text-gray-900">{{ $service }}</h3>
@@ -193,10 +193,10 @@
         x-intersect.once.margin.-100px.-100px.-100px.-100px="whyInView = true"
         :class="whyInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
           Why Choose {{ $company['name'] }}
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Experience the difference that sets us apart from the competition
         </p>
       </div>
@@ -214,7 +214,7 @@
             <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <x-site.lucide-icon :name="$strIcon" class="w-8 h-8 text-white" />
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $strength }}</h3>
+            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">{{ $strength }}</h3>
           </div>
         @endforeach
       </div>
@@ -238,8 +238,8 @@
           x-intersect.once.margin.-100px.-100px.-100px.-100px="contactInView = true"
           :class="contactInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[50px]'"
         >
-          <h2 class="text-4xl font-bold text-gray-900 mb-6">Get In Touch</h2>
-          <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Get In Touch</h2>
+          <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">
             Have questions or ready to get started? Contact us today and discover how {{ $company['name'] }} can serve you.
           </p>
 
@@ -252,7 +252,7 @@
               </div>
               <div>
                 <div class="font-semibold text-gray-900 mb-1">Hotline</div>
-                <a href="tel:{{ $company['hotline'] }}" class="text-gray-600 hover:text-blue-600 transition-colors text-lg">
+                <a href="tel:{{ $company['hotline'] }}" class="text-gray-600 hover:text-blue-600 transition-colors text-base md:text-lg">
                   {{ $company['hotline'] }}
                 </a>
               </div>

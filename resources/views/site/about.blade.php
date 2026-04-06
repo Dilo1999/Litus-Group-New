@@ -68,13 +68,13 @@
           style="transition-delay: 200ms"
           :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
         >
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">About LITUS Group</h2>
-          <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">About LITUS Group</h2>
+          <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">
             LITUS Group is a diversified business conglomerate with a strong presence
             across multiple sectors including hospitality, construction, automotive,
             technology, and trading. Our commitment to excellence drives everything we do.
           </p>
-          <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+          <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">
             With a portfolio spanning from luxury hotels and resorts to cutting-edge
             technology solutions, we deliver comprehensive services that meet the evolving
             needs of our clients. Our diverse businesses work in synergy to create value
@@ -92,7 +92,7 @@
                   <circle cx="12" cy="12" r="10" />
                   <path d="m9 12 2 2 4-4" />
                 </svg>
-                <span class="text-gray-700 text-lg">{{ $highlight }}</span>
+                <span class="text-gray-700 text-base md:text-lg">{{ $highlight }}</span>
               </div>
             @endforeach
           </div>
@@ -128,8 +128,8 @@
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
         >
-          <h3 class="text-3xl font-bold text-white mb-4">Our Mission</h3>
-          <p class="text-lg text-blue-100 leading-relaxed">
+          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
+          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
             To deliver exceptional value across diverse industries through innovation, quality, and unwavering commitment to customer satisfaction. We strive to be the partner of choice for businesses and individuals seeking excellence.
           </p>
         </div>
@@ -140,8 +140,8 @@
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
         >
-          <h3 class="text-3xl font-bold text-white mb-4">Our Vision</h3>
-          <p class="text-lg text-blue-100 leading-relaxed">
+          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Vision</h3>
+          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
             To be the most trusted and diversified business group in the Maldives, setting industry standards and creating sustainable value for all stakeholders while contributing to national economic growth.
           </p>
         </div>

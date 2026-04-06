@@ -23,10 +23,10 @@
         x-intersect.once.margin.-100px.-100px.-100px.-100px="inView = true"
         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
           Meet Our Leadership Team
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Visionary leaders driving excellence across LITUS Group's diverse portfolio of companies
         </p>
       </div>

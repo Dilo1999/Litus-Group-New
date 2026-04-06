@@ -69,9 +69,9 @@
           Back to News & Media
         </a>
 
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">{{ $event['title'] }}</h1>
-        <p class="text-xl text-blue-100 mb-2">{{ $event['date'] }}</p>
-        <p class="text-lg text-blue-200 max-w-3xl">{{ $event['description'] }}</p>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4">{{ $event['title'] }}</h1>
+        <p class="text-lg md:text-xl text-blue-100 mb-2">{{ $event['date'] }}</p>
+        <p class="text-base md:text-lg text-blue-200 max-w-3xl">{{ $event['description'] }}</p>
       </x-site.motion>
     </div>
   </section>

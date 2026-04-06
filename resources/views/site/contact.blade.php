@@ -19,10 +19,10 @@
         class="site-contact-header text-center mb-16 opacity-0 translate-y-[50px] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
         :class="contactInView ? '!opacity-100 !translate-y-0' : ''"
       >
-        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
           Contact Us
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Get in touch with us to learn more about our services and how we can help you
         </p>
       </div>
@@ -146,7 +146,7 @@
     ></iframe>
     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 pointer-events-none">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">
+        <h3 class="text-xl md:text-3xl font-bold text-white mb-2">
           Visit Our Office
         </h3>
         <a
