@@ -14,7 +14,25 @@
   </script>
 @endif
 
-<form id="contact-form" method="POST" action="{{ route('site.contact.submit') }}" class="bg-white p-8 rounded-2xl shadow-lg">
+<form
+  id="contact-form"
+  method="POST"
+  action="{{ route('site.contact.submit') }}"
+  class="bg-white p-8 rounded-2xl shadow-lg"
+  x-data="{
+    canSubmit: false,
+    submitting: false,
+    update() {
+      this.canSubmit = this.$el.checkValidity();
+    },
+    init() {
+      queueMicrotask(() => this.update());
+    }
+  }"
+  @input.debounce.50ms="update()"
+  @change.debounce.50ms="update()"
+  @submit="submitting = true; update()"
+>
   @csrf
   <div class="space-y-6">
     <div>
@@ -101,7 +119,9 @@
 
     <button
       type="submit"
-      class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      :disabled="!canSubmit || submitting"
+      :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
+      class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
     >
       Send Message
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
