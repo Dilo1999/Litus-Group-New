@@ -35,55 +35,71 @@
     </div>
 
     <form
-      action="{{ route('site.contact') }}"
+      action="{{ route('site.careers.apply') }}"
       method="POST"
       enctype="multipart/form-data"
       class="px-6 py-5 space-y-4"
     >
       @csrf
+      <input type="hidden" name="apply_title_locked" :value="applyJobTitleLocked ? '1' : '0'" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-800 mb-1">Position</label>
           <input
             type="text"
             name="position"
-            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 @error('position') border-red-400 @enderror"
             x-model="applyJobTitle"
             :readonly="applyJobTitleLocked"
             :placeholder="applyJobTitleLocked ? '' : 'e.g. Marketing Executive'"
           />
+          @error('position')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+          @enderror
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-800 mb-1">Full Name</label>
           <input
             type="text"
             name="name"
+            value="{{ old('name') }}"
             required
-            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 @error('name') border-red-400 @enderror"
             placeholder="Your name"
             autocomplete="name"
           />
+          @error('name')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+          @enderror
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-800 mb-1">Email</label>
           <input
             type="email"
             name="email"
+            value="{{ old('email') }}"
             required
-            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 @error('email') border-red-400 @enderror"
             placeholder="you@example.com"
             autocomplete="email"
           />
+          @error('email')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+          @enderror
         </div>
         <div class="md:col-span-2">
           <label class="block text-sm font-semibold text-gray-800 mb-1">Phone (optional)</label>
           <input
             type="tel"
             name="phone"
-            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            value="{{ old('phone') }}"
+            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 @error('phone') border-red-400 @enderror"
             placeholder="+960 ..."
             autocomplete="tel"
           />
+          @error('phone')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+          @enderror
         </div>
       </div>
       <div>
@@ -106,9 +122,12 @@
             type="file"
             name="cv"
             required
-            class="mt-3 block w-full text-sm text-gray-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white file:text-blue-700 hover:file:bg-blue-50"
+            class="mt-3 block w-full text-sm text-gray-700 file:mr-3 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white file:text-blue-700 hover:file:bg-blue-50 @error('cv') ring-2 ring-red-200 @enderror"
             accept=".pdf,.doc,.docx"
           />
+          @error('cv')
+            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+          @enderror
         </div>
       </div>
       <div class="flex items-center justify-end gap-3 pt-2">

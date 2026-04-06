@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobApplicationMail;
 use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
 use App\Services\SeoService;
 use App\Support\SiteData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Throwable;
 
 class SiteController extends Controller
 {
@@ -183,5 +187,42 @@ class SiteController extends Controller
         ]);
 
         return back()->with('status', 'Thank you! Your message has been received.')->withInput([]);
+    }
+
+    public function jobApplicationSubmit(Request $request)
+    {
+        $validated = $request->validate([
+            'position' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'apply_title_locked' => ['nullable', 'in:0,1'],
+            'cv' => ['required', 'file', 'max:10240', 'mimes:pdf,doc,docx'],
+        ]);
+
+        $position = trim((string) ($validated['position'] ?? '')) ?: 'General application';
+        $cv = $request->file('cv');
+
+        $recipient = config('mail.careers_to');
+
+        try {
+            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new JobApplicationMail(
+                position: $position,
+                name: $validated['name'],
+                email: $validated['email'],
+                phone: $validated['phone'] ?? null,
+                cv: $cv,
+            ));
+        } catch (Throwable $e) {
+            Log::error('Job application mail failed', ['exception' => $e]);
+
+            return back()
+                ->withInput($request->except('cv'))
+                ->withErrors(['cv' => 'We could not send your application. Please try again later or contact HR directly.']);
+        }
+
+        return redirect()
+            ->route('site.careers')
+            ->with('job_apply_success', 'Thank you! Your application has been submitted. We will get back to you shortly.');
     }
 }

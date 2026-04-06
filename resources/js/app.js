@@ -8,7 +8,7 @@ Alpine.plugin(intersect);
 /** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */
 document.addEventListener('alpine:init', () => {
   /** Careers — matches Careers.tsx useInView(once, margin -100px); skip animation if reduced motion. */
-  Alpine.data('careersPage', () => ({
+  Alpine.data('careersPage', (cfg = {}) => ({
     careersInView: false,
     activeJobIndex: null,
     showApplyModal: false,
@@ -17,6 +17,12 @@ document.addEventListener('alpine:init', () => {
     init() {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         this.careersInView = true;
+      }
+      if (cfg.reopenJobModal) {
+        this.applyJobTitle = cfg.jobModalTitle || '';
+        this.applyJobTitleLocked = cfg.jobModalLocked !== false;
+        this.showApplyModal = true;
+        document.documentElement.classList.add('overflow-y-hidden');
       }
     },
     toggleJob(index) {

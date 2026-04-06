@@ -2,10 +2,25 @@
 
 @section('content')
 @php($jobOpenings = $jobOpenings ?? [])
+@php($careersAlpineConfig = [
+    'reopenJobModal' => $errors->any(),
+    'jobModalTitle' => old('position', ''),
+    'jobModalLocked' => (string) old('apply_title_locked', '1') === '1',
+])
 {{-- Active rows from job_openings (SiteData::careerOpenings); no static fallbacks --}}
 <div class="pt-20">
-  <section id="careers" class="py-24 bg-white" data-careers-page x-data="careersPage()">
+  <section
+    id="careers"
+    class="py-24 bg-white"
+    data-careers-page
+    x-data="careersPage({{ \Illuminate\Support\Js::from($careersAlpineConfig) }})"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      @if (session('job_apply_success'))
+        <div class="mb-8 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800" role="status">
+          {{ session('job_apply_success') }}
+        </div>
+      @endif
       <div
         class="site-careers-header text-center mb-16 opacity-0 translate-y-[50px] transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
         x-intersect.once.margin.-100px.-100px.-100px.-100px="careersInView = true"
