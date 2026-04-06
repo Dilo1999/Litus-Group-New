@@ -74,6 +74,7 @@ class SiteController extends Controller
 
         return view('site.company', [
             'company' => $company,
+            'companyRow' => $companyRow,
         ]);
     }
 
@@ -178,13 +179,39 @@ class SiteController extends Controller
 
     public function contactSubmit(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'message' => ['required', 'string', 'max:5000'],
             'company' => ['nullable', 'string', 'max:255'],
+            'company_id' => ['nullable', 'integer', 'exists:companies,id'],
         ]);
+
+        $recipient = config('mail.contact_to', config('mail.from.address'));
+
+        if (! empty($validated['company_id'])) {
+            $company = Company::query()->select(['id', 'name', 'email'])->find($validated['company_id']);
+            if ($company?->email) {
+                $recipient = $company->email;
+            }
+        }
+
+        try {
+            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new \App\Mail\CompanyContactMail(
+                senderName: $validated['name'],
+                senderEmail: $validated['email'],
+                senderPhone: $validated['phone'] ?? null,
+                messageBody: $validated['message'],
+                companyName: $validated['company'] ?? null,
+            ));
+        } catch (Throwable $e) {
+            Log::error('Contact form mail failed', ['exception' => $e]);
+
+            return back()
+                ->withInput([])
+                ->withErrors(['message' => 'We could not send your message. Please try again later.']);
+        }
 
         return back()->with('status', 'Thank you! Your message has been received.')->withInput([]);
     }

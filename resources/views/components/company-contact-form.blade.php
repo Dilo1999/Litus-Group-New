@@ -1,16 +1,44 @@
 @props([
     'companyName' => '',
+    'companyId' => null,
 ])
 
 @if (session('status'))
-  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800">
+  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800" role="status">
     {{ session('status') }}
   </div>
+  <script>
+    window.addEventListener('load', () => {
+      const el = document.getElementById('company-contact-form');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
 @endif
 
-<form method="POST" action="{{ route('site.contact.submit') }}" class="bg-white p-8 rounded-2xl shadow-lg">
+<form
+  id="company-contact-form"
+  method="POST"
+  action="{{ route('site.contact.submit') }}"
+  class="bg-white p-8 rounded-2xl shadow-lg"
+  x-data="{
+    canSubmit: false,
+    submitting: false,
+    update() {
+      this.canSubmit = this.$el.checkValidity();
+    },
+    init() {
+      queueMicrotask(() => this.update());
+    }
+  }"
+  @input.debounce.50ms="update()"
+  @change.debounce.50ms="update()"
+  @submit="submitting = true; update()"
+>
   @csrf
   <input type="hidden" name="company" value="{{ $companyName }}" />
+  @if(! empty($companyId))
+    <input type="hidden" name="company_id" value="{{ $companyId }}" />
+  @endif
 
   <h3 class="text-2xl font-bold text-gray-900 mb-6">Send Us A Message</h3>
 
@@ -75,7 +103,9 @@
 
     <button
       type="submit"
-      class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      :disabled="!canSubmit || submitting"
+      :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
+      class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
     >
       Send Message
       <x-site.lucide-icon name="send" class="w-5 h-5 text-white" />

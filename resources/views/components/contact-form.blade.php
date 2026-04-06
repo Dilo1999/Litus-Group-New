@@ -3,12 +3,18 @@
 ])
 
 @if (session('status'))
-  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800">
+  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800" role="status">
     {{ session('status') }}
   </div>
+  <script>
+    window.addEventListener('load', () => {
+      const el = document.getElementById('contact-form');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
 @endif
 
-<form method="POST" action="{{ route('site.contact.submit') }}" class="bg-white p-8 rounded-2xl shadow-lg">
+<form id="contact-form" method="POST" action="{{ route('site.contact.submit') }}" class="bg-white p-8 rounded-2xl shadow-lg">
   @csrf
   <div class="space-y-6">
     <div>

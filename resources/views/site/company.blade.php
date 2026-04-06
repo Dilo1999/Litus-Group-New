@@ -282,7 +282,7 @@
           style="transition-delay: 200ms"
           :class="contactInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
         >
-          <x-company-contact-form :company-name="$company['name']" />
+          <x-company-contact-form :company-name="$company['name']" :company-id="optional($companyRow)->id" />
         </div>
       </div>
     </div>
