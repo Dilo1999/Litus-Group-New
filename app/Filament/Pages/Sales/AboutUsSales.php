@@ -32,6 +32,14 @@ class AboutUsSales extends Page implements HasForms
         $this->abortIfHr();
 
         $this->form->fill([
+            'intro_paragraph_1' => SiteSetting::getValue(
+                'about.intro.paragraph_1',
+                'LITUS Group is a diversified business conglomerate with a strong presence across multiple sectors including hospitality, construction, automotive, technology, and trading. Our commitment to excellence drives everything we do.'
+            ),
+            'intro_paragraph_2' => SiteSetting::getValue(
+                'about.intro.paragraph_2',
+                'With a portfolio spanning from luxury hotels and resorts to cutting-edge technology solutions, we deliver comprehensive services that meet the evolving needs of our clients. Our diverse businesses work in synergy to create value and drive sustainable growth.'
+            ),
             'business_partnership_image_path' => SiteSetting::getValue('about.business_partnership.image_path'),
         ]);
     }
@@ -48,6 +56,21 @@ class AboutUsSales extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
+            Forms\Components\Section::make('About LITUS Group — intro text')
+                ->description('Two paragraphs shown beside the image under “About LITUS Group” on the public About Us page.')
+                ->schema([
+                    Forms\Components\Textarea::make('intro_paragraph_1')
+                        ->label('First paragraph')
+                        ->rows(4)
+                        ->required()
+                        ->columnSpanFull(),
+                    Forms\Components\Textarea::make('intro_paragraph_2')
+                        ->label('Second paragraph')
+                        ->rows(4)
+                        ->required()
+                        ->columnSpanFull(),
+                ])
+                ->columns(1),
             Forms\Components\Section::make('Business partnership image')
                 ->description('Image shown beside “About LITUS Group” on the public About Us page.')
                 ->schema([
@@ -82,9 +105,11 @@ class AboutUsSales extends Page implements HasForms
             Storage::disk('public')->delete($previousPath);
         }
 
+        SiteSetting::setValue('about.intro.paragraph_1', $state['intro_paragraph_1'] ?? '');
+        SiteSetting::setValue('about.intro.paragraph_2', $state['intro_paragraph_2'] ?? '');
         SiteSetting::setValue('about.business_partnership.image_path', $nextPath);
 
-        $this->notify('success', 'About Us image updated.');
+        $this->notify('success', 'About Us page updated.');
     }
 
     public function removeBusinessPartnershipImage(): void

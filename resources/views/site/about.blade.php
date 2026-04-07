@@ -8,6 +8,14 @@
     'Innovative solutions and cutting-edge technology',
     'Dedicated team of industry professionals',
   ];
+  $aboutIntro1 = \App\Models\SiteSetting::getValue(
+    'about.intro.paragraph_1',
+    'LITUS Group is a diversified business conglomerate with a strong presence across multiple sectors including hospitality, construction, automotive, technology, and trading. Our commitment to excellence drives everything we do.'
+  );
+  $aboutIntro2 = \App\Models\SiteSetting::getValue(
+    'about.intro.paragraph_2',
+    'With a portfolio spanning from luxury hotels and resorts to cutting-edge technology solutions, we deliver comprehensive services that meet the evolving needs of our clients. Our diverse businesses work in synergy to create value and drive sustainable growth.'
+  );
 @endphp
 
 {{-- Matches src/app/pages/AboutPage.tsx + src/app/components/About.tsx --}}
@@ -69,17 +77,8 @@
           :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
         >
           <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">About LITUS Group</h2>
-          <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">
-            LITUS Group is a diversified business conglomerate with a strong presence
-            across multiple sectors including hospitality, construction, automotive,
-            technology, and trading. Our commitment to excellence drives everything we do.
-          </p>
-          <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">
-            With a portfolio spanning from luxury hotels and resorts to cutting-edge
-            technology solutions, we deliver comprehensive services that meet the evolving
-            needs of our clients. Our diverse businesses work in synergy to create value
-            and drive sustainable growth.
-          </p>
+          <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">{!! nl2br(e($aboutIntro1)) !!}</p>
+          <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">{!! nl2br(e($aboutIntro2)) !!}</p>
 
           <div class="space-y-4 mb-8">
             @foreach($highlights as $index => $highlight)
