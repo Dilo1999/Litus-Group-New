@@ -1,0 +1,31 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Never expose a git checkout living under the web root.
+    RewriteRule (^|/)\.git(/|$) - [F,L]
+
+    # If the request is already for /public, don't rewrite again.
+    RewriteRule ^public/ - [L]
+
+    # If the request is already for the deployed checkout's /public, don't rewrite again.
+    RewriteRule ^litusgroup/public/ - [L]
+
+    # Serve existing files/directories from the project root as-is.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # If the requested path exists inside /public, serve it from there.
+    RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # cPanel: git checkout in /public_html/litusgroup/ but domain root is /public_html
+    RewriteCond %{DOCUMENT_ROOT}/litusgroup/public%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/litusgroup/public%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ litusgroup/public/$1 [L]
+
+    # Otherwise, route the request through the document root front controller.
+    RewriteRule ^ index.php [L]
+</IfModule>
+
