@@ -37,7 +37,7 @@
         </div>
 
         <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ $company['name'] }}</h1>
-        <p class="text-xl md:text-2xl text-blue-100 mb-8">{{ $company['tagline'] }}</p>
+        <p class="text-lg md:text-2xl text-blue-100 mb-8">{{ $company['tagline'] }}</p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
