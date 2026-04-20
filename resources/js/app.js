@@ -1,8 +1,10 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import collapse from '@alpinejs/collapse';
 import intersect from '@alpinejs/intersect';
 
+Alpine.plugin(collapse);
 Alpine.plugin(intersect);
 
 /** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */

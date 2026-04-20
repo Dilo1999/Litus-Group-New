@@ -122,6 +122,11 @@
                               <img
                                 src="{{ $logoSrc }}"
                                 alt=""
+                                width="64"
+                                height="32"
+                                loading="lazy"
+                                decoding="async"
+                                fetchpriority="low"
                                 class="max-h-full max-w-full object-contain object-left"
                               />
                             </div>
@@ -237,14 +242,10 @@
               </svg>
             </button>
 
+            {{-- No max-height animation: animating toward 2000px causes heavy reflow on mobile. --}}
             <div
               x-show="mobileCompaniesOpen"
-              x-transition:enter="transition-all duration-300 ease-out"
-              x-transition:enter-start="max-h-0 opacity-0"
-              x-transition:enter-end="max-h-[min(80vh,2000px)] opacity-100"
-              x-transition:leave="transition-all duration-300 ease-out"
-              x-transition:leave-start="max-h-[min(80vh,2000px)] opacity-100"
-              x-transition:leave-end="max-h-0 opacity-0"
+              x-collapse.duration.200ms
               class="overflow-hidden bg-gray-50"
             >
               @foreach($companies as $company)
@@ -261,6 +262,11 @@
                       <img
                         src="{{ $logoSrc }}"
                         alt="{{ $company['name'] }}"
+                        width="48"
+                        height="24"
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="low"
                         class="max-h-full max-w-full object-contain"
                       />
                     </div>
