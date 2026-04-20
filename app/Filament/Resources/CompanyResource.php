@@ -20,6 +20,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CompanyResource extends Resource
 {
@@ -101,8 +102,22 @@ class CompanyResource extends Resource
                             ->disk('public')
                             ->directory('companies/logos')
                             ->visibility('public')
-                            ->preserveFilenames()
                             ->image()
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/svg+xml',
+                            ])
+                            ->rules([
+                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+                            ])
+                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
+                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
+
+                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
+                            })
                             ->panelLayout('integrated')
                             ->panelAspectRatio('13:8')
                             ->removeUploadedFileButtonPosition('left')
@@ -131,8 +146,22 @@ class CompanyResource extends Resource
                             ->disk('public')
                             ->directory('companies/about')
                             ->visibility('public')
-                            ->preserveFilenames()
                             ->image()
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/svg+xml',
+                            ])
+                            ->rules([
+                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+                            ])
+                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
+                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
+
+                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
+                            })
                             ->panelLayout('integrated')
                             ->panelAspectRatio('16:10')
                             ->removeUploadedFileButtonPosition('left')
