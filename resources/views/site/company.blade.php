@@ -95,19 +95,16 @@
           class="site-company-motion-about-left will-change-[opacity,transform] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
           :class="aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[50px]'"
         >
-          <div class="inline-block px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium mb-4">
-            {{ $company['category'] }}
-          </div>
-          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6 text-center md:text-left">
             About {{ $company['name'] }}
           </h2>
           @if(filled($company['description'] ?? null))
-            <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">
+            <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed text-center md:text-left">
               {{ $company['description'] }}
             </p>
           @endif
           @if(filled($company['description_secondary'] ?? null))
-            <p class="text-base md:text-lg text-gray-600 leading-relaxed">
+            <p class="text-base md:text-lg text-gray-600 leading-relaxed text-center md:text-left">
               {{ $company['description_secondary'] }}
             </p>
           @endif
