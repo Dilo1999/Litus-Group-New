@@ -193,7 +193,7 @@
     </div>
   </section>
 
-  <section class="py-24 bg-gray-50">
+  <section class="py-14 md:py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <x-site.motion variant="fade-left" :duration="800">
@@ -204,13 +204,15 @@
           <p class="text-lg text-gray-600 mb-8 leading-relaxed">
             Our commitment to quality, innovation, and customer satisfaction has made us a trusted partner for businesses and individuals alike.
           </p>
-          <a
-            href="{{ route('site.about') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
-          >
-            Learn More About Us
-            <span>→</span>
-          </a>
+          <div class="flex justify-center lg:justify-start">
+            <a
+              href="{{ route('site.about') }}"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+            >
+              Learn More About Us
+              <span>→</span>
+            </a>
+          </div>
         </x-site.motion>
 
         @php
@@ -367,13 +369,13 @@
   <section class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-        <x-site.motion class="flex-1" variant="fade-left-sm" :duration="800">
+        <x-site.motion class="flex-1 text-center lg:text-left" variant="fade-left-sm" :duration="800">
           <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Let's Connect</h2>
           <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
             Have questions or interested in our services? Get in touch with us today
           </p>
         </x-site.motion>
-        <x-site.motion class="flex-shrink-0" variant="fade-right-sm" :delay="200" :duration="800">
+        <x-site.motion class="flex-shrink-0 flex justify-center lg:justify-end" variant="fade-right-sm" :delay="200" :duration="800">
           <a
             href="{{ route('site.contact') }}"
             class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
