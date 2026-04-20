@@ -24,11 +24,20 @@
     companiesOpen: false,
     get navSolid() { return this.isScrolled || !this.isHome },
     _onResize: null,
+    _onScroll: null,
+    _scrollRaf: null,
     init() {
       this.companiesOpen = false;
-      const onScroll = () => { this.isScrolled = window.scrollY > 20 };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
+      this._onScroll = () => {
+        if (this._scrollRaf != null) return;
+        this._scrollRaf = requestAnimationFrame(() => {
+          this._scrollRaf = null;
+          const next = window.scrollY > 20;
+          if (this.isScrolled !== next) this.isScrolled = next;
+        });
+      };
+      this._onScroll();
+      window.addEventListener('scroll', this._onScroll, { passive: true });
       this.$watch('mobileOpen', (open) => {
         if (!open) this.mobileCompaniesOpen = false;
         document.documentElement.classList.toggle('site-mobile-menu-open', !!open);
@@ -40,13 +49,18 @@
     },
     destroy() {
       document.documentElement.classList.remove('site-mobile-menu-open');
+      if (this._scrollRaf != null) {
+        cancelAnimationFrame(this._scrollRaf);
+        this._scrollRaf = null;
+      }
+      if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
       if (this._onResize) window.removeEventListener('resize', this._onResize);
     }
   }"
 >
   <nav
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-    :class="navSolid ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-transparent'"
+    :class="navSolid ? 'bg-white shadow-md lg:bg-white/95 lg:backdrop-blur-md' : 'bg-transparent'"
   >
     <div class="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-24">
@@ -170,7 +184,7 @@
     x-transition:leave="transition-[transform,opacity] duration-350 ease-[cubic-bezier(0.45,0,0.55,1)]"
     x-transition:leave-start="opacity-100 translate-x-0"
     x-transition:leave-end="opacity-0 translate-x-full"
-    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white/90 backdrop-blur-md lg:hidden"
+    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white lg:hidden"
     @keydown.escape.window="mobileOpen = false"
   >
     <div class="flex min-h-[5rem] shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">

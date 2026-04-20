@@ -126,6 +126,13 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Scroll-in motion: shorter transitions on small viewports (less main-thread work). */
+@media (max-width: 767px) {
+  [data-motion] {
+    transition-duration: 450ms !important;
+  }
+}
+
 @layer base {
   [x-cloak] {
     display: none !important;
@@ -143,11 +150,17 @@
 
   body {
     @apply bg-background text-foreground;
-    scroll-behavior: smooth;
   }
 
   html {
     font-size: var(--font-size);
+  }
+
+  /* Smooth scrolling is expensive on mobile; keep it for large screens only. */
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   html.site-mobile-menu-open {

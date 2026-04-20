@@ -23,6 +23,8 @@
           src="{{ $heroImageUrl }}"
           alt="Modern corporate building"
           class="w-full h-full object-cover"
+          fetchpriority="high"
+          decoding="async"
         />
       @endif
       <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
@@ -44,7 +46,7 @@
         @if(count($highlights) > 0)
           {{-- Rotating spotlight: all companies with featured=true (DB order); Alpine cycles when 2+ --}}
           <div
-            class="site-hero-card bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 mb-10"
+            class="site-hero-card bg-white/10 border border-white/20 rounded-2xl p-6 mb-10 md:backdrop-blur-md"
           >
             <div
               class="min-h-[5.5rem] flex flex-col justify-center"
@@ -92,7 +94,7 @@
           </a>
           <a
             href="{{ route('site.contact') }}"
-            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30"
+            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm"
           >
             Contact Us
           </a>
@@ -121,7 +123,7 @@
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
-        class="site-companies-overview-header text-center mb-16 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+        class="site-companies-overview-header text-center mb-16 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform]"
         x-intersect.once.margin.-100px.-100px.-100px.-100px="companiesInView = true"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
@@ -137,7 +139,7 @@
             $companyLogoSrc = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null);
           @endphp
           <div
-            class="site-companies-overview-card h-full transition-[opacity,transform] duration-500 ease-out will-change-[opacity,transform]"
+            class="site-companies-overview-card h-full transition-[opacity,transform] duration-500 ease-out max-md:will-change-auto md:will-change-[opacity,transform]"
             style="transition-delay: {{ $index * 50 }}ms"
             :class="companiesInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'"
           >
@@ -149,6 +151,8 @@
                       src="{{ $companyLogoSrc }}"
                       alt="{{ $company['name'] }}"
                       class="max-w-full max-h-full object-contain"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 @else
@@ -169,7 +173,7 @@
       </div>
 
       <div
-        class="site-companies-overview-cta text-center transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+        class="site-companies-overview-cta text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform]"
         style="transition-delay: 400ms"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
       >
@@ -219,6 +223,8 @@
                 src="{{ $whyChooseImageUrl }}"
                 alt="Why Choose LITUS Group"
                 class="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </x-site.motion>
@@ -242,7 +248,7 @@
       >
         <div
           x-intersect.once.margin.-100px.-100px.-100px.-100px="mvInView = true"
-          class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
           <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
@@ -251,7 +257,7 @@
           </p>
         </div>
         <div
-          class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm"
           style="transition-delay: 200ms"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >

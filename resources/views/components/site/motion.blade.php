@@ -46,10 +46,10 @@
 <div
     data-motion
     x-data="{ shown: false, init() { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.shown = true } }"
-    x-intersect.once.margin.-100px.-100px.-100px.-100px="setTimeout(() => { shown = true }, {{ $delayMs }})"
+    x-intersect.once.margin.-100px.-100px.-100px.-100px="shown = true"
     x-bind:class="shown ? '{{ $to }}' : '{{ $from }}'"
-    class="transition-[opacity,transform] ease-out will-change-[opacity,transform] {{ $attributes->get('class') }}"
-    style="transition-duration: {{ $durationMs }}ms"
+    class="transition-[opacity,transform] ease-out {{ $attributes->get('class') }}"
+    style="transition-duration: {{ $durationMs }}ms; transition-delay: {{ $delayMs }}ms"
     {{ $attributes->except('class') }}
 >
     {{ $slot }}
