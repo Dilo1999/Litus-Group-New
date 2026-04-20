@@ -60,21 +60,23 @@
                 x-transition:leave="hero-spotlight-tx-leave"
                 x-transition:leave-start="hero-spotlight-at-rest"
                 x-transition:leave-end="hero-spotlight-to-above"
-                class="flex items-center justify-between gap-4"
+                class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div class="min-w-0">
-                  <div class="text-sm text-blue-200 mb-1">Featured Company</div>
-                  <div class="text-2xl font-bold text-white" x-text="items[idx].company"></div>
+                <div class="min-w-0 w-full text-center sm:flex-1 sm:text-center">
+                  <div
+                    class="text-white font-extrabold leading-tight tracking-tight text-[1.7rem] sm:text-3xl"
+                    x-text="items[idx].company"
+                  ></div>
                 </div>
                 <a
                   x-show="items[idx].hotline && String(items[idx].hotline).trim().length"
-                  class="flex shrink-0 items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold transition-all"
+                  class="inline-flex shrink-0 items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold transition-all shadow-md shadow-blue-950/20 ring-1 ring-white/10 w-full sm:w-auto"
                   :href="'tel:' + String(items[idx].hotline).replace(/\s/g, '')"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
-                  <span x-text="items[idx].hotline"></span>
+                  <span class="whitespace-nowrap" x-text="items[idx].hotline"></span>
                 </a>
               </div>
             </div>
@@ -94,7 +96,7 @@
           </a>
           <a
             href="{{ route('site.contact') }}"
-            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm"
+            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm flex items-center justify-center text-center"
           >
             Contact Us
           </a>
