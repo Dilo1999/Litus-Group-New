@@ -118,9 +118,13 @@
                       >
                         <div class="flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group w-full">
                           @if($logoSrc)
-                            <div class="w-16 h-8 flex shrink-0 items-center justify-center">
+                            <div
+                              class="w-16 h-8 flex shrink-0 items-center justify-center"
+                              x-data="{ loaded: false }"
+                              x-intersect.once="loaded = true"
+                            >
                               <img
-                                src="{{ $logoSrc }}"
+                                :src="loaded ? @js($logoSrc) : 'data:image/gif;base64,R0lGODlhAQABAAAAACw='"
                                 alt=""
                                 width="64"
                                 height="32"
@@ -258,9 +262,13 @@
                   @click="mobileOpen = false; mobileCompaniesOpen = false"
                 >
                   @if($logoSrc)
-                    <div class="flex h-6 w-12 shrink-0 items-center justify-center">
+                    <div
+                      class="flex h-6 w-12 shrink-0 items-center justify-center"
+                      x-data="{ loaded: false }"
+                      x-intersect.once="loaded = true"
+                    >
                       <img
-                        src="{{ $logoSrc }}"
+                        :src="loaded ? @js($logoSrc) : 'data:image/gif;base64,R0lGODlhAQABAAAAACw='"
                         alt="{{ $company['name'] }}"
                         width="48"
                         height="24"
