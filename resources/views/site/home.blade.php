@@ -62,7 +62,7 @@
                 x-transition:leave-end="hero-spotlight-to-above"
                 class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div class="min-w-0 w-full text-center sm:flex-1 sm:text-center">
+                <div class="min-w-0 w-full text-center sm:flex-1 sm:text-left">
                   <div
                     class="text-white font-extrabold leading-tight tracking-tight text-[1.7rem] sm:text-3xl"
                     x-text="items[idx].company"
