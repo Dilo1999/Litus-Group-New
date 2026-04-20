@@ -196,7 +196,7 @@
   <section class="py-14 md:py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <x-site.motion variant="fade-left" :duration="800">
+        <x-site.motion class="text-center lg:text-left" variant="fade-left" :duration="800">
           <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Why Choose LITUS Group</h2>
           <p class="text-lg text-gray-600 mb-6 leading-relaxed">
             LITUS Group stands as a beacon of diversification and excellence in the Maldives business landscape. With 16 specialized companies spanning multiple industries, we deliver comprehensive solutions that drive growth and create lasting value.
