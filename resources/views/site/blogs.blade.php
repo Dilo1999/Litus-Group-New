@@ -223,22 +223,22 @@
         <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-2">Gallery</h2>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
         @foreach ($galleryEvents as $index => $item)
           <a
             href="{{ route('site.event', ['slug' => $item['slug']]) }}"
-            class="site-blogs-gallery-item group block h-full opacity-0 translate-y-[30px] transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            class="site-blogs-gallery-item group block h-full min-w-0 opacity-0 translate-y-[30px] transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
             style="transition-delay: {{ $index * 100 }}ms"
             :class="galleryInView ? '!opacity-100 !translate-y-0' : ''"
           >
-            <div class="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 mb-4">
+            <div class="relative mb-2 aspect-[4/3] overflow-hidden rounded-lg bg-gray-100 sm:mb-4">
               <img
                 src="{{ $item['image'] ?? '' }}"
                 alt="{{ $item['image_alt'] ?? $item['title'] }}"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
-            <h3 class="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">{{ $item['title'] }}</h3>
+            <h3 class="text-xs font-medium leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:text-sm">{{ $item['title'] }}</h3>
           </a>
         @endforeach
       </div>
