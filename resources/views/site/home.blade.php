@@ -90,7 +90,7 @@
           </div>
         @endif
 
-        <div class="site-hero-ctas flex flex-col sm:flex-row gap-4">
+        <div class="site-hero-ctas flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <a
             href="{{ route('site.our-companies') }}"
             class="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
@@ -103,7 +103,7 @@
           </a>
           <a
             href="{{ route('site.contact') }}"
-            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm flex items-center justify-center text-center"
+            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm flex items-center justify-center text-center sm:ml-auto"
           >
             Contact Us
           </a>
