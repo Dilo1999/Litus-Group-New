@@ -10,6 +10,8 @@
     fn ($m) => filled($m['image'] ?? null)
   ));
 
+  $homeBlogPreviews = array_slice(\App\Support\SiteData::blogPosts(), 0, 4);
+
   $heroImagePath = \App\Models\SiteSetting::getValue('home.hero.image_path');
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
@@ -398,17 +400,60 @@
 
   <section class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
+      <x-site.motion class="text-center mb-12 md:mb-16" variant="fade-up" :duration="800">
         <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">News & Media</h2>
         <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Stay updated with the latest stories and insights from across the LITUS Group
         </p>
       </x-site.motion>
 
+      @if(count($homeBlogPreviews) > 0)
+        <div class="mb-12 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 md:mb-16">
+          @foreach($homeBlogPreviews as $i => $post)
+            <x-site.motion :delay="$i * 80" :duration="600" variant="fade-up">
+              <a
+                href="{{ route('site.blog-article', ['slug' => $post['slug']]) }}"
+                class="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg"
+              >
+                <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100">
+                  @if(filled($post['image'] ?? null))
+                    <img
+                      src="{{ $post['image'] }}"
+                      alt="{{ $post['title'] }}"
+                      class="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  @else
+                    <div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="text-blue-200/80">
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <circle cx="9" cy="9" r="2" />
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                      </svg>
+                    </div>
+                  @endif
+                </div>
+                <div class="flex flex-1 flex-col p-3.5 text-left sm:p-4">
+                  <h3 class="text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:text-base">
+                    {{ $post['title'] }}
+                  </h3>
+                  @if(filled($post['date'] ?? null))
+                    <p class="mt-1.5 text-xs text-gray-500 sm:text-sm">
+                      {{ $post['date'] }}
+                    </p>
+                  @endif
+                </div>
+              </a>
+            </x-site.motion>
+          @endforeach
+        </div>
+      @endif
+
       <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.blogs') }}"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+          class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl"
         >
           Read More
           <span>→</span>
