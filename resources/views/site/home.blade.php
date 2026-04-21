@@ -5,6 +5,11 @@
   $highlights = $heroSpotlightHighlights ?? [];
   $displayCompanies = array_slice($companies ?? [], 0, 8);
 
+  $leadershipTeam = array_values(array_filter(
+    \App\Support\SiteData::team(),
+    fn ($m) => filled($m['image'] ?? null)
+  ));
+
   $heroImagePath = \App\Models\SiteSetting::getValue('home.hero.image_path');
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
@@ -311,14 +316,78 @@
 
   <section class="py-24 bg-blue-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
+      <x-site.motion class="text-center mb-12 md:mb-16" variant="fade-up" :duration="800">
         <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Our Leadership</h2>
-        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
+        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
           Meet the visionary leaders driving LITUS Group's success across all sectors
         </p>
+      </x-site.motion>
+
+      @if(count($leadershipTeam) > 0)
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 mb-12 md:mb-16">
+          @foreach($leadershipTeam as $index => $member)
+            <x-site.motion :delay="$index * 80" :duration="600" variant="fade-up">
+              <article class="group text-center">
+                <div class="relative mx-auto mb-4 aspect-square max-w-[220px] sm:max-w-[240px] rounded-2xl overflow-hidden border border-white/10 bg-white/5 shadow-xl shadow-black/30 ring-1 ring-white/10">
+                  <img
+                    src="{{ $member['image'] }}"
+                    alt="{{ $member['name'] }}"
+                    class="h-full w-full object-cover object-center transition duration-500 ease-out group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  @if(!empty($member['linkedin_url']) || !empty($member['email']))
+                    <div class="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-blue-950/95 via-blue-900/35 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pb-4">
+                      <div class="flex gap-2">
+                        @if(!empty($member['linkedin_url']))
+                          <a
+                            href="{{ $member['linkedin_url'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="rounded-full bg-white p-2.5 text-blue-900 shadow-md transition-transform hover:scale-110 hover:bg-blue-50"
+                            aria-label="LinkedIn — {{ $member['name'] }}"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                              <rect width="4" height="12" x="2" y="9" />
+                              <circle cx="4" cy="4" r="2" />
+                            </svg>
+                          </a>
+                        @endif
+                        @if(!empty($member['email']))
+                          <a
+                            href="mailto:{{ $member['email'] }}"
+                            class="rounded-full bg-white p-2.5 text-blue-900 shadow-md transition-transform hover:scale-110 hover:bg-blue-50"
+                            aria-label="Email — {{ $member['name'] }}"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                              <rect width="20" height="16" x="2" y="4" rx="2" />
+                              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                          </a>
+                        @endif
+                      </div>
+                    </div>
+                  @endif
+                </div>
+                <h3 class="text-base font-bold leading-snug text-white sm:text-lg">
+                  {{ $member['name'] }}
+                </h3>
+                @if(!empty($member['role']))
+                  <p class="mt-1 text-xs font-semibold text-blue-200 sm:text-sm">
+                    {{ $member['role'] }}
+                  </p>
+                @endif
+              </article>
+            </x-site.motion>
+          @endforeach
+        </div>
+      @endif
+
+      <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.team') }}"
-          class="bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+          class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg transition-all hover:bg-gray-100 hover:shadow-xl"
         >
           View Full Team
           <span>→</span>
