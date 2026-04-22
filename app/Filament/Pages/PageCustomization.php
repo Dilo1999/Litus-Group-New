@@ -12,7 +12,7 @@ class PageCustomization extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-template';
 
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 90;
 

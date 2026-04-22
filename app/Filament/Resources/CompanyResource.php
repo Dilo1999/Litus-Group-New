@@ -38,7 +38,7 @@ class CompanyResource extends Resource
 
     protected static ?string $slug = 'companies';
 
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 88;
 
