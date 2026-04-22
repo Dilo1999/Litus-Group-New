@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamMemberResource\Pages;
 use App\Models\TeamMember;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
@@ -37,6 +38,21 @@ class TeamMemberResource extends Resource
     protected static ?string $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 86;
+
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
 
     public static function form(Form $form): Form
     {

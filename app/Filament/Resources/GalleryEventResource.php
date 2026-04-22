@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\GalleryEventResource\Pages;
+use App\Models\User;
 use App\Models\GalleryEvent;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -39,6 +40,21 @@ class GalleryEventResource extends Resource
     protected static ?string $navigationGroup = 'Management';
 
     protected static ?int $navigationSort = 85;
+
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() || $user?->isManagement();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
 
     protected static function uploadUrlResolver(): callable
     {

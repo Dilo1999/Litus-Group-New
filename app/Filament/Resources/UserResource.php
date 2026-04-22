@@ -34,6 +34,21 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 100;
 
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -61,7 +76,7 @@ class UserResource extends Resource
                                 User::ROLE_HR => 'HR',
                             ])
                             ->required()
-                            ->helperText('Admin: full access. Management: Management section only (gallery, blog, team, companies, page customization). HR: HR section only (job openings).'),
+                            ->helperText('Admin: full access. Management: Management section only (Gallery Events, Blog Posts). HR: HR section only (Job Openings).'),
                     ])
                     ->columns(1),
             ]);

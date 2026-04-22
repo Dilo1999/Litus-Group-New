@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Forms\Components\PageSeoFields;
 use App\Filament\Resources\PageSeoResource\Pages;
 use App\Models\PageSeo;
+use App\Models\User;
 use App\Support\SiteSeoRoutes;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -34,6 +35,21 @@ class PageSeoResource extends Resource
     protected static ?int $navigationSort = 95;
 
     protected static ?string $slug = 'page-seo';
+
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
 
     public static function form(Form $form): Form
     {

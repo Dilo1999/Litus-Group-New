@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\JobOpeningResource\Pages;
 use App\Models\JobOpening;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -35,6 +36,21 @@ class JobOpeningResource extends Resource
     protected static ?string $navigationGroup = 'HR';
 
     protected static ?int $navigationSort = 87;
+
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() || $user?->isHr();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
 
     public static function form(Form $form): Form
     {

@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Concerns\BlocksHrAccess;
+use App\Models\User;
 use Filament\Pages;
 use Filament\Pages\Page;
 
@@ -26,16 +27,15 @@ class PageCustomization extends Page
 
     public function mount(): void
     {
-        $this->abortIfHr();
+        $user = auth()->user();
+        if (! $user instanceof User || ! $user->isAdmin()) {
+            abort(403);
+        }
     }
 
     protected static function shouldRegisterNavigation(): bool
     {
-        if (auth()->user()?->isHr()) {
-            return false;
-        }
-
-        return parent::shouldRegisterNavigation();
+        return auth()->user() instanceof User && auth()->user()->isAdmin();
     }
 
     public function getBreadcrumbs(): array

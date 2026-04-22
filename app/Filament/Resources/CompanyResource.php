@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Models\Company;
+use App\Models\User;
 use App\Support\SiteData;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -41,6 +42,21 @@ class CompanyResource extends Resource
     protected static ?string $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 88;
+
+    protected static function canAccessForUser(?User $user): bool
+    {
+        return $user?->isAdmin() ?? false;
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
+
+    public static function canViewAny(): bool
+    {
+        return static::canAccessForUser(auth()->user());
+    }
 
     public static function form(Form $form): Form
     {
