@@ -2,7 +2,6 @@
   $currentYear = now()->year;
   $footerLinks = [
     'LITUS Companies' => [
-      ['name' => 'LITUS Group', 'slug' => 'litus-group'],
       ['name' => 'LITUS Maldives', 'slug' => 'litus-maldives'],
       ['name' => 'LITUS Shipping', 'slug' => 'litus-shipping'],
       ['name' => 'LITUS Automobiles', 'slug' => 'litus-automobiles'],
