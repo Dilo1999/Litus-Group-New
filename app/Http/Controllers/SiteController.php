@@ -8,7 +8,6 @@ use App\Models\Company;
 use App\Models\GalleryEvent;
 use App\Services\SeoService;
 use App\Support\SiteData;
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -199,7 +198,7 @@ class SiteController extends Controller
         }
 
         try {
-            $this->sendMailableWithFallback($recipient, fn () => new \App\Mail\CompanyContactMail(
+            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new \App\Mail\CompanyContactMail(
                 senderName: $validated['name'],
                 senderEmail: $validated['email'],
                 senderPhone: $validated['phone'] ?? null,
@@ -207,11 +206,7 @@ class SiteController extends Controller
                 companyName: $validated['company'] ?? null,
             ));
         } catch (Throwable $e) {
-            Log::error('Contact form mail failed', [
-                'recipient' => $recipient,
-                'message' => $e->getMessage(),
-                'exception' => $e,
-            ]);
+            Log::error('Contact form mail failed', ['exception' => $e]);
 
             return back()
                 ->withInput([])
@@ -238,7 +233,7 @@ class SiteController extends Controller
         $recipient = config('mail.careers_to');
 
         try {
-            $this->sendMailableWithFallback($recipient, fn () => new JobApplicationMail(
+            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new JobApplicationMail(
                 position: $position,
                 name: $validated['name'],
                 email: $validated['email'],
@@ -246,11 +241,7 @@ class SiteController extends Controller
                 cv: $cv,
             ));
         } catch (Throwable $e) {
-            Log::error('Job application mail failed', [
-                'recipient' => $recipient,
-                'message' => $e->getMessage(),
-                'exception' => $e,
-            ]);
+            Log::error('Job application mail failed', ['exception' => $e]);
 
             return back()
                 ->withInput($request->except('cv'))
@@ -260,47 +251,5 @@ class SiteController extends Controller
         return redirect()
             ->route('site.careers')
             ->with('job_apply_success', 'Thank you! Your application has been submitted. We will get back to you shortly.');
-    }
-
-    /**
-     * Try the configured default mailer, then an optional fallback (e.g. cpanel_smtp).
-     * A fresh mailable is built on each attempt so attachments/streams are not reused incorrectly.
-     *
-     * @param  Closure(): \Illuminate\Contracts\Mail\Mailable  $mailableFactory
-     */
-    private function sendMailableWithFallback(string $recipient, Closure $mailableFactory): void
-    {
-        $mailers = array_values(array_unique(array_filter([
-            (string) config('mail.default', 'smtp'),
-            (string) (config('mail.fallback_mailer') ?? ''),
-        ])));
-
-        $defined = array_keys(config('mail.mailers', []));
-        $lastException = null;
-
-        foreach ($mailers as $mailer) {
-            if ($mailer === '' || ! in_array($mailer, $defined, true)) {
-                continue;
-            }
-
-            try {
-                Mail::mailer($mailer)->to($recipient)->send($mailableFactory());
-
-                return;
-            } catch (Throwable $e) {
-                $lastException = $e;
-                Log::warning('Mail send attempt failed', [
-                    'mailer' => $mailer,
-                    'recipient' => $recipient,
-                    'message' => $e->getMessage(),
-                ]);
-            }
-        }
-
-        if ($lastException) {
-            throw $lastException;
-        }
-
-        throw new \RuntimeException('No valid mailer configured to send mail.');
     }
 }

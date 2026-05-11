@@ -44,17 +44,10 @@ class JobApplicationMail extends Mailable
 
     public function attachments(): array
     {
-        $path = $this->cv->getRealPath() ?: $this->cv->getPathname();
-        $name = $this->cv->getClientOriginalName();
-        $mime = $this->cv->getMimeType() ?: 'application/octet-stream';
-
         return [
-            Attachment::fromData(
-                function () use ($path) {
-                    return (string) file_get_contents($path);
-                },
-                $name
-            )->withMime($mime),
+            Attachment::fromPath($this->cv->getRealPath())
+                ->as($this->cv->getClientOriginalName())
+                ->withMime($this->cv->getMimeType() ?: 'application/octet-stream'),
         ];
     }
 }

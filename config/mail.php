@@ -33,58 +33,17 @@ return [
     |
     */
 
-    /*
-    |--------------------------------------------------------------------------
-    | cPanel / shared hosting notes (SMTP)
-    |--------------------------------------------------------------------------
-    |
-    | - Set APP_URL to your real site URL on the server (used as EHLO fallback).
-    | - Optionally set MAIL_EHLO_DOMAIN to your domain if mail still fails.
-    | - If port 587 + TLS fails, try MAIL_PORT=465 with MAIL_ENCRYPTION=ssl.
-    | - If SSL certificate verification fails on the host, set MAIL_VERIFY_PEER=false
-    |   (less secure; prefer fixing PHP's CA bundle / openssl.cafile in php.ini).
-    | - If the host blocks outbound SMTP to Google, create a mailbox in cPanel and use
-    |   MAIL_MAILER=cpanel_smtp with MAIL_CPANEL_* (localhost relay).
-    |
-    */
-
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => (int) env('MAIL_PORT', 587),
+            'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => (int) env('MAIL_TIMEOUT', 60),
-            'local_domain' => env('MAIL_EHLO_DOMAIN')
-                ?: (parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
-            // Symfony Mailer reads this from the DSN options array (see EsmtpTransportFactory).
-            'verify_peer' => filter_var(env('MAIL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
-        ],
-
-        /*
-        |--------------------------------------------------------------------------
-        | cPanel localhost SMTP relay
-        |--------------------------------------------------------------------------
-        |
-        | Use when outbound connections to external SMTP (e.g. smtp.gmail.com) are blocked.
-        | Create an email account in cPanel, then set MAIL_MAILER=cpanel_smtp and the vars below.
-        |
-        */
-
-        'cpanel_smtp' => [
-            'transport' => 'smtp',
-            'host' => env('MAIL_CPANEL_HOST', 'localhost'),
-            'port' => (int) env('MAIL_CPANEL_PORT', 587),
-            'encryption' => env('MAIL_CPANEL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_CPANEL_USERNAME'),
-            'password' => env('MAIL_CPANEL_PASSWORD'),
-            'timeout' => (int) env('MAIL_TIMEOUT', 60),
-            'local_domain' => env('MAIL_EHLO_DOMAIN')
-                ?: (parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
-            'verify_peer' => filter_var(env('MAIL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
         'ses' => [
@@ -172,19 +131,6 @@ return [
     */
 
     'careers_to' => env('MAIL_CAREERS_RECIPIENT') ?: 'hr@litusgroup.mv',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Fallback mailer (optional)
-    |--------------------------------------------------------------------------
-    |
-    | If the primary MAIL_MAILER fails (e.g. outbound Gmail blocked on cPanel),
-    | set MAIL_FALLBACK_MAILER=cpanel_smtp and configure MAIL_CPANEL_* so a second
-    | attempt uses the localhost relay.
-    |
-    */
-
-    'fallback_mailer' => env('MAIL_FALLBACK_MAILER'),
 
     /*
     |--------------------------------------------------------------------------
