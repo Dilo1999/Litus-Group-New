@@ -14,6 +14,7 @@ class CompanyContactMail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
+        public string $toEmail,
         public string $senderName,
         public string $senderEmail,
         public ?string $senderPhone,
@@ -30,6 +31,7 @@ class CompanyContactMail extends Mailable
         return new Envelope(
             from: new Address(config('mail.from.address'), config('mail.from.name')),
             replyTo: [new Address($this->senderEmail, $this->senderName)],
+            to: [new Address($this->toEmail)],
             subject: $subject,
         );
     }
@@ -41,4 +43,3 @@ class CompanyContactMail extends Mailable
         );
     }
 }
-

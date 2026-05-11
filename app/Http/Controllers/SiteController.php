@@ -197,8 +197,18 @@ class SiteController extends Controller
             }
         }
 
+        $recipient = trim((string) $recipient);
+        if (! filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            Log::error('Contact form misconfigured recipient', ['recipient' => $recipient]);
+
+            return back()
+                ->withInput([])
+                ->withErrors(['message' => 'We could not send your message. Please contact us by phone or email.']);
+        }
+
         try {
-            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new \App\Mail\CompanyContactMail(
+            Mail::mailer(config('mail.default', 'smtp'))->send(new \App\Mail\CompanyContactMail(
+                toEmail: $recipient,
                 senderName: $validated['name'],
                 senderEmail: $validated['email'],
                 senderPhone: $validated['phone'] ?? null,

@@ -6,10 +6,10 @@ if (! is_string($mailEhloDomain) || $mailEhloDomain === '') {
     $mailEhloDomain = is_string($appHost) && $appHost !== '' ? $appHost : 'localhost';
 }
 
-$failoverMailers = array_values(array_filter(array_map('trim', explode(',', (string) env('MAIL_FAILOVER_MAILERS', 'smtp,sendmail')))));
+$failoverMailers = array_values(array_filter(array_map('trim', explode(',', (string) env('MAIL_FAILOVER_MAILERS', 'smtp')))));
 
 if ($failoverMailers === []) {
-    $failoverMailers = ['smtp', 'sendmail'];
+    $failoverMailers = ['smtp'];
 }
 
 $smtpStream = [];
@@ -66,6 +66,21 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+            'timeout' => env('MAIL_TIMEOUT', 60),
+            'local_domain' => $mailEhloDomain,
+        ], $smtpStream),
+
+        /*
+        | Optional second SMTP hop (e.g. cPanel Exim on localhost) when outbound Gmail is blocked.
+        | Set MAIL_FAILOVER_MAILERS=smtp,smtp_relay and configure MAIL_RELAY_* on the server.
+        */
+        'smtp_relay' => array_merge([
+            'transport' => 'smtp',
+            'host' => env('MAIL_RELAY_HOST', 'localhost'),
+            'port' => env('MAIL_RELAY_PORT', 587),
+            'encryption' => env('MAIL_RELAY_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_RELAY_USERNAME'),
+            'password' => env('MAIL_RELAY_PASSWORD'),
             'timeout' => env('MAIL_TIMEOUT', 60),
             'local_domain' => $mailEhloDomain,
         ], $smtpStream),
