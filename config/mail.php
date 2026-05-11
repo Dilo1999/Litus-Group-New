@@ -175,6 +175,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Fallback mailer (optional)
+    |--------------------------------------------------------------------------
+    |
+    | If the primary MAIL_MAILER fails (e.g. outbound Gmail blocked on cPanel),
+    | set MAIL_FALLBACK_MAILER=cpanel_smtp and configure MAIL_CPANEL_* so a second
+    | attempt uses the localhost relay.
+    |
+    */
+
+    'fallback_mailer' => env('MAIL_FALLBACK_MAILER'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Markdown Mail Settings
     |--------------------------------------------------------------------------
     |
