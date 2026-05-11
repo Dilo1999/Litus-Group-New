@@ -206,7 +206,12 @@ class SiteController extends Controller
                 companyName: $validated['company'] ?? null,
             ));
         } catch (Throwable $e) {
-            Log::error('Contact form mail failed', ['exception' => $e]);
+            Log::error('Contact form mail failed', [
+                'recipient' => $recipient,
+                'mailer' => (string) config('mail.default'),
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
 
             return back()
                 ->withInput([])
@@ -241,7 +246,12 @@ class SiteController extends Controller
                 cv: $cv,
             ));
         } catch (Throwable $e) {
-            Log::error('Job application mail failed', ['exception' => $e]);
+            Log::error('Job application mail failed', [
+                'recipient' => $recipient,
+                'mailer' => (string) config('mail.default'),
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
 
             return back()
                 ->withInput($request->except('cv'))

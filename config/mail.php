@@ -6,6 +6,12 @@ if (! is_string($mailEhloDomain) || $mailEhloDomain === '') {
     $mailEhloDomain = is_string($appHost) && $appHost !== '' ? $appHost : 'localhost';
 }
 
+$failoverMailers = array_values(array_filter(array_map('trim', explode(',', (string) env('MAIL_FAILOVER_MAILERS', 'smtp,sendmail')))));
+
+if ($failoverMailers === []) {
+    $failoverMailers = ['smtp', 'sendmail'];
+}
+
 $smtpStream = [];
 if (filter_var(env('MAIL_SMTP_ALLOW_INSECURE', false), FILTER_VALIDATE_BOOLEAN)) {
     // Shared/cPanel hosts sometimes ship incomplete CA bundles or proxy TLS; use only if needed.
@@ -99,10 +105,7 @@ return [
 
         'failover' => [
             'transport' => 'failover',
-            'mailers' => [
-                'smtp',
-                'log',
-            ],
+            'mailers' => $failoverMailers,
         ],
 
         'roundrobin' => [
