@@ -1,5 +1,23 @@
 <?php
 
+$mailEhloDomain = env('MAIL_EHLO_DOMAIN');
+if (! is_string($mailEhloDomain) || $mailEhloDomain === '') {
+    $appHost = parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST);
+    $mailEhloDomain = is_string($appHost) && $appHost !== '' ? $appHost : 'localhost';
+}
+
+$smtpStream = [];
+if (filter_var(env('MAIL_SMTP_ALLOW_INSECURE', false), FILTER_VALIDATE_BOOLEAN)) {
+    // Shared/cPanel hosts sometimes ship incomplete CA bundles or proxy TLS; use only if needed.
+    $smtpStream['stream'] = [
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true,
+        ],
+    ];
+}
+
 return [
 
     /*
@@ -34,7 +52,7 @@ return [
     */
 
     'mailers' => [
-        'smtp' => [
+        'smtp' => array_merge([
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
@@ -42,9 +60,9 @@ return [
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN'),
-        ],
+            'timeout' => env('MAIL_TIMEOUT', 60),
+            'local_domain' => $mailEhloDomain,
+        ], $smtpStream),
 
         'ses' => [
             'transport' => 'ses',
