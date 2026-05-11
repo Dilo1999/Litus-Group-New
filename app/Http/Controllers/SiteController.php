@@ -197,18 +197,8 @@ class SiteController extends Controller
             }
         }
 
-        $recipient = trim((string) $recipient);
-        if (! filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
-            Log::error('Contact form misconfigured recipient', ['recipient' => $recipient]);
-
-            return back()
-                ->withInput([])
-                ->withErrors(['message' => 'We could not send your message. Please contact us by phone or email.']);
-        }
-
         try {
-            Mail::mailer(config('mail.default', 'smtp'))->send(new \App\Mail\CompanyContactMail(
-                toEmail: $recipient,
+            Mail::mailer(config('mail.default', 'smtp'))->to($recipient)->send(new \App\Mail\CompanyContactMail(
                 senderName: $validated['name'],
                 senderEmail: $validated['email'],
                 senderPhone: $validated['phone'] ?? null,
@@ -216,12 +206,7 @@ class SiteController extends Controller
                 companyName: $validated['company'] ?? null,
             ));
         } catch (Throwable $e) {
-            Log::error('Contact form mail failed', [
-                'recipient' => $recipient,
-                'mailer' => (string) config('mail.default'),
-                'message' => $e->getMessage(),
-                'exception' => $e,
-            ]);
+            Log::error('Contact form mail failed', ['exception' => $e]);
 
             return back()
                 ->withInput([])
@@ -256,12 +241,7 @@ class SiteController extends Controller
                 cv: $cv,
             ));
         } catch (Throwable $e) {
-            Log::error('Job application mail failed', [
-                'recipient' => $recipient,
-                'mailer' => (string) config('mail.default'),
-                'message' => $e->getMessage(),
-                'exception' => $e,
-            ]);
+            Log::error('Job application mail failed', ['exception' => $e]);
 
             return back()
                 ->withInput($request->except('cv'))

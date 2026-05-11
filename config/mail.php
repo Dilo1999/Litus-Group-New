@@ -1,29 +1,5 @@
 <?php
 
-$mailEhloDomain = env('MAIL_EHLO_DOMAIN');
-if (! is_string($mailEhloDomain) || $mailEhloDomain === '') {
-    $appHost = parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST);
-    $mailEhloDomain = is_string($appHost) && $appHost !== '' ? $appHost : 'localhost';
-}
-
-$failoverMailers = array_values(array_filter(array_map('trim', explode(',', (string) env('MAIL_FAILOVER_MAILERS', 'smtp')))));
-
-if ($failoverMailers === []) {
-    $failoverMailers = ['smtp'];
-}
-
-$smtpStream = [];
-if (filter_var(env('MAIL_SMTP_ALLOW_INSECURE', false), FILTER_VALIDATE_BOOLEAN)) {
-    // Shared/cPanel hosts sometimes ship incomplete CA bundles or proxy TLS; use only if needed.
-    $smtpStream['stream'] = [
-        'ssl' => [
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-            'allow_self_signed' => true,
-        ],
-    ];
-}
-
 return [
 
     /*
@@ -57,33 +33,59 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | cPanel / shared hosting notes (SMTP)
+    |--------------------------------------------------------------------------
+    |
+    | - Set APP_URL to your real site URL on the server (used as EHLO fallback).
+    | - Optionally set MAIL_EHLO_DOMAIN to your domain if mail still fails.
+    | - If port 587 + TLS fails, try MAIL_PORT=465 with MAIL_ENCRYPTION=ssl.
+    | - If SSL certificate verification fails on the host, set MAIL_VERIFY_PEER=false
+    |   (less secure; prefer fixing PHP's CA bundle / openssl.cafile in php.ini).
+    | - If the host blocks outbound SMTP to Google, create a mailbox in cPanel and use
+    |   MAIL_MAILER=cpanel_smtp with MAIL_CPANEL_* (localhost relay).
+    |
+    */
+
     'mailers' => [
-        'smtp' => array_merge([
+        'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
+            'port' => (int) env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
-            'timeout' => env('MAIL_TIMEOUT', 60),
-            'local_domain' => $mailEhloDomain,
-        ], $smtpStream),
+            'timeout' => (int) env('MAIL_TIMEOUT', 60),
+            'local_domain' => env('MAIL_EHLO_DOMAIN')
+                ?: (parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
+            // Symfony Mailer reads this from the DSN options array (see EsmtpTransportFactory).
+            'verify_peer' => filter_var(env('MAIL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+        ],
 
         /*
-        | Optional second SMTP hop (e.g. cPanel Exim on localhost) when outbound Gmail is blocked.
-        | Set MAIL_FAILOVER_MAILERS=smtp,smtp_relay and configure MAIL_RELAY_* on the server.
+        |--------------------------------------------------------------------------
+        | cPanel localhost SMTP relay
+        |--------------------------------------------------------------------------
+        |
+        | Use when outbound connections to external SMTP (e.g. smtp.gmail.com) are blocked.
+        | Create an email account in cPanel, then set MAIL_MAILER=cpanel_smtp and the vars below.
+        |
         */
-        'smtp_relay' => array_merge([
+
+        'cpanel_smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_RELAY_HOST', 'localhost'),
-            'port' => env('MAIL_RELAY_PORT', 587),
-            'encryption' => env('MAIL_RELAY_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_RELAY_USERNAME'),
-            'password' => env('MAIL_RELAY_PASSWORD'),
-            'timeout' => env('MAIL_TIMEOUT', 60),
-            'local_domain' => $mailEhloDomain,
-        ], $smtpStream),
+            'host' => env('MAIL_CPANEL_HOST', 'localhost'),
+            'port' => (int) env('MAIL_CPANEL_PORT', 587),
+            'encryption' => env('MAIL_CPANEL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_CPANEL_USERNAME'),
+            'password' => env('MAIL_CPANEL_PASSWORD'),
+            'timeout' => (int) env('MAIL_TIMEOUT', 60),
+            'local_domain' => env('MAIL_EHLO_DOMAIN')
+                ?: (parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
+            'verify_peer' => filter_var(env('MAIL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+        ],
 
         'ses' => [
             'transport' => 'ses',
@@ -120,7 +122,10 @@ return [
 
         'failover' => [
             'transport' => 'failover',
-            'mailers' => $failoverMailers,
+            'mailers' => [
+                'smtp',
+                'log',
+            ],
         ],
 
         'roundrobin' => [
