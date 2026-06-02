@@ -247,11 +247,11 @@
 
         @if($whyChooseImageUrl)
           <x-site.motion variant="fade-right" :delay="200" :duration="800">
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
               <img
                 src="{{ $whyChooseImageUrl }}"
                 alt="Why Choose LITUS Group"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
               />
@@ -277,7 +277,7 @@
       >
         <div
           x-intersect.once.margin.-100px.-100px.-100px.-100px="mvInView = true"
-          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm"
+          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
           <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
@@ -286,7 +286,7 @@
           </p>
         </div>
         <div
-          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm"
+          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
           style="transition-delay: 200ms"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
@@ -321,11 +321,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         @foreach($values as $i => $v)
           <x-site.motion :delay="$i * 100" :duration="500" variant="fade-up">
-            <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 text-center h-full">
-              <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="group bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 hover:border-blue-300 text-center h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-default">
+              <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg">
                 <span class="text-3xl font-bold text-white">{{ $v['letter'] }}</span>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $v['title'] }}</h3>
+              <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $v['title'] }}</h3>
               <p class="text-gray-600">{{ $v['description'] }}</p>
             </div>
           </x-site.motion>

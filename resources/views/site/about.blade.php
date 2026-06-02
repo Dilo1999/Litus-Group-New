@@ -79,12 +79,12 @@
               ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutPartnershipPath)
               : null;
           @endphp
-          <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+          <div class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
             @if($aboutPartnershipUrl)
               <img
                 src="{{ $aboutPartnershipUrl }}"
                 alt="Business partnership"
-                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
+                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
               />
             @else
               <div
@@ -96,7 +96,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent pointer-events-none"></div>
           </div>
           <div
-            class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+            class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform,box-shadow] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:shadow-2xl hover:-translate-y-1 hover:scale-105 cursor-default"
             style="transition-delay: 300ms"
             :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
           >
@@ -158,7 +158,7 @@
       >
         <div
           x-intersect.once.margin.-100px.-100px.-100px.-100px="visionInView = true"
-          class="site-about-motion-mission bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+          class="site-about-motion-mission bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
         >
@@ -169,7 +169,7 @@
         </div>
 
         <div
-          class="site-about-motion-vision bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+          class="site-about-motion-vision bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
           style="transition-delay: 200ms"
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
