@@ -199,6 +199,16 @@
   }
 }
 
+/* Home hero background — horizontal slide when spotlight company changes */
+.hero-bg-slider-track {
+  transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.hero-bg-slider-slide {
+  min-width: 100%;
+}
+
 /* Home hero rotating spotlight — plain CSS (Alpine x-transition + Tailwind utilities is unreliable in v4) */
 .hero-spotlight-tx-enter {
   transition-property: opacity, transform;
@@ -287,6 +297,10 @@
   .hero-spotlight-to-above {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .hero-bg-slider-track {
+    transition: none !important;
   }
 
   [data-home-mission-vision] > div {

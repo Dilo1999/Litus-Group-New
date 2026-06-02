@@ -27,21 +27,25 @@
       x-data="heroSpotlight(@js($highlights), @js($heroImageUrl))"
     @endif
   >
-    <div class="absolute inset-0 z-0">
+    <div class="absolute inset-0 z-0 overflow-hidden">
       @if(count($highlights) > 0)
-        <template x-if="currentHeroImage">
-          <img
-            :key="'hero-bg-' + idx"
-            :src="currentHeroImage"
-            alt=""
-            class="absolute inset-0 h-full w-full object-cover"
-            fetchpriority="high"
-            decoding="async"
-            x-transition:enter="transition-opacity duration-700 ease-out"
-            x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100"
-          />
-        </template>
+        <div
+          class="hero-bg-slider-track flex h-full"
+          :style="{ transform: heroSlideTransform }"
+          x-show="heroSlides.length > 0"
+        >
+          <template x-for="(src, slideIdx) in heroSlides" :key="slideIdx">
+            <div class="hero-bg-slider-slide relative h-full shrink-0 grow-0 basis-full">
+              <img
+                :src="src"
+                alt=""
+                class="absolute inset-0 h-full w-full object-cover"
+                :fetchpriority="slideIdx === 0 ? 'high' : 'low'"
+                decoding="async"
+              />
+            </div>
+          </template>
+        </div>
       @elseif(filled($heroImageUrl))
         <img
           src="{{ $heroImageUrl }}"

@@ -148,14 +148,24 @@ document.addEventListener('alpine:init', () => {
     _interval: null,
     _cyclePending: null,
     _cycling: false,
-    get currentHeroImage() {
-      const item = this.items[this.idx];
-      const url = item?.heroImage;
-      if (url && String(url).trim()) {
-        return String(url).trim();
+    get heroSlides() {
+      return this.items
+        .map((item) => {
+          const url = item?.heroImage;
+          if (url && String(url).trim()) {
+            return String(url).trim();
+          }
+
+          return this.fallbackHeroImage || '';
+        })
+        .filter((url) => url);
+    },
+    get heroSlideTransform() {
+      if (this.heroSlides.length <= 1) {
+        return 'translateX(0)';
       }
 
-      return this.fallbackHeroImage || '';
+      return `translateX(-${this.idx * 100}%)`;
     },
     init() {
       if (!Array.isArray(items) || items.length === 0) {
@@ -183,11 +193,11 @@ document.addEventListener('alpine:init', () => {
       }
       this._cycling = true;
       this.visible = false;
+      this.idx = (this.idx + 1) % this.items.length;
       if (this._cyclePending) {
         window.clearTimeout(this._cyclePending);
       }
       this._cyclePending = window.setTimeout(() => {
-        this.idx = (this.idx + 1) % this.items.length;
         this.visible = true;
         this._cycling = false;
       }, 520);
