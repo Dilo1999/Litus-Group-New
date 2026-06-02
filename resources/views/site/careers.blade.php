@@ -7,12 +7,32 @@
     'jobModalTitle' => old('position', ''),
     'jobModalLocked' => (string) old('apply_title_locked', '1') === '1',
 ])
+@php
+  $heroImagePath = \App\Models\SiteSetting::getValue('careers.hero.image_path');
+  $heroImageUrl = filled($heroImagePath)
+    ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
+    : null;
+@endphp
 {{-- Active rows from job_openings (SiteData::careerOpenings); no static fallbacks --}}
 <div>
-  <section class="relative pt-36 pb-36 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
-      <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+  <section class="relative pt-36 pb-36 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      @if(filled($heroImageUrl))
+        <img
+          src="{{ $heroImageUrl }}"
+          alt="Careers hero"
+          class="h-full w-full object-cover"
+          fetchpriority="high"
+          decoding="async"
+        />
+      @else
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
+      @endif
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-900/90"></div>
+      <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+        <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+      </div>
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div class="site-blogs-hero">

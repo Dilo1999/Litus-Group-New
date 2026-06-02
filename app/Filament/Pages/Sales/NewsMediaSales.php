@@ -12,18 +12,18 @@ use Filament\Pages;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Storage;
 
-class OurCompaniesSales extends Page implements HasForms
+class NewsMediaSales extends Page implements HasForms
 {
     use BlocksHrAccess;
     use InteractsWithForms;
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected static ?string $title = 'Our Companies Sales Page';
+    protected static ?string $title = 'News & Media Sales Page';
 
-    protected static ?string $slug = 'sales/our-companies';
+    protected static ?string $slug = 'sales/news-media';
 
-    protected static string $view = 'filament.pages.sales.our-companies-sales';
+    protected static string $view = 'filament.pages.sales.news-media-sales';
 
     public array $data = [];
 
@@ -32,7 +32,7 @@ class OurCompaniesSales extends Page implements HasForms
         $this->abortIfHr();
 
         $this->form->fill([
-            'hero_image_path' => SiteSetting::getValue('our_companies.hero.image_path'),
+            'hero_image_path' => SiteSetting::getValue('blogs.hero.image_path'),
         ]);
     }
 
@@ -41,7 +41,7 @@ class OurCompaniesSales extends Page implements HasForms
         return [
             Pages\Dashboard::getUrl() => 'Dashboard',
             PageCustomization::getUrl() => 'Page Customization',
-            static::getUrl() => 'Our Companies',
+            static::getUrl() => 'News & Media',
         ];
     }
 
@@ -54,12 +54,12 @@ class OurCompaniesSales extends Page implements HasForms
     {
         return [
             Forms\Components\Section::make('Hero image')
-                ->description('Upload, replace, or remove the hero image shown on the Our Companies page.')
+                ->description('Upload, replace, or remove the hero image shown on the News & Media page.')
                 ->schema([
                     Forms\Components\FileUpload::make('hero_image_path')
                         ->label('Hero image')
                         ->disk('public')
-                        ->directory('site/our-companies/hero')
+                        ->directory('site/blogs/hero')
                         ->visibility('public')
                         ->preserveFilenames()
                         ->image()
@@ -75,15 +75,16 @@ class OurCompaniesSales extends Page implements HasForms
     {
         $state = $this->form->getState();
 
-        $previousPath = SiteSetting::getValue('our_companies.hero.image_path');
+        $previousPath = SiteSetting::getValue('blogs.hero.image_path');
         $nextPath = $state['hero_image_path'] ?? null;
 
         if ($previousPath && $previousPath !== $nextPath) {
             Storage::disk('public')->delete($previousPath);
         }
 
-        SiteSetting::setValue('our_companies.hero.image_path', $nextPath);
+        SiteSetting::setValue('blogs.hero.image_path', $nextPath);
 
-        $this->notify('success', 'Our Companies hero image updated.');
+        $this->notify('success', 'News & Media hero image updated.');
     }
 }
+

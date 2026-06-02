@@ -4,12 +4,13 @@ namespace App\Filament\Pages\Sales;
 
 use App\Filament\Concerns\BlocksHrAccess;
 use App\Filament\Pages\PageCustomization;
-use App\Models\TeamMember;
+use App\Models\SiteSetting;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Storage;
 
 class TeamSales extends Page implements HasForms
 {
@@ -30,24 +31,8 @@ class TeamSales extends Page implements HasForms
     {
         $this->abortIfHr();
 
-        $members = TeamMember::query()
-            ->orderBy('sort_order')
-            ->orderBy('id')
-            ->get()
-            ->map(fn (TeamMember $m) => [
-                'id' => $m->id,
-                'name' => $m->name,
-                'role' => $m->role,
-                'bio' => $m->bio,
-                'expertise' => $m->expertise,
-                'photo' => $m->photo,
-                'is_active' => (bool) $m->is_active,
-                'sort_order' => (int) $m->sort_order,
-            ])
-            ->all();
-
         $this->form->fill([
-            'members' => $members,
+            'hero_image_path' => SiteSetting::getValue('team.hero.image_path'),
         ]);
     }
 
@@ -68,80 +53,35 @@ class TeamSales extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Section::make('Leadership team')
-                ->description('Manage the leaders shown on the public Team page.')
+            Forms\Components\Section::make('Hero image')
+                ->description('Upload, replace, or remove the hero image shown on the Team page.')
                 ->schema([
-                    Forms\Components\Repeater::make('members')
-                        ->label('Team members')
-                        ->defaultItems(0)
-                        ->collapsible()
-                        ->orderable()
-                        ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
-                        ->schema([
-                            Forms\Components\Hidden::make('id'),
-                            Forms\Components\TextInput::make('name')
-                                ->required()
-                                ->maxLength(255)
-                                ->columnSpanFull(),
-                            Forms\Components\TextInput::make('role')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\Textarea::make('bio')
-                                ->rows(4)
-                                ->columnSpanFull(),
-                            Forms\Components\TextInput::make('expertise')
-                                ->label('Expertise (comma separated)')
-                                ->maxLength(500),
-                            Forms\Components\TextInput::make('photo')
-                                ->label('Photo URL or storage path (team/...)')
-                                ->maxLength(500)
-                                ->columnSpanFull(),
-                            Forms\Components\Toggle::make('is_active')
-                                ->label('Active')
-                                ->default(true)
-                                ->inline(false),
-                        ])
-                        ->columns(2),
-                ]),
+                    Forms\Components\FileUpload::make('hero_image_path')
+                        ->label('Hero image')
+                        ->disk('public')
+                        ->directory('site/team/hero')
+                        ->visibility('public')
+                        ->preserveFilenames()
+                        ->image()
+                        ->imagePreviewHeight('180')
+                        ->maxSize(4096)
+                        ->helperText('PNG/JPG/WebP. Recommended: 1920×1080.'),
+                ])
+                ->columns(1),
         ];
     }
 
     public function save(): void
     {
         $state = $this->form->getState();
-        $items = $state['members'] ?? [];
 
-        $keptIds = [];
-
-        foreach (array_values($items) as $index => $item) {
-            $id = $item['id'] ?? null;
-
-            $payload = [
-                'name' => $item['name'] ?? '',
-                'role' => $item['role'] ?? null,
-                'bio' => $item['bio'] ?? null,
-                'expertise' => $item['expertise'] ?? null,
-                'photo' => $item['photo'] ?? null,
-                'is_active' => (bool)($item['is_active'] ?? true),
-                'sort_order' => $index + 1,
-            ];
-
-            if ($id) {
-                TeamMember::query()->whereKey($id)->update($payload);
-                $keptIds[] = (int) $id;
-            } else {
-                $created = TeamMember::query()->create($payload);
-                $keptIds[] = (int) $created->id;
-            }
+        $previousHero = SiteSetting::getValue('team.hero.image_path');
+        $nextHero = $state['hero_image_path'] ?? null;
+        if ($previousHero && $previousHero !== $nextHero) {
+            Storage::disk('public')->delete($previousHero);
         }
-
-        TeamMember::query()
-            ->when(count($keptIds) > 0, fn ($q) => $q->whereNotIn('id', $keptIds))
-            ->delete();
-
-        $this->notify('success', 'Team updated.');
-
-        $this->mount();
+        SiteSetting::setValue('team.hero.image_path', $nextHero);
+        $this->notify('success', 'Team hero image updated.');
     }
 }
 

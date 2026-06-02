@@ -2,13 +2,33 @@
 
 @section('content')
 {{-- src/app/pages/BlogsPage.tsx — hero, filter/search, featured + grid, pagination, gallery --}}
+@php
+  $heroImagePath = \App\Models\SiteSetting::getValue('blogs.hero.image_path');
+  $heroImageUrl = filled($heroImagePath)
+    ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
+    : null;
+@endphp
 <div
   class="min-h-screen bg-white"
   data-blogs-page
   x-data="blogsPage(@js($blogPosts), @js($blogCategories))"
 >
   {{-- Hero — motion on load (y 30, 0.8s) --}}
-  <section class="relative pb-36 pt-36 overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+  <section class="relative pb-36 pt-36 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      @if(filled($heroImageUrl))
+        <img
+          src="{{ $heroImageUrl }}"
+          alt="News & Media hero"
+          class="h-full w-full object-cover"
+          fetchpriority="high"
+          decoding="async"
+        />
+      @else
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
+      @endif
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-900/90"></div>
+    </div>
     <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptMCAxMmMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPjwvc3ZnPg==')] opacity-20"></div>
     </div>

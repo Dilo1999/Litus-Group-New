@@ -2,9 +2,9 @@
     <form wire:submit.prevent="save" class="space-y-6">
         <x-filament::card>
             <div class="space-y-2">
-                <div class="text-2xl font-bold">Team</div>
+                <div class="text-2xl font-bold">Contact Us</div>
                 <div class="text-sm text-gray-600 dark:text-gray-300">
-                    Customize the hero image for the public Team page.
+                    Customize the hero image for the public Contact Us page.
                 </div>
             </div>
         </x-filament::card>

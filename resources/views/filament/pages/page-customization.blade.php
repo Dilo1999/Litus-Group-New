@@ -16,21 +16,6 @@
         </a>
 
         <a
-            href="{{ \App\Filament\Pages\Sales\OurCompaniesSales::getUrl() }}"
-            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-        >
-            <x-filament::card class="transition group-hover:shadow-md">
-                <div class="space-y-1">
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="text-lg font-semibold">Our Companies</div>
-                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Manage information and details for our company listings.</div>
-                </div>
-            </x-filament::card>
-        </a>
-
-        <a
             href="{{ \App\Filament\Pages\Sales\AboutUsSales::getUrl() }}"
             class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
@@ -41,6 +26,81 @@
                         <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
                     </div>
                     <div class="text-sm text-gray-500 dark:text-gray-400">Customize the About Us page content and layout.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
+            href="{{ \App\Filament\Pages\Sales\OurCompaniesSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">Our Companies</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Customize the hero image for Our Companies.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
+            href="{{ \App\Filament\Pages\Sales\TeamSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">Team</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Customize the hero image for Team.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
+            href="{{ \App\Filament\Pages\Sales\CareersSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">Careers</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Customize the hero image for Careers.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
+            href="{{ \App\Filament\Pages\Sales\NewsMediaSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">News &amp; Media</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Customize the hero image for News &amp; Media.</div>
+                </div>
+            </x-filament::card>
+        </a>
+
+        <a
+            href="{{ \App\Filament\Pages\Sales\ContactSales::getUrl() }}"
+            class="group block rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+        >
+            <x-filament::card class="transition group-hover:shadow-md">
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="text-lg font-semibold">Contact Us</div>
+                        <span class="text-sm text-primary-600 dark:text-primary-400">Open</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Customize the hero image for Contact Us.</div>
                 </div>
             </x-filament::card>
         </a>
