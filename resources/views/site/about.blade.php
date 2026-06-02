@@ -12,6 +12,7 @@
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
     : null;
+  $heroPosY = (int) \App\Models\SiteSetting::getValue('about.hero.position_y', 50);
   $aboutIntro1 = \App\Models\SiteSetting::getValue(
     'about.intro.paragraph_1',
     'LITUS Group is a diversified business conglomerate with a strong presence across multiple sectors including hospitality, construction, automotive, technology, and trading. Our commitment to excellence drives everything we do.'
@@ -31,6 +32,7 @@
           src="{{ $heroImageUrl }}"
           alt="About Us hero"
           class="h-full w-full object-cover"
+          style="object-position: 50% {{ $heroPosY }}%;"
           fetchpriority="high"
           decoding="async"
         />

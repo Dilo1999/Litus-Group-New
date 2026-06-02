@@ -4,6 +4,7 @@ namespace App\Filament\Pages\Sales;
 
 use App\Filament\Concerns\BlocksHrAccess;
 use App\Filament\Pages\PageCustomization;
+use App\Filament\Support\HeroImageForm;
 use App\Models\SiteSetting;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -33,6 +34,7 @@ class TeamSales extends Page implements HasForms
 
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('team.hero.image_path'),
+            'hero_image_position_y' => (int) SiteSetting::getValue('team.hero.position_y', 50),
         ]);
     }
 
@@ -53,21 +55,10 @@ class TeamSales extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Section::make('Hero image')
-                ->description('Upload, replace, or remove the hero image shown on the Team page.')
-                ->schema([
-                    Forms\Components\FileUpload::make('hero_image_path')
-                        ->label('Hero image')
-                        ->disk('public')
-                        ->directory('site/team/hero')
-                        ->visibility('public')
-                        ->preserveFilenames()
-                        ->image()
-                        ->imagePreviewHeight('180')
-                        ->maxSize(4096)
-                        ->helperText('PNG/JPG/WebP. Recommended: 1920×1080.'),
-                ])
-                ->columns(1),
+            HeroImageForm::section(
+                'site/team/hero',
+                'Upload, replace, or remove the hero image shown on the Team page.'
+            ),
         ];
     }
 
@@ -81,6 +72,7 @@ class TeamSales extends Page implements HasForms
             Storage::disk('public')->delete($previousHero);
         }
         SiteSetting::setValue('team.hero.image_path', $nextHero);
+        SiteSetting::setValue('team.hero.position_y', (int) ($state['hero_image_position_y'] ?? 50));
         $this->notify('success', 'Team hero image updated.');
     }
 }

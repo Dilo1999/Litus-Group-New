@@ -7,6 +7,7 @@
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
     : null;
+  $heroPosY = (int) \App\Models\SiteSetting::getValue('our_companies.hero.position_y', 50);
   $divisions = $divisions ?? SiteData::divisions();
   $companies = $companies ?? SiteData::companies();
   $divisionOrder = $divisionOrder ?? [
@@ -28,6 +29,7 @@
         src="{{ $heroImageUrl }}"
         alt="Our Companies hero"
         class="h-full w-full object-cover"
+        style="object-position: 50% {{ $heroPosY }}%;"
         fetchpriority="high"
         decoding="async"
       />

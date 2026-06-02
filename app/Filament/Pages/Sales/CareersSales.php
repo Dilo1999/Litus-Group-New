@@ -4,6 +4,7 @@ namespace App\Filament\Pages\Sales;
 
 use App\Filament\Concerns\BlocksHrAccess;
 use App\Filament\Pages\PageCustomization;
+use App\Filament\Support\HeroImageForm;
 use App\Models\SiteSetting;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -33,6 +34,7 @@ class CareersSales extends Page implements HasForms
 
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('careers.hero.image_path'),
+            'hero_image_position_y' => (int) SiteSetting::getValue('careers.hero.position_y', 50),
         ]);
     }
 
@@ -53,21 +55,10 @@ class CareersSales extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Section::make('Hero image')
-                ->description('Upload, replace, or remove the hero image shown on the Careers page.')
-                ->schema([
-                    Forms\Components\FileUpload::make('hero_image_path')
-                        ->label('Hero image')
-                        ->disk('public')
-                        ->directory('site/careers/hero')
-                        ->visibility('public')
-                        ->preserveFilenames()
-                        ->image()
-                        ->imagePreviewHeight('180')
-                        ->maxSize(4096)
-                        ->helperText('PNG/JPG/WebP. Recommended: 1920×1080.'),
-                ])
-                ->columns(1),
+            HeroImageForm::section(
+                'site/careers/hero',
+                'Upload, replace, or remove the hero image shown on the Careers page.'
+            ),
         ];
     }
 
@@ -83,6 +74,7 @@ class CareersSales extends Page implements HasForms
         }
 
         SiteSetting::setValue('careers.hero.image_path', $nextPath);
+        SiteSetting::setValue('careers.hero.position_y', (int) ($state['hero_image_position_y'] ?? 50));
 
         $this->notify('success', 'Careers hero image updated.');
     }

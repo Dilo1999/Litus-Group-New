@@ -7,6 +7,7 @@
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
     : null;
+  $heroPosY = (int) \App\Models\SiteSetting::getValue('team.hero.position_y', 50);
 @endphp
 
 {{-- Matches src/app/pages/TeamPage.tsx + src/app/components/Team.tsx --}}
@@ -18,6 +19,7 @@
           src="{{ $heroImageUrl }}"
           alt="Team hero"
           class="h-full w-full object-cover"
+          style="object-position: 50% {{ $heroPosY }}%;"
           fetchpriority="high"
           decoding="async"
         />

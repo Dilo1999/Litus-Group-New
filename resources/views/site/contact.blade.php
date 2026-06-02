@@ -7,6 +7,7 @@
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
     : null;
+  $heroPosY = (int) \App\Models\SiteSetting::getValue('contact.hero.position_y', 50);
 @endphp
 
 @section('content')
@@ -19,6 +20,7 @@
           src="{{ $heroImageUrl }}"
           alt="Contact hero"
           class="h-full w-full object-cover"
+          style="object-position: 50% {{ $heroPosY }}%;"
           fetchpriority="high"
           decoding="async"
         />
