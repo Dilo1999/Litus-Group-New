@@ -32,6 +32,21 @@ class SiteData
         return asset('assets/logo/'.rawurlencode($basename));
     }
 
+    public static function companyHeroImageUrl(?string $path): ?string
+    {
+        if ($path === null || $path === '') {
+            return null;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        if (str_starts_with($path, 'companies/')) {
+            return Storage::disk('public')->url($path);
+        }
+
+        return null;
+    }
+
     /** Header/footer brand mark. */
     public static function brandLogoUrl(): string
     {
@@ -202,7 +217,7 @@ class SiteData
     /**
      * Featured companies for the home hero rotating spotlight (order matches companies list).
      *
-     * @return list<array{company: string, hotline: string}>
+     * @return list<array{company: string, hotline: string, heroImage: string|null}>
      */
     public static function heroSpotlightHighlights(): array
     {
@@ -211,6 +226,7 @@ class SiteData
                 return [
                     'company' => (string) ($c['name'] ?? ''),
                     'hotline' => trim((string) ($c['hotline'] ?? '')),
+                    'heroImage' => self::companyHeroImageUrl($c['hero_image'] ?? null),
                 ];
             },
             self::featuredCompanies()

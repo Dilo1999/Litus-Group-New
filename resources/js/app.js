@@ -140,13 +140,23 @@ document.addEventListener('alpine:init', () => {
     },
   }));
 
-  Alpine.data('heroSpotlight', (items) => ({
-    items,
+  Alpine.data('heroSpotlight', (items, fallbackHeroImage = null) => ({
+    items: Array.isArray(items) ? items : [],
+    fallbackHeroImage: fallbackHeroImage || null,
     idx: 0,
     visible: true,
     _interval: null,
     _cyclePending: null,
     _cycling: false,
+    get currentHeroImage() {
+      const item = this.items[this.idx];
+      const url = item?.heroImage;
+      if (url && String(url).trim()) {
+        return String(url).trim();
+      }
+
+      return this.fallbackHeroImage || '';
+    },
     init() {
       if (!Array.isArray(items) || items.length === 0) {
         return;
@@ -157,7 +167,7 @@ document.addEventListener('alpine:init', () => {
       if (items.length < 2) {
         return;
       }
-      this._interval = window.setInterval(() => this.cycle(), 3000);
+      this._interval = window.setInterval(() => this.cycle(), 6000);
     },
     destroy() {
       if (this._cyclePending) {

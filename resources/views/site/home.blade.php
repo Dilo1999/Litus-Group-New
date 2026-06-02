@@ -23,13 +23,30 @@
   <section
     id="home"
     class="relative min-h-screen flex items-center justify-center overflow-hidden"
+    @if(count($highlights) > 0)
+      x-data="heroSpotlight(@js($highlights), @js($heroImageUrl))"
+    @endif
   >
     <div class="absolute inset-0 z-0">
-      @if(filled($heroImageUrl))
+      @if(count($highlights) > 0)
+        <template x-if="currentHeroImage">
+          <img
+            :key="'hero-bg-' + idx"
+            :src="currentHeroImage"
+            alt=""
+            class="absolute inset-0 h-full w-full object-cover"
+            fetchpriority="high"
+            decoding="async"
+            x-transition:enter="transition-opacity duration-700 ease-out"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+          />
+        </template>
+      @elseif(filled($heroImageUrl))
         <img
           src="{{ $heroImageUrl }}"
           alt="Modern corporate building"
-          class="w-full h-full object-cover"
+          class="h-full w-full object-cover"
           fetchpriority="high"
           decoding="async"
         />
@@ -55,10 +72,7 @@
           <div
             class="site-hero-card bg-white/10 border border-white/20 rounded-2xl p-6 mb-10 md:backdrop-blur-md"
           >
-            <div
-              class="min-h-[5.5rem] flex flex-col justify-center"
-              x-data="heroSpotlight(@js($highlights))"
-            >
+            <div class="min-h-[5.5rem] flex flex-col justify-center">
               <div
                 x-show="visible"
                 x-transition:enter="hero-spotlight-tx-enter"
