@@ -1,13 +1,15 @@
 @extends('layouts.site')
 
 @section('content')
-@php($jobOpenings = $jobOpenings ?? [])
-@php($careersAlpineConfig = [
+@php
+  $jobOpenings = $jobOpenings ?? [];
+
+  $careersAlpineConfig = [
     'reopenJobModal' => $errors->any(),
     'jobModalTitle' => old('position', ''),
     'jobModalLocked' => (string) old('apply_title_locked', '1') === '1',
-])
-@php
+  ];
+
   $heroImagePath = \App\Models\SiteSetting::getValue('careers.hero.image_path');
   $heroImageUrl = filled($heroImagePath)
     ? \Illuminate\Support\Facades\Storage::disk('public')->url($heroImagePath)
@@ -17,7 +19,7 @@
 <div>
   <section class="relative pt-36 pb-36 overflow-hidden">
     <div class="absolute inset-0 z-0">
-      @if(filled($heroImageUrl))
+      @if(filled($heroImageUrl ?? null))
         <img
           src="{{ $heroImageUrl }}"
           alt="Careers hero"
@@ -48,7 +50,7 @@
     id="careers"
     class="py-24 bg-white"
     data-careers-page
-    x-data="careersPage({{ \Illuminate\Support\Js::from($careersAlpineConfig) }})"
+    x-data="careersPage({{ \Illuminate\Support\Js::from($careersAlpineConfig ?? []) }})"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       @if (session('job_apply_success'))
