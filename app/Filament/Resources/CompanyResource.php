@@ -67,11 +67,6 @@ class CompanyResource extends Resource
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('slug')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true)
-                            ->rule('regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'),
                         TextInput::make('sort_order')
                             ->numeric()
                             ->default(0)
@@ -378,7 +373,35 @@ class CompanyResource extends Resource
             deleteWhenReplacedPrefix: 'companies/',
         );
 
+        $name = trim((string) ($data['name'] ?? ''));
+        if ($name !== '') {
+            $data['slug'] = static::uniqueSlugForName($name, $existing?->getKey());
+        }
+
         return $data;
+    }
+
+    public static function uniqueSlugForName(string $name, ?int $exceptId = null): string
+    {
+        $base = Str::slug($name);
+        if ($base === '') {
+            $base = 'company';
+        }
+
+        $slug = $base;
+        $suffix = 2;
+
+        while (
+            Company::query()
+                ->when($exceptId !== null, fn (Builder $query) => $query->whereKeyNot($exceptId))
+                ->where('slug', $slug)
+                ->exists()
+        ) {
+            $slug = $base.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 
     /**
