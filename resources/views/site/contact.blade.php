@@ -37,7 +37,7 @@
       <div class="site-blogs-hero">
         <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Contact Us</h1>
         <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
-          Reach out to LITUS Group—our team is ready to help
+          Reach out to LITUS Group - our team is ready to help
         </p>
       </div>
     </div>
