@@ -14,7 +14,7 @@
   x-data="blogsPage(@js($blogPosts), @js($blogCategories))"
 >
   {{-- Hero — motion on load (y 30, 0.8s) --}}
-  <section class="relative pb-36 pt-36 overflow-hidden">
+  <section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       @if(filled($heroImageUrl))
         <img

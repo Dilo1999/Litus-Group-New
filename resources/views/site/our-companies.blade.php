@@ -21,7 +21,7 @@
 @endphp
 
 {{-- PageHero (matches reference: gradient hero, title + subtitle, initial motion 0.8s / y≈30) --}}
-<section class="relative pt-36 pb-36 overflow-hidden">
+<section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0 z-0">
     @if(filled($heroImageUrl))
       <img
@@ -40,7 +40,7 @@
       <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
     </div>
   </div>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="site-our-companies-hero text-center text-white">
       <h1 class="text-4xl md:text-6xl font-bold mb-6">Our Companies</h1>
       <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">

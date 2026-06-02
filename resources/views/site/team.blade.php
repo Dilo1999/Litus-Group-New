@@ -11,7 +11,7 @@
 
 {{-- Matches src/app/pages/TeamPage.tsx + src/app/components/Team.tsx --}}
 <div>
-  <section class="relative pt-36 pb-36 overflow-hidden">
+  <section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       @if(filled($heroImageUrl))
         <img
