@@ -197,6 +197,45 @@ document.addEventListener('alpine:init', () => {
     },
   }));
 
+  Alpine.data('aboutPartnershipSlider', (slides = []) => ({
+    slides: Array.isArray(slides) ? slides.filter((url) => url && String(url).trim()) : [],
+    activeIndex: 0,
+    _interval: null,
+    get slideTransform() {
+      if (this.slides.length <= 1) {
+        return 'translateX(0)';
+      }
+
+      return `translateX(-${this.activeIndex * 100}%)`;
+    },
+    init() {
+      if (this.slides.length < 2) {
+        return;
+      }
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+      this._interval = window.setInterval(() => this.next(), 5000);
+    },
+    destroy() {
+      if (this._interval) {
+        window.clearInterval(this._interval);
+      }
+    },
+    goTo(index) {
+      if (index < 0 || index >= this.slides.length) {
+        return;
+      }
+      this.activeIndex = index;
+    },
+    next() {
+      if (this.slides.length < 2) {
+        return;
+      }
+      this.activeIndex = (this.activeIndex + 1) % this.slides.length;
+    },
+  }));
+
   Alpine.data('heroSpotlight', (items, fallbackHeroImage = null) => ({
     items: Array.isArray(items) ? items : [],
     fallbackHeroImage: fallbackHeroImage || null,

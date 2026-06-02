@@ -74,17 +74,61 @@
           :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[50px]'"
         >
           @php
-            $aboutPartnershipPath = \App\Models\SiteSetting::getValue('about.business_partnership.image_path');
-            $aboutPartnershipUrl = $aboutPartnershipPath
-              ? \Illuminate\Support\Facades\Storage::disk('public')->url($aboutPartnershipPath)
-              : null;
+            $aboutPartnershipPaths = \App\Models\SiteSetting::aboutPartnershipImagePaths();
+            $aboutPartnershipUrls = collect($aboutPartnershipPaths)
+              ->map(fn (string $path) => \Illuminate\Support\Facades\Storage::disk('public')->url($path))
+              ->values()
+              ->all();
+            $aboutPartnershipSlideCount = count($aboutPartnershipUrls);
           @endphp
-          <div class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-            @if($aboutPartnershipUrl)
+          <div
+            @if($aboutPartnershipSlideCount > 1)
+              x-data="aboutPartnershipSlider(@js($aboutPartnershipUrls))"
+            @endif
+            class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+          >
+            @if($aboutPartnershipSlideCount > 1)
+              <div class="overflow-hidden">
+                <div
+                  class="about-partnership-slider-track flex"
+                  :style="{ transform: slideTransform }"
+                  role="group"
+                  aria-roledescription="carousel"
+                  :aria-label="'Business partnership images, slide ' + (activeIndex + 1) + ' of ' + slides.length"
+                >
+                  <template x-for="(src, slideIdx) in slides" :key="slideIdx">
+                    <div class="about-partnership-slider-slide relative shrink-0 grow-0 basis-full">
+                      <img
+                        :src="src"
+                        alt=""
+                        class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        :fetchpriority="slideIdx === 0 ? 'high' : 'low'"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  </template>
+                </div>
+              </div>
+              <div class="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2 pointer-events-none">
+                <template x-for="(_, dotIdx) in slides" :key="'dot-' + dotIdx">
+                  <button
+                    type="button"
+                    class="pointer-events-auto h-2 rounded-full transition-all duration-300"
+                    :class="activeIndex === dotIdx ? 'w-6 bg-white' : 'w-2 bg-white/50 hover:bg-white/80'"
+                    :aria-label="'Go to slide ' + (dotIdx + 1)"
+                    :aria-current="activeIndex === dotIdx ? 'true' : 'false'"
+                    @click="goTo(dotIdx)"
+                  ></button>
+                </template>
+              </div>
+            @elseif($aboutPartnershipSlideCount === 1)
               <img
-                src="{{ $aboutPartnershipUrl }}"
+                src="{{ $aboutPartnershipUrls[0] }}"
                 alt="Business partnership"
                 class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
               />
             @else
               <div

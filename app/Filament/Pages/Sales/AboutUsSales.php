@@ -43,7 +43,7 @@ class AboutUsSales extends Page implements HasForms
                 'about.intro.paragraph_2',
                 'With a portfolio spanning from luxury hotels and resorts to cutting-edge technology solutions, we deliver comprehensive services that meet the evolving needs of our clients. Our diverse businesses work in synergy to create value and drive sustainable growth.'
             ),
-            'business_partnership_image_path' => SiteSetting::getValue('about.business_partnership.image_path'),
+            'business_partnership_image_paths' => SiteSetting::aboutPartnershipImagePaths(),
         ]);
     }
 
@@ -78,19 +78,21 @@ class AboutUsSales extends Page implements HasForms
                         ->columnSpanFull(),
                 ])
                 ->columns(1),
-            Forms\Components\Section::make('Business partnership image')
-                ->description('Image shown beside “About LITUS Group” on the public About Us page.')
+            Forms\Components\Section::make('Business partnership images')
+                ->description('Images shown beside “About LITUS Group” on the public About Us page. Multiple images display as a slideshow.')
                 ->schema([
-                    Forms\Components\FileUpload::make('business_partnership_image_path')
-                        ->label('Section image')
+                    Forms\Components\FileUpload::make('business_partnership_image_paths')
+                        ->label('Section images')
                         ->disk('public')
                         ->directory('site/about/business-partnership')
                         ->visibility('public')
                         ->preserveFilenames()
                         ->image()
+                        ->multiple()
+                        ->enableReordering()
                         ->imagePreviewHeight('180')
                         ->maxSize(4096)
-                        ->helperText('PNG/JPG/WebP. Recommended: 1200×900 or similar landscape.'),
+                        ->helperText('PNG/JPG/WebP. Recommended: 1200×900 or similar landscape. Upload one or more; multiple images rotate automatically on the site.'),
                 ])
                 ->columns(1),
         ];
@@ -113,16 +115,22 @@ class AboutUsSales extends Page implements HasForms
         SiteSetting::setValue('about.hero.image_path', $nextHero);
         SiteSetting::setValue('about.hero.position_y', (int) ($state['hero_image_position_y'] ?? 50));
 
-        $previousPath = SiteSetting::getValue('about.business_partnership.image_path');
-        $nextPath = $state['business_partnership_image_path'] ?? null;
+        $previousPaths = SiteSetting::aboutPartnershipImagePaths();
+        $nextPaths = array_values(array_filter(
+            (array) ($state['business_partnership_image_paths'] ?? []),
+            fn ($path) => is_string($path) && $path !== ''
+        ));
 
-        if ($previousPath && $previousPath !== $nextPath) {
-            Storage::disk('public')->delete($previousPath);
+        foreach ($previousPaths as $path) {
+            if (! in_array($path, $nextPaths, true)) {
+                Storage::disk('public')->delete($path);
+            }
         }
 
         SiteSetting::setValue('about.intro.paragraph_1', $state['intro_paragraph_1'] ?? '');
         SiteSetting::setValue('about.intro.paragraph_2', $state['intro_paragraph_2'] ?? '');
-        SiteSetting::setValue('about.business_partnership.image_path', $nextPath);
+        SiteSetting::setValue('about.business_partnership.image_paths', $nextPaths);
+        SiteSetting::setValue('about.business_partnership.image_path', null);
 
         $this->notify('success', 'About Us page updated.');
     }
@@ -143,15 +151,14 @@ class AboutUsSales extends Page implements HasForms
 
     public function removeBusinessPartnershipImage(): void
     {
-        $previousPath = SiteSetting::getValue('about.business_partnership.image_path');
-
-        if ($previousPath) {
-            Storage::disk('public')->delete($previousPath);
+        foreach (SiteSetting::aboutPartnershipImagePaths() as $path) {
+            Storage::disk('public')->delete($path);
         }
 
+        SiteSetting::setValue('about.business_partnership.image_paths', []);
         SiteSetting::setValue('about.business_partnership.image_path', null);
-        $this->form->fill(['business_partnership_image_path' => null]);
+        $this->form->fill(['business_partnership_image_paths' => []]);
 
-        $this->notify('success', 'Image removed.');
+        $this->notify('success', 'Images removed.');
     }
 }

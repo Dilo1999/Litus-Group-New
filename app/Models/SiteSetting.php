@@ -33,5 +33,21 @@ class SiteSetting extends Model
             ['value' => is_string($value) ? $value : json_encode($value)]
         );
     }
+
+    /**
+     * @return list<string>
+     */
+    public static function aboutPartnershipImagePaths(): array
+    {
+        $paths = static::getValue('about.business_partnership.image_paths');
+
+        if (is_array($paths)) {
+            return array_values(array_filter($paths, fn ($path) => is_string($path) && $path !== ''));
+        }
+
+        $legacy = static::getValue('about.business_partnership.image_path');
+
+        return is_string($legacy) && $legacy !== '' ? [$legacy] : [];
+    }
 }
 

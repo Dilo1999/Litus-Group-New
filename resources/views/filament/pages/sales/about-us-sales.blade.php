@@ -22,7 +22,7 @@
                 outlined
                 wire:click="removeBusinessPartnershipImage"
             >
-                Remove image
+                Remove all images
             </x-filament::button>
         </div>
     </form>

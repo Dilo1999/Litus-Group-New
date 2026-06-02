@@ -231,6 +231,16 @@
   min-width: 100%;
 }
 
+/* About page — business partnership image slideshow */
+.about-partnership-slider-track {
+  transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.about-partnership-slider-slide {
+  min-width: 100%;
+}
+
 /* Home hero rotating spotlight — plain CSS (Alpine x-transition + Tailwind utilities is unreliable in v4) */
 .hero-spotlight-tx-enter {
   transition-property: opacity, transform;
@@ -321,7 +331,8 @@
     transform: none !important;
   }
 
-  .hero-bg-slider-track {
+  .hero-bg-slider-track,
+  .about-partnership-slider-track {
     transition: none !important;
   }
 
