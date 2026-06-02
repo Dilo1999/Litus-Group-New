@@ -1,5 +1,6 @@
 import './bootstrap';
 
+import { getNavLogoSrc, scheduleNavLogoWarm, warmNavLogoCache } from './nav-logo-cache';
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 import intersect from '@alpinejs/intersect';
@@ -9,6 +10,62 @@ Alpine.plugin(intersect);
 
 /** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */
 document.addEventListener('alpine:init', () => {
+  Alpine.data('siteNavbar', (config = {}) => ({
+    heroTopIsDark: config.heroTopIsDark ?? false,
+    companyLogoUrls: Array.isArray(config.companyLogoUrls) ? config.companyLogoUrls : [],
+    logosWarmed: false,
+    isScrolled: false,
+    mobileOpen: false,
+    mobileCompaniesOpen: false,
+    get navSolid() {
+      return this.isScrolled;
+    },
+    get navOnDarkHero() {
+      return !this.isScrolled && this.heroTopIsDark;
+    },
+    _onResize: null,
+    _onScroll: null,
+    _scrollRaf: null,
+    logoSrc(url) {
+      return getNavLogoSrc(url) || url;
+    },
+    async init() {
+      if (this.companyLogoUrls.length > 0) {
+        scheduleNavLogoWarm(this.companyLogoUrls);
+        await warmNavLogoCache(this.companyLogoUrls);
+        this.logosWarmed = true;
+      }
+
+      this._onScroll = () => {
+        if (this._scrollRaf != null) return;
+        this._scrollRaf = requestAnimationFrame(() => {
+          this._scrollRaf = null;
+          const next = window.scrollY > 20;
+          if (this.isScrolled !== next) this.isScrolled = next;
+        });
+      };
+      this._onScroll();
+      window.addEventListener('scroll', this._onScroll, { passive: true });
+      this.$watch('mobileOpen', (open) => {
+        if (!open) this.mobileCompaniesOpen = false;
+        document.documentElement.classList.toggle('site-mobile-menu-open', !!open);
+      });
+      this._onResize = () => {
+        if (window.innerWidth >= 1024 && this.mobileOpen) this.mobileOpen = false;
+      };
+      window.addEventListener('resize', this._onResize, { passive: true });
+    },
+    destroy() {
+      document.documentElement.classList.remove('site-mobile-menu-open');
+      if (this._scrollRaf != null) {
+        cancelAnimationFrame(this._scrollRaf);
+        this._scrollRaf = null;
+      }
+      if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+      if (this._onResize) window.removeEventListener('resize', this._onResize);
+    },
+  }));
+
   /** Careers — matches Careers.tsx useInView(once, margin -100px); skip animation if reduced motion. */
   Alpine.data('careersPage', (cfg = {}) => ({
     careersInView: false,

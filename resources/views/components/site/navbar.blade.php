@@ -12,6 +12,10 @@
   ];
 
   $companies = SiteData::companies();
+  $companyLogoUrls = array_values(array_filter(array_map(
+    static fn (array $c) => SiteData::companyLogoUrl($c['logo'] ?? null),
+    $companies
+  )));
   // Pages whose top section is dark behind the navbar.
   // On these pages we use light (white) ink when the navbar is transparent.
   $heroTopIsDark = request()->routeIs([
@@ -28,48 +32,8 @@
 @endphp
 
 <div
-  x-data="{
-    heroTopIsDark: @js($heroTopIsDark),
-    isScrolled: false,
-    mobileOpen: false,
-    mobileCompaniesOpen: false,
-    companiesOpen: false,
-    get navSolid() { return this.isScrolled },
-    get navOnDarkHero() { return !this.isScrolled && this.heroTopIsDark },
-    _onResize: null,
-    _onScroll: null,
-    _scrollRaf: null,
-    init() {
-      this.companiesOpen = false;
-      this._onScroll = () => {
-        if (this._scrollRaf != null) return;
-        this._scrollRaf = requestAnimationFrame(() => {
-          this._scrollRaf = null;
-          const next = window.scrollY > 20;
-          if (this.isScrolled !== next) this.isScrolled = next;
-        });
-      };
-      this._onScroll();
-      window.addEventListener('scroll', this._onScroll, { passive: true });
-      this.$watch('mobileOpen', (open) => {
-        if (!open) this.mobileCompaniesOpen = false;
-        document.documentElement.classList.toggle('site-mobile-menu-open', !!open);
-      });
-      this._onResize = () => {
-        if (window.innerWidth >= 1024 && this.mobileOpen) this.mobileOpen = false;
-      };
-      window.addEventListener('resize', this._onResize, { passive: true });
-    },
-    destroy() {
-      document.documentElement.classList.remove('site-mobile-menu-open');
-      if (this._scrollRaf != null) {
-        cancelAnimationFrame(this._scrollRaf);
-        this._scrollRaf = null;
-      }
-      if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
-      if (this._onResize) window.removeEventListener('resize', this._onResize);
-    }
-  }"
+  data-company-logo-urls='@json($companyLogoUrls)'
+  x-data="siteNavbar({ heroTopIsDark: @js($heroTopIsDark), companyLogoUrls: @js($companyLogoUrls) })"
 >
   <nav
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -91,16 +55,12 @@
         <div class="hidden shrink-0 items-center space-x-8 lg:flex lg:space-x-10">
           @foreach($navItems as $item)
             @if(!empty($item['dropdown']))
-              <div
-                class="relative"
-                @mouseenter="companiesOpen = true"
-                @mouseleave="companiesOpen = false"
-              >
+              {{-- CSS-only hover (site-nav-companies): cannot stick open like Alpine companiesOpen state --}}
+              <div class="site-nav-companies relative">
                 <a
                   href="{{ route($item['route']) }}"
                   class="transition-colors font-semibold text-base flex items-center gap-1.5"
                   :class="navOnDarkHero ? 'text-white hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'"
-                  @click="companiesOpen = false"
                 >
                   {{ $item['label'] }}
                   <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -108,19 +68,8 @@
                   </svg>
                 </a>
 
-                {{-- pt-2 bridges the gap so :hover isn’t lost between trigger and panel; x-cloak hides until Alpine runs --}}
-                <div class="absolute left-1/2 top-full z-[60] flex -translate-x-1/2 justify-center pt-2">
-                  <div
-                    x-show="companiesOpen"
-                    x-cloak
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 -translate-y-2"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 -translate-y-2"
-                    class="w-[600px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-8"
-                  >
+                <div class="site-nav-companies__panel absolute left-1/2 top-full z-[60] pt-2">
+                  <div class="w-[600px] rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl">
                   <div class="grid grid-cols-2 gap-x-8 gap-y-4">
                     @foreach($companies as $company)
                       @php
@@ -129,32 +78,29 @@
                       <a
                         href="{{ route('site.company', ['slug' => $company['slug']]) }}"
                         class="block"
-                        @click="companiesOpen = false"
                       >
-                        <div class="flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group w-full">
+                        <div class="flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-gray-50 rounded-lg transition-colors group/company-row w-full">
                           @if($logoSrc)
                             <div
                               class="w-16 h-8 flex shrink-0 items-center justify-center"
-                              x-data="{ loaded: false }"
-                              x-intersect.once="loaded = true"
                             >
                               <img
-                                :src="loaded ? @js($logoSrc) : 'data:image/gif;base64,R0lGODlhAQABAAAAACw='"
+                                :src="logoSrc(@js($logoSrc))"
+                                :key="(logosWarmed ? 'cached-' : 'pending-') + @js($logoSrc)"
                                 alt=""
                                 width="64"
                                 height="32"
-                                loading="lazy"
-                                decoding="async"
-                                fetchpriority="low"
+                                loading="eager"
+                                decoding="sync"
                                 class="max-h-full max-w-full object-contain object-left"
                               />
                             </div>
                           @else
-                            <div class="flex h-8 w-16 shrink-0 items-center justify-center text-gray-400 group-hover:text-blue-600 [&_svg]:size-6">
+                            <div class="flex h-8 w-16 shrink-0 items-center justify-center text-gray-400 group-hover/company-row:text-blue-600 [&_svg]:size-6">
                               <x-site.lucide-icon :name="$company['icon'] ?? 'building2'" />
                             </div>
                           @endif
-                          <span class="font-medium group-hover:text-blue-600 transition-colors text-sm">
+                          <span class="font-medium group-hover/company-row:text-blue-600 transition-colors text-sm">
                             {{ $company['name'] }}
                           </span>
                         </div>
@@ -170,7 +116,6 @@
                   href="{{ route($item['route']) }}"
                   class="transition-colors font-semibold text-base"
                   :class="navOnDarkHero ? 'text-white hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'"
-                  @click="companiesOpen = false"
                 >
                   {{ $item['label'] }}
                 </a>
@@ -281,17 +226,15 @@
                   @if($logoSrc)
                     <div
                       class="flex h-6 w-12 shrink-0 items-center justify-center"
-                      x-data="{ loaded: false }"
-                      x-intersect.once="loaded = true"
                     >
                       <img
-                        :src="loaded ? @js($logoSrc) : 'data:image/gif;base64,R0lGODlhAQABAAAAACw='"
+                        :src="logoSrc(@js($logoSrc))"
+                        :key="(logosWarmed ? 'cached-' : 'pending-') + @js($logoSrc)"
                         alt="{{ $company['name'] }}"
                         width="48"
                         height="24"
-                        loading="lazy"
-                        decoding="async"
-                        fetchpriority="low"
+                        loading="eager"
+                        decoding="sync"
                         class="max-h-full max-w-full object-contain"
                       />
                     </div>

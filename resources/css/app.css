@@ -199,6 +199,28 @@
   }
 }
 
+/* Desktop nav: Our Companies mega-menu — CSS-only hover (no JS state to stick open) */
+@media (min-width: 1024px) {
+  .site-nav-companies__panel {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, -0.5rem);
+    transition:
+      opacity 200ms ease-out,
+      transform 200ms ease-out,
+      visibility 200ms ease-out;
+  }
+
+  .site-nav-companies:hover .site-nav-companies__panel,
+  .site-nav-companies:focus-within .site-nav-companies__panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+  }
+}
+
 /* Home hero background — horizontal slide when spotlight company changes */
 .hero-bg-slider-track {
   transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);

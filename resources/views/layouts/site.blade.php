@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon/LG-Favicon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/favicon/LG-Favicon.png') }}">
     {!! app(\App\Services\SeoService::class)->headHtml() !!}
+    @stack('head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen">
