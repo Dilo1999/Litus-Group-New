@@ -19,7 +19,22 @@
 @endphp
 
 {{-- Matches src/app/pages/AboutPage.tsx + src/app/components/About.tsx --}}
-<div class="pt-16">
+<div>
+  <section class="relative pt-36 pb-36 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="site-blogs-hero">
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">About Us</h1>
+        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
+          Learn about LITUS Group, our values, and the diverse businesses we grow together
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section id="about" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div

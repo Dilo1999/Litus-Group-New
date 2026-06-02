@@ -7,7 +7,22 @@
 
 @section('content')
 {{-- Matches src/app/pages/ContactPage.tsx + src/app/components/Contact.tsx --}}
-<div class="pt-16" data-contact-page x-data="contactPage()">
+<div data-contact-page x-data="contactPage()">
+  <section class="relative pt-36 pb-36 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="site-blogs-hero">
+        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Contact Us</h1>
+        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
+          Reach out to LITUS Group—our team is ready to help
+        </p>
+      </div>
+    </div>
+  </section>
+
   {{-- Contact.tsx: useInView(once, margin -100px) gates header + columns; map uses separate useInView --}}
   <section
     id="contact"
@@ -19,9 +34,7 @@
         class="site-contact-header text-center mb-16 opacity-0 translate-y-[50px] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
         :class="contactInView ? '!opacity-100 !translate-y-0' : ''"
       >
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
-          Contact Us
-        </h2>
+        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Get In Touch</h2>
         <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
           Get in touch with us to learn more about our services and how we can help you
         </p>

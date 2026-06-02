@@ -12,23 +12,30 @@
   ];
 
   $companies = SiteData::companies();
-  $heroNav = request()->routeIs([
+  // Pages whose top section is dark behind the navbar.
+  // On these pages we use light (white) ink when the navbar is transparent.
+  $heroTopIsDark = request()->routeIs([
     'site.home',
     'site.company',
     'site.our-companies',
     'site.blogs',
     'site.event',
+    'site.about',
+    'site.team',
+    'site.careers',
+    'site.contact',
   ]);
 @endphp
 
 <div
   x-data="{
-    heroNav: @js($heroNav),
+    heroTopIsDark: @js($heroTopIsDark),
     isScrolled: false,
     mobileOpen: false,
     mobileCompaniesOpen: false,
     companiesOpen: false,
-    get navSolid() { return this.isScrolled || !this.heroNav },
+    get navSolid() { return this.isScrolled },
+    get navOnDarkHero() { return !this.isScrolled && this.heroTopIsDark },
     _onResize: null,
     _onScroll: null,
     _scrollRaf: null,
@@ -75,8 +82,8 @@
             <img
               src="{{ SiteData::brandLogoUrl() }}"
               alt="LITUS Group"
-              class="h-10 md:h-12 w-auto transition-all duration-300"
-              :class="navSolid ? '' : 'brightness-0 invert'"
+              class="h-14 md:h-16 w-auto transition-all duration-300"
+              :class="navOnDarkHero ? 'brightness-0 invert' : ''"
             />
           </a>
         </div>
@@ -92,7 +99,7 @@
                 <a
                   href="{{ route($item['route']) }}"
                   class="transition-colors font-semibold text-base flex items-center gap-1.5"
-                  :class="navSolid ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'"
+                  :class="navOnDarkHero ? 'text-white hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'"
                   @click="companiesOpen = false"
                 >
                   {{ $item['label'] }}
@@ -162,7 +169,7 @@
                 <a
                   href="{{ route($item['route']) }}"
                   class="transition-colors font-semibold text-base"
-                  :class="navSolid ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'"
+                  :class="navOnDarkHero ? 'text-white hover:text-blue-300' : 'text-gray-700 hover:text-blue-600'"
                   @click="companiesOpen = false"
                 >
                   {{ $item['label'] }}
@@ -176,7 +183,7 @@
         <button
           type="button"
           class="lg:hidden p-2"
-          :class="navSolid ? 'text-gray-900' : 'text-white'"
+          :class="navOnDarkHero ? 'text-white' : 'text-gray-900'"
           @click="mobileOpen = !mobileOpen"
           :aria-expanded="mobileOpen"
           aria-label="Toggle menu"

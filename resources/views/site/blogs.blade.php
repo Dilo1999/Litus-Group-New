@@ -3,7 +3,7 @@
 @section('content')
 {{-- src/app/pages/BlogsPage.tsx — hero, filter/search, featured + grid, pagination, gallery --}}
 <div
-  class="min-h-screen bg-white pt-16"
+  class="min-h-screen bg-white"
   data-blogs-page
   x-data="blogsPage(@js($blogPosts), @js($blogCategories))"
 >
