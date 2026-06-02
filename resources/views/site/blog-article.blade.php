@@ -8,7 +8,7 @@
 <div class="min-h-screen overflow-x-hidden bg-[#f9f8f6] font-sans antialiased">
 
   {{-- Hero --}}
-  <section class="relative overflow-hidden bg-[#0c1a2e] pt-20 max-sm:pt-[4.75rem]">
+  <section class="relative overflow-hidden bg-[#0c1a2e] pt-16 max-sm:pt-[4rem]">
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.06] via-transparent to-white/[0.03]" aria-hidden="true"></div>
     <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div class="absolute -right-[200px] -top-[300px] size-[700px] rounded-full border border-white/5"></div>

@@ -20,20 +20,23 @@ class EditCompany extends EditRecord
     {
         $this->restoreNonDiskFileUploadPreview(field: 'logo', url: SiteData::companyLogoUrl($this->record->logo ?? null));
 
-        $aboutRaw = $this->record->about_image ?? null;
-        $aboutUrl = null;
-        if (filled($aboutRaw) && (str_starts_with($aboutRaw, 'http://') || str_starts_with($aboutRaw, 'https://'))) {
-            $aboutUrl = $aboutRaw;
-        } elseif (filled($aboutRaw) && str_starts_with($aboutRaw, 'companies/') && Storage::disk('public')->exists($aboutRaw)) {
-            // Already on disk; FileUpload will hydrate it.
-            $aboutUrl = null;
-        } elseif (filled($aboutRaw)) {
-            // If it isn't a URL and doesn't exist on disk, don't attempt to preview.
-            $aboutUrl = null;
+        $this->restoreExternalFileUploadPreview('hero_image');
+        $this->restoreExternalFileUploadPreview('about_image');
+    }
+
+    protected function restoreExternalFileUploadPreview(string $field): void
+    {
+        $raw = $this->record->getAttribute($field);
+        if (blank($raw)) {
+            return;
         }
 
-        if ($aboutUrl) {
-            $this->data['about_image'] = [(string) Str::uuid() => $aboutUrl];
+        if (str_starts_with((string) $raw, 'companies/') && Storage::disk('public')->exists((string) $raw)) {
+            return;
+        }
+
+        if (str_starts_with((string) $raw, 'http://') || str_starts_with((string) $raw, 'https://')) {
+            $this->data[$field] = [(string) Str::uuid() => (string) $raw];
         }
     }
 

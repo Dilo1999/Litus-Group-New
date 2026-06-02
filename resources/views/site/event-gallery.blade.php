@@ -58,7 +58,7 @@
   }"
   x-on:keydown.window="onKey($event)"
 >
-  <section class="pt-32 pb-12 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+  <section class="pt-36 pb-24 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <x-site.motion variant="fade-up" :duration="600">
         <a

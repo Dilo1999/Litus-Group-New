@@ -6,7 +6,7 @@
 @endphp
 
 {{-- Matches src/app/pages/TeamPage.tsx + src/app/components/Team.tsx --}}
-<div class="pt-20">
+<div class="pt-16">
   <section id="team" class="py-24 bg-white" data-team-page>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       @if(empty($team))

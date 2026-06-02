@@ -7,7 +7,7 @@
 
 @section('content')
 {{-- Matches src/app/pages/ContactPage.tsx + src/app/components/Contact.tsx --}}
-<div class="pt-20" data-contact-page x-data="contactPage()">
+<div class="pt-16" data-contact-page x-data="contactPage()">
   {{-- Contact.tsx: useInView(once, margin -100px) gates header + columns; map uses separate useInView --}}
   <section
     id="contact"

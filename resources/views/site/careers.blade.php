@@ -8,7 +8,7 @@
     'jobModalLocked' => (string) old('apply_title_locked', '1') === '1',
 ])
 {{-- Active rows from job_openings (SiteData::careerOpenings); no static fallbacks --}}
-<div class="pt-20">
+<div class="pt-16">
   <section
     id="careers"
     class="py-24 bg-white"

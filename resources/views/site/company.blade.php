@@ -4,6 +4,15 @@
 @php
   $company = $company ?? null;
   $heroLogo = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null);
+  $heroImageRaw = $company['hero_image'] ?? null;
+  $heroImageUrl = null;
+  if (filled($heroImageRaw)) {
+    if (str_starts_with($heroImageRaw, 'http://') || str_starts_with($heroImageRaw, 'https://')) {
+      $heroImageUrl = $heroImageRaw;
+    } elseif (str_starts_with($heroImageRaw, 'companies/')) {
+      $heroImageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($heroImageRaw);
+    }
+  }
   $aboutImageRaw = $company['about_image'] ?? null;
   $aboutImageUrl = null;
   if (filled($aboutImageRaw)) {
@@ -18,33 +27,47 @@
 {{-- Matches src/app/pages/CompanyPage.tsx --}}
 <div data-company-detail>
   {{-- CompanyHero — initial opacity 0 y 30 → animate 0.8s on load --}}
-  <section class="relative pt-32 pb-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-      <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+  <section class="relative pt-36 pb-36 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      @if(filled($heroImageUrl))
+        <img
+          src="{{ $heroImageUrl }}"
+          alt="{{ $company['name'] }} hero"
+          class="w-full h-full object-cover"
+          fetchpriority="high"
+          decoding="async"
+        />
+      @else
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
+      @endif
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-800/80 to-blue-900/90"></div>
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-10 w-96 h-96 bg-blue-400 rounded-full blur-3xl"></div>
+      </div>
     </div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="site-company-hero text-center text-white">
-        <div class="flex items-center justify-center mx-auto mb-6 h-20">
+        <div class="flex items-center justify-center mx-auto mb-4 h-24 md:h-28">
           @if($heroLogo)
             <img
               src="{{ $heroLogo }}"
               alt="{{ $company['name'] }}"
-              class="h-full w-auto max-w-[min(100%,320px)] object-contain brightness-0 invert scale-[1.618]"
+              class="h-full w-auto max-w-[min(100%,400px)] md:max-w-[min(100%,480px)] object-contain brightness-0 invert scale-[1.618]"
             />
           @endif
         </div>
 
-        <h1 class="text-4xl md:text-6xl font-bold mb-4">{{ $company['name'] }}</h1>
-        <p class="text-lg md:text-2xl text-blue-100 mb-8">{{ $company['tagline'] }}</p>
+        <h1 class="text-4xl md:text-6xl font-bold mb-2">{{ $company['name'] }}</h1>
+        <p class="text-lg md:text-2xl text-blue-100 py-4 md:py-5 px-4 max-w-3xl mx-auto leading-relaxed">{{ $company['tagline'] }}</p>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mt-10 md:mt-12">
           <a
             href="tel:{{ $company['hotline'] }}"
-            class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl"
+            class="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-blue-900 px-5 py-2.5 rounded-full text-base font-semibold transition-all shadow-md hover:shadow-lg"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
             {{ $company['hotline'] }}
@@ -52,9 +75,9 @@
           @if(!empty($company['email']))
             <a
               href="mailto:{{ $company['email'] }}"
-              class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30"
+              class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-5 py-2.5 rounded-full text-base font-semibold transition-all border border-white/30"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>

@@ -12,17 +12,23 @@
   ];
 
   $companies = SiteData::companies();
-  $isHome = request()->routeIs('site.home');
+  $heroNav = request()->routeIs([
+    'site.home',
+    'site.company',
+    'site.our-companies',
+    'site.blogs',
+    'site.event',
+  ]);
 @endphp
 
 <div
   x-data="{
-    isHome: @js($isHome),
+    heroNav: @js($heroNav),
     isScrolled: false,
     mobileOpen: false,
     mobileCompaniesOpen: false,
     companiesOpen: false,
-    get navSolid() { return this.isScrolled || !this.isHome },
+    get navSolid() { return this.isScrolled || !this.heroNav },
     _onResize: null,
     _onScroll: null,
     _scrollRaf: null,
@@ -63,17 +69,19 @@
     :class="navSolid ? 'bg-white shadow-md lg:bg-white/95 lg:backdrop-blur-md' : 'bg-transparent'"
   >
     <div class="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-24">
-        <a href="{{ route('site.home') }}" class="cursor-pointer flex select-none items-center shrink-0">
-          <img
-            src="{{ SiteData::brandLogoUrl() }}"
-            alt="LITUS Group"
-            class="h-16 md:h-20 w-auto transition-all duration-300"
-            :class="navSolid ? '' : 'brightness-0 invert'"
-          />
-        </a>
+      <div class="flex items-center h-16">
+        <div class="flex min-w-0 flex-1 items-center justify-start">
+          <a href="{{ route('site.home') }}" class="flex shrink-0 cursor-pointer select-none items-center">
+            <img
+              src="{{ SiteData::brandLogoUrl() }}"
+              alt="LITUS Group"
+              class="h-10 md:h-12 w-auto transition-all duration-300"
+              :class="navSolid ? '' : 'brightness-0 invert'"
+            />
+          </a>
+        </div>
 
-        <div class="hidden lg:flex items-center space-x-10">
+        <div class="hidden shrink-0 items-center space-x-8 lg:flex lg:space-x-10">
           @foreach($navItems as $item)
             @if(!empty($item['dropdown']))
               <div
@@ -83,7 +91,7 @@
               >
                 <a
                   href="{{ route($item['route']) }}"
-                  class="transition-colors font-semibold text-[1.05rem] flex items-center gap-1.5"
+                  class="transition-colors font-semibold text-base flex items-center gap-1.5"
                   :class="navSolid ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'"
                   @click="companiesOpen = false"
                 >
@@ -153,7 +161,7 @@
               <div>
                 <a
                   href="{{ route($item['route']) }}"
-                  class="transition-colors font-semibold text-[1.05rem]"
+                  class="transition-colors font-semibold text-base"
                   :class="navSolid ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-blue-300'"
                   @click="companiesOpen = false"
                 >
@@ -164,6 +172,7 @@
           @endforeach
         </div>
 
+        <div class="flex min-w-0 flex-1 items-center justify-end">
         <button
           type="button"
           class="lg:hidden p-2"
@@ -179,6 +188,7 @@
             <path d="M18 6 6 18M6 6l12 12" />
           </svg>
         </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -196,7 +206,7 @@
     class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white lg:hidden"
     @keydown.escape.window="mobileOpen = false"
   >
-    <div class="flex min-h-[5rem] shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-4 pt-[max(1rem,env(safe-area-inset-top))]">
+    <div class="flex min-h-[4rem] shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <a
         href="{{ route('site.home') }}"
         class="flex min-w-0 flex-1 items-center pr-4"

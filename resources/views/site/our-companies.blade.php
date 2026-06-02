@@ -17,7 +17,7 @@
 @endphp
 
 {{-- PageHero (matches reference: gradient hero, title + subtitle, initial motion 0.8s / y≈30) --}}
-<section class="relative pt-32 pb-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+<section class="relative pt-36 pb-36 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="site-our-companies-hero text-center text-white">
       <h1 class="text-4xl md:text-6xl font-bold mb-6">Our Companies</h1>

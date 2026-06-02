@@ -10,8 +10,11 @@ class Company extends Model
     protected static function booted(): void
     {
         static::deleting(function (Company $company): void {
-            if ($company->logo && str_starts_with($company->logo, 'companies/')) {
-                Storage::disk('public')->delete($company->logo);
+            foreach (['logo', 'hero_image', 'about_image'] as $field) {
+                $path = $company->{$field};
+                if ($path && str_starts_with($path, 'companies/')) {
+                    Storage::disk('public')->delete($path);
+                }
             }
         });
     }
@@ -25,6 +28,7 @@ class Company extends Model
         'category',
         'division',
         'logo',
+        'hero_image',
         'about_image',
         'icon',
         'hotline',
@@ -68,6 +72,7 @@ class Company extends Model
             'category' => $this->category,
             'division' => $this->division,
             'logo' => $this->logo,
+            'hero_image' => $this->hero_image,
             'about_image' => $this->about_image,
             'icon' => $this->icon,
             'hotline' => $this->hotline,

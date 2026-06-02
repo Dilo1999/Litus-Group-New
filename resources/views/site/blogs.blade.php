@@ -3,12 +3,12 @@
 @section('content')
 {{-- src/app/pages/BlogsPage.tsx — hero, filter/search, featured + grid, pagination, gallery --}}
 <div
-  class="min-h-screen bg-white pt-20"
+  class="min-h-screen bg-white pt-16"
   data-blogs-page
   x-data="blogsPage(@js($blogPosts), @js($blogCategories))"
 >
   {{-- Hero — motion on load (y 30, 0.8s) --}}
-  <section class="relative pb-20 pt-32 overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
+  <section class="relative pb-36 pt-36 overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
     <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
       <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptMCAxMmMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9nPjwvc3ZnPg==')] opacity-20"></div>
     </div>

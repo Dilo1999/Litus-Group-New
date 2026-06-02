@@ -113,6 +113,54 @@ class CompanyResource extends Resource
                     ->columns(2),
                 Forms\Components\Section::make('Branding')
                     ->schema([
+                        FileUpload::make('hero_image')
+                            ->label('Hero section image')
+                            ->disk('public')
+                            ->directory('companies/hero')
+                            ->visibility('public')
+                            ->image()
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/svg+xml',
+                            ])
+                            ->rules([
+                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+                            ])
+                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
+                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
+
+                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
+                            })
+                            ->panelLayout('integrated')
+                            ->panelAspectRatio('21:9')
+                            ->removeUploadedFileButtonPosition('left')
+                            ->uploadButtonPosition('center bottom')
+                            ->loadingIndicatorPosition('center bottom')
+                            ->uploadProgressIndicatorPosition('center bottom')
+                            ->maxSize(8192)
+                            ->nullable()
+                            ->placeholder('Drag & drop your image or browse')
+                            ->helperText('Background image for the company page hero banner. A blue overlay keeps text readable.')
+                            ->extraAttributes(['class' => 'max-w-3xl'])
+                            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
+                                $disk = $component->getDisk();
+
+                                try {
+                                    if ($disk->exists($file)) {
+                                        return $disk->url($file);
+                                    }
+                                } catch (\Throwable) {
+                                }
+
+                                if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
+                                    return $file;
+                                }
+
+                                return null;
+                            }),
                         FileUpload::make('logo')
                             ->label('Logo')
                             ->disk('public')
@@ -308,6 +356,13 @@ class CompanyResource extends Resource
             ->all();
 
         unset($data['service_items'], $data['strength_items']);
+
+        $data = static::normalizeFileFieldForSave(
+            data: $data,
+            field: 'hero_image',
+            existing: $existing,
+            deleteWhenReplacedPrefix: 'companies/',
+        );
 
         $data = static::normalizeFileFieldForSave(
             data: $data,

@@ -19,7 +19,7 @@
 @endphp
 
 {{-- Matches src/app/pages/AboutPage.tsx + src/app/components/About.tsx --}}
-<div class="pt-20">
+<div class="pt-16">
   <section id="about" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
