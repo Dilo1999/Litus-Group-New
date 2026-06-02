@@ -32,6 +32,7 @@ class AboutUsSales extends Page implements HasForms
         $this->abortIfHr();
 
         $this->form->fill([
+            'hero_image_path' => SiteSetting::getValue('about.hero.image_path'),
             'intro_paragraph_1' => SiteSetting::getValue(
                 'about.intro.paragraph_1',
                 'LITUS Group is a diversified business conglomerate with a strong presence across multiple sectors including hospitality, construction, automotive, technology, and trading. Our commitment to excellence drives everything we do.'
@@ -56,6 +57,21 @@ class AboutUsSales extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
+            Forms\Components\Section::make('Hero image')
+                ->description('Upload, replace, or remove the hero image shown at the top of the public About Us page.')
+                ->schema([
+                    Forms\Components\FileUpload::make('hero_image_path')
+                        ->label('Hero image')
+                        ->disk('public')
+                        ->directory('site/about/hero')
+                        ->visibility('public')
+                        ->preserveFilenames()
+                        ->image()
+                        ->imagePreviewHeight('180')
+                        ->maxSize(4096)
+                        ->helperText('PNG/JPG/WebP. Recommended: 1920×1080.'),
+                ])
+                ->columns(1),
             Forms\Components\Section::make('About LITUS Group — intro text')
                 ->description('Two paragraphs shown beside the image under “About LITUS Group” on the public About Us page.')
                 ->schema([
@@ -98,6 +114,13 @@ class AboutUsSales extends Page implements HasForms
     {
         $state = $this->form->getState();
 
+        $previousHero = SiteSetting::getValue('about.hero.image_path');
+        $nextHero = $state['hero_image_path'] ?? null;
+        if ($previousHero && $previousHero !== $nextHero) {
+            Storage::disk('public')->delete($previousHero);
+        }
+        SiteSetting::setValue('about.hero.image_path', $nextHero);
+
         $previousPath = SiteSetting::getValue('about.business_partnership.image_path');
         $nextPath = $state['business_partnership_image_path'] ?? null;
 
@@ -110,6 +133,20 @@ class AboutUsSales extends Page implements HasForms
         SiteSetting::setValue('about.business_partnership.image_path', $nextPath);
 
         $this->notify('success', 'About Us page updated.');
+    }
+
+    public function removeHeroImage(): void
+    {
+        $previousPath = SiteSetting::getValue('about.hero.image_path');
+
+        if ($previousPath) {
+            Storage::disk('public')->delete($previousPath);
+        }
+
+        SiteSetting::setValue('about.hero.image_path', null);
+        $this->form->fill(['hero_image_path' => null]);
+
+        $this->notify('success', 'Hero image removed.');
     }
 
     public function removeBusinessPartnershipImage(): void

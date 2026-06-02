@@ -11,6 +11,15 @@
                 type="button"
                 color="danger"
                 outlined
+                wire:click="removeHeroImage"
+            >
+                Remove hero image
+            </x-filament::button>
+
+            <x-filament::button
+                type="button"
+                color="danger"
+                outlined
                 wire:click="removeBusinessPartnershipImage"
             >
                 Remove image
