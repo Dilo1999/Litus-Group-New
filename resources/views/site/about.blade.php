@@ -85,7 +85,7 @@
             @if($aboutPartnershipSlideCount > 1)
               x-data="aboutPartnershipSlider(@js($aboutPartnershipUrls))"
             @endif
-            class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+            class="relative rounded-2xl overflow-hidden shadow-2xl"
           >
             @if($aboutPartnershipSlideCount > 1)
               <div class="overflow-hidden">
@@ -101,7 +101,7 @@
                       <img
                         :src="src"
                         alt=""
-                        class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
                         :fetchpriority="slideIdx === 0 ? 'high' : 'low'"
                         loading="lazy"
                         decoding="async"
@@ -126,7 +126,7 @@
               <img
                 src="{{ $aboutPartnershipUrls[0] }}"
                 alt="Business partnership"
-                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
                 loading="lazy"
                 decoding="async"
               />
@@ -140,7 +140,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent pointer-events-none"></div>
           </div>
           <div
-            class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform,box-shadow] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:shadow-2xl hover:-translate-y-1 hover:scale-105 cursor-default"
+            class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
             style="transition-delay: 300ms"
             :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
           >
