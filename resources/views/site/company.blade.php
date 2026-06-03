@@ -185,11 +185,11 @@
             {{-- Inner card: hover matches motion.div transition-all in CompanyPage.tsx (separate from 0.5s layout tween) --}}
             <div class="h-full rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg text-center">
               @if(filled($serviceDisplay['icon_url']))
-                <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                <div class="mb-4 mx-auto flex h-[80px] w-[80px] items-center justify-center rounded-lg bg-blue-100">
                   <img
                     src="{{ $serviceDisplay['icon_url'] }}"
                     alt=""
-                    class="h-6 w-6 object-contain"
+                    class="h-[50px] w-[50px] object-contain"
                     loading="lazy"
                     decoding="async"
                   />
@@ -238,11 +238,11 @@
             :class="whyInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'"
           >
             @if(filled($strengthDisplay['icon_url']))
-              <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+              <div class="mb-4 mx-auto flex h-[80px] w-[80px] items-center justify-center rounded-lg bg-blue-100">
                 <img
                   src="{{ $strengthDisplay['icon_url'] }}"
                   alt=""
-                  class="h-6 w-6 object-contain"
+                  class="h-[50px] w-[50px] object-contain"
                   loading="lazy"
                   decoding="async"
                 />
