@@ -59,17 +59,7 @@ class BlogPostResource extends Resource
                     TextInput::make('title')
                         ->required()
                         ->maxLength(255)
-                        ->reactive()
-                        ->afterStateUpdated(fn (callable $set, ?string $state): mixed => $set('slug', Str::slug((string) $state)))
                         ->columnSpanFull(),
-
-                    TextInput::make('slug')
-                        ->required()
-                        ->maxLength(255)
-                        ->unique(ignoreRecord: true)
-                        ->disabled()
-                        ->dehydrated()
-                        ->helperText('Auto-generated from the title.'),
 
                     TextInput::make('category')
                         ->maxLength(255)
@@ -198,6 +188,43 @@ class BlogPostResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->orderByDesc('created_at')->orderByDesc('id');
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function assignSlug(array $data, ?BlogPost $existing = null): array
+    {
+        $title = trim((string) ($data['title'] ?? ''));
+        if ($title !== '') {
+            $data['slug'] = static::uniqueSlugForTitle($title, $existing?->getKey());
+        }
+
+        return $data;
+    }
+
+    public static function uniqueSlugForTitle(string $title, ?int $exceptId = null): string
+    {
+        $base = Str::slug($title);
+        if ($base === '') {
+            $base = 'post';
+        }
+
+        $slug = $base;
+        $suffix = 2;
+
+        while (
+            BlogPost::query()
+                ->when($exceptId !== null, fn (Builder $query) => $query->whereKeyNot($exceptId))
+                ->where('slug', $slug)
+                ->exists()
+        ) {
+            $slug = $base.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }
 

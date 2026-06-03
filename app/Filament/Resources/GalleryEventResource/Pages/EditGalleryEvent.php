@@ -10,6 +10,11 @@ class EditGalleryEvent extends EditRecord
 {
     protected static string $resource = GalleryEventResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return GalleryEventResource::assignSlug($data, $this->getRecord());
+    }
+
     protected function getActions(): array
     {
         return [

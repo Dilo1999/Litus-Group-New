@@ -86,17 +86,7 @@ class GalleryEventResource extends Resource
                     TextInput::make('title')
                         ->required()
                         ->maxLength(255)
-                        ->reactive()
-                        ->afterStateUpdated(fn (callable $set, ?string $state): mixed => $set('slug', Str::slug((string) $state)))
                         ->columnSpanFull(),
-
-                    TextInput::make('slug')
-                        ->maxLength(255)
-                        ->disabled()
-                        ->dehydrated()
-                        ->default(fn (callable $get): string => Str::slug((string) $get('title') ?: ''))
-                        ->unique(ignoreRecord: true)
-                        ->helperText('Used in the public URL (e.g. /events/your-slug).'),
 
                     DatePicker::make('date_display')
                         ->label('Display date')
@@ -194,5 +184,42 @@ class GalleryEventResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->orderBy('sort_order')->orderBy('id');
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function assignSlug(array $data, ?GalleryEvent $existing = null): array
+    {
+        $title = trim((string) ($data['title'] ?? ''));
+        if ($title !== '') {
+            $data['slug'] = static::uniqueSlugForTitle($title, $existing?->getKey());
+        }
+
+        return $data;
+    }
+
+    public static function uniqueSlugForTitle(string $title, ?int $exceptId = null): string
+    {
+        $base = Str::slug($title);
+        if ($base === '') {
+            $base = 'event';
+        }
+
+        $slug = $base;
+        $suffix = 2;
+
+        while (
+            GalleryEvent::query()
+                ->when($exceptId !== null, fn (Builder $query) => $query->whereKeyNot($exceptId))
+                ->where('slug', $slug)
+                ->exists()
+        ) {
+            $slug = $base.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }

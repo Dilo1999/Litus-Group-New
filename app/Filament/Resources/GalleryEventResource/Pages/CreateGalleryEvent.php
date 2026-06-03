@@ -15,6 +15,6 @@ class CreateGalleryEvent extends CreateRecord
         // Ensure `sort_order` always reflects the order entries are created in.
         $data['sort_order'] = GalleryEvent::query()->max('sort_order') + 1;
 
-        return $data;
+        return GalleryEventResource::assignSlug($data);
     }
 }
