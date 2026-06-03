@@ -173,7 +173,7 @@
       <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach(($company['services'] ?? []) as $index => $service)
           @php
-            $svcIcon = \App\Support\CompanyPageIcons::serviceIcon($service);
+            $serviceDisplay = \App\Support\CompanyPageIcons::resolveLabeledItem($service);
           @endphp
           <div
             class="site-company-motion-service-card h-full transition-[opacity,transform] duration-[500ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
@@ -182,10 +182,18 @@
           >
             {{-- Inner card: hover matches motion.div transition-all in CompanyPage.tsx (separate from 0.5s layout tween) --}}
             <div class="h-full rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg text-center">
-              <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                <x-site.lucide-icon :name="$svcIcon" class="h-6 w-6 text-blue-600" />
-              </div>
-              <h3 class="text-lg font-bold text-gray-900">{{ $service }}</h3>
+              @if(filled($serviceDisplay['icon_url']))
+                <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                  <img
+                    src="{{ $serviceDisplay['icon_url'] }}"
+                    alt=""
+                    class="h-6 w-6 object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              @endif
+              <h3 class="text-lg font-bold text-gray-900">{{ $serviceDisplay['label'] }}</h3>
             </div>
           </div>
         @endforeach
@@ -220,17 +228,25 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         @foreach(($company['strengths'] ?? []) as $index => $strength)
           @php
-            $strIcon = \App\Support\CompanyPageIcons::strengthIcon($strength);
+            $strengthDisplay = \App\Support\CompanyPageIcons::resolveLabeledItem($strength);
           @endphp
           <div
             class="site-company-motion-why-card text-center transition-[opacity,transform] duration-[500ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
             style="transition-delay: {{ $index * 100 }}ms"
             :class="whyInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'"
           >
-            <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <x-site.lucide-icon :name="$strIcon" class="w-8 h-8 text-white" />
-            </div>
-            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">{{ $strength }}</h3>
+            @if(filled($strengthDisplay['icon_url']))
+              <div class="mb-4 mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                <img
+                  src="{{ $strengthDisplay['icon_url'] }}"
+                  alt=""
+                  class="h-6 w-6 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            @endif
+            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-2">{{ $strengthDisplay['label'] }}</h3>
           </div>
         @endforeach
       </div>

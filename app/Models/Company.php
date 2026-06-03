@@ -16,6 +16,18 @@ class Company extends Model
                     Storage::disk('public')->delete($path);
                 }
             }
+
+            foreach (\App\Support\CompanyPageIcons::iconPathsFromItems($company->services ?? []) as $path) {
+                if (str_starts_with($path, 'companies/service-icons/')) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
+
+            foreach (\App\Support\CompanyPageIcons::iconPathsFromItems($company->strengths ?? []) as $path) {
+                if (str_starts_with($path, 'companies/strength-icons/')) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
         });
     }
 
