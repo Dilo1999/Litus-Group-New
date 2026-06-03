@@ -89,7 +89,7 @@
               >
                 <div class="min-w-0 w-full text-center sm:flex-1 sm:text-left">
                   <div
-                    class="text-white font-extrabold leading-tight tracking-tight text-[1.7rem] sm:text-3xl"
+                    class="text-white font-bold leading-tight tracking-tight text-[1.7rem] sm:text-3xl"
                     x-text="items[idx].company"
                   ></div>
                 </div>
