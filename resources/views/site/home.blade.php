@@ -221,16 +221,23 @@
 
   <section class="py-14 md:py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      @php
+        $whyChooseImagePath = \App\Models\SiteSetting::getValue('home.why_choose.image_path');
+        $whyChooseImageUrl = $whyChooseImagePath ? \Illuminate\Support\Facades\Storage::disk('public')->url($whyChooseImagePath) : null;
+      @endphp
       <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
         <x-site.motion class="text-center lg:text-left" variant="fade-up" :duration="800">
           <h2 class="mb-4 text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl md:text-5xl">Why Choose LITUS Group</h2>
           <p class="mb-4 text-base leading-relaxed text-gray-600 sm:mb-6 sm:text-lg">
             LITUS Group stands as a beacon of diversification and excellence in the Maldives business landscape. With 16 specialized companies spanning multiple industries, we deliver comprehensive solutions that drive growth and create lasting value.
           </p>
-          <p class="mb-6 text-base leading-relaxed text-gray-600 sm:mb-8 sm:text-lg">
+          <p class="mb-0 text-base leading-relaxed text-gray-600 md:mb-8 md:text-lg">
             Our commitment to quality, innovation, and customer satisfaction has made us a trusted partner for businesses and individuals alike.
           </p>
-          <div class="flex justify-center lg:justify-start">
+          <div @class([
+            'mt-6 flex justify-center lg:justify-start',
+            'hidden md:flex' => filled($whyChooseImageUrl),
+          ])>
             <a
               href="{{ route('site.about') }}"
               class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
@@ -241,21 +248,25 @@
           </div>
         </x-site.motion>
 
-        @php
-          $whyChooseImagePath = \App\Models\SiteSetting::getValue('home.why_choose.image_path');
-          $whyChooseImageUrl = $whyChooseImagePath ? \Illuminate\Support\Facades\Storage::disk('public')->url($whyChooseImagePath) : null;
-        @endphp
-
         @if($whyChooseImageUrl)
           <x-site.motion variant="fade-up" :delay="200" :duration="800">
             <div class="group relative overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-2xl">
               <img
                 src="{{ $whyChooseImageUrl }}"
                 alt="Why Choose LITUS Group"
-                class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 loading="lazy"
                 decoding="async"
               />
+            </div>
+            <div class="mt-6 flex justify-center md:hidden">
+              <a
+                href="{{ route('site.about') }}"
+                class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
+              >
+                Learn More About Us
+                <span class="site-cta-btn__icon" aria-hidden="true">→</span>
+              </a>
             </div>
           </x-site.motion>
         @endif
