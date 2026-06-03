@@ -240,28 +240,44 @@ document.addEventListener('alpine:init', () => {
     items: Array.isArray(items) ? items : [],
     fallbackHeroImage: fallbackHeroImage || null,
     idx: 0,
+    slideIdx: 0,
     visible: true,
     _interval: null,
     _cyclePending: null,
+    _snapPending: null,
     _cycling: false,
+    _trackNoTransition: false,
     get heroSlides() {
-      return this.items
-        .map((item) => {
-          const url = item?.heroImage;
-          if (url && String(url).trim()) {
-            return String(url).trim();
-          }
+      const slides = this.items.map((item) => {
+        const url = item?.heroImage;
+        if (url && String(url).trim()) {
+          return String(url).trim();
+        }
 
-          return this.fallbackHeroImage || '';
-        })
-        .filter((url) => url);
+        return this.fallbackHeroImage || '';
+      });
+
+      if (slides.length < 2) {
+        return slides;
+      }
+
+      return [...slides, slides[0]];
     },
     get heroSlideTransform() {
-      if (this.heroSlides.length <= 1) {
+      if (this.items.length <= 1) {
         return 'translateX(0)';
       }
 
-      return `translateX(-${this.idx * 100}%)`;
+      return `translateX(-${this.slideIdx * 100}%)`;
+    },
+    get heroTrackStyle() {
+      const style = { transform: this.heroSlideTransform };
+
+      if (this._trackNoTransition) {
+        style.transition = 'none';
+      }
+
+      return style;
     },
     init() {
       if (!Array.isArray(items) || items.length === 0) {
@@ -279,6 +295,9 @@ document.addEventListener('alpine:init', () => {
       if (this._cyclePending) {
         window.clearTimeout(this._cyclePending);
       }
+      if (this._snapPending) {
+        window.clearTimeout(this._snapPending);
+      }
       if (this._interval) {
         window.clearInterval(this._interval);
       }
@@ -287,9 +306,32 @@ document.addEventListener('alpine:init', () => {
       if (this._cycling || !Array.isArray(this.items) || this.items.length < 2) {
         return;
       }
+
+      const count = this.items.length;
+      const nextIdx = (this.idx + 1) % count;
+
       this._cycling = true;
       this.visible = false;
-      this.idx = (this.idx + 1) % this.items.length;
+      this.idx = nextIdx;
+
+      if (this.slideIdx === count - 1) {
+        this.slideIdx = count;
+        if (this._snapPending) {
+          window.clearTimeout(this._snapPending);
+        }
+        this._snapPending = window.setTimeout(() => {
+          this._trackNoTransition = true;
+          this.slideIdx = 0;
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              this._trackNoTransition = false;
+            });
+          });
+        }, 900);
+      } else {
+        this.slideIdx = nextIdx;
+      }
+
       if (this._cyclePending) {
         window.clearTimeout(this._cyclePending);
       }

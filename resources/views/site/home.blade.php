@@ -31,7 +31,7 @@
       @if(count($highlights) > 0)
         <div
           class="hero-bg-slider-track flex h-full"
-          :style="{ transform: heroSlideTransform }"
+          :style="heroTrackStyle"
           x-show="heroSlides.length > 0"
         >
           <template x-for="(src, slideIdx) in heroSlides" :key="slideIdx">
