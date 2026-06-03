@@ -76,6 +76,8 @@ document.addEventListener('alpine:init', () => {
     init() {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         this.careersInView = true;
+      } else if (window.matchMedia('(max-width: 767px)').matches) {
+        this.careersInView = true;
       }
       if (cfg.reopenJobModal) {
         this.applyJobTitle = cfg.jobModalTitle || '';
@@ -108,6 +110,9 @@ document.addEventListener('alpine:init', () => {
     mapInView: false,
     init() {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        this.contactInView = true;
+        this.mapInView = true;
+      } else if (window.matchMedia('(max-width: 767px)').matches) {
         this.contactInView = true;
         this.mapInView = true;
       }

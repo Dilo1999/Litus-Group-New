@@ -3,7 +3,7 @@
 ])
 
 @if (session('status'))
-  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800" role="status">
+  <div class="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 sm:mb-6 sm:px-5 sm:py-4 sm:text-base" role="status">
     {{ session('status') }}
   </div>
   <script>
@@ -18,7 +18,7 @@
   id="contact-form"
   method="POST"
   action="{{ route('site.contact.submit') }}"
-  class="bg-white p-8 rounded-2xl shadow-lg"
+  class="rounded-2xl bg-white p-5 shadow-lg sm:p-8"
   x-data="{
     canSubmit: false,
     submitting: false,
@@ -34,7 +34,7 @@
   @submit="submitting = true; update()"
 >
   @csrf
-  <div class="space-y-6">
+  <div class="space-y-4 sm:space-y-6">
     <div>
       <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
       <input
@@ -121,7 +121,7 @@
       type="submit"
       :disabled="!canSubmit || submitting"
       :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
-      class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      class="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-blue-400 sm:px-8 sm:py-4 sm:text-lg"
     >
       Send Message
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -13,7 +13,7 @@
 @section('content')
 {{-- Matches src/app/pages/ContactPage.tsx + src/app/components/Contact.tsx --}}
 <div data-contact-page x-data="contactPage()">
-  <section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
+  <section class="relative flex min-h-[min(72svh,520px)] items-center justify-center overflow-hidden md:min-h-[640px]">
     <div class="absolute inset-0 z-0">
       @if(filled($heroImageUrl))
         <img
@@ -27,12 +27,12 @@
       @else
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
       @endif
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/45 via-blue-900/30 to-blue-950/15 md:bg-gradient-to-r md:from-blue-900/90 md:via-blue-800/80 md:to-transparent"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="site-blogs-hero">
-        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Contact Us</h1>
-        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 sm:py-20 md:py-24 lg:px-8">
+      <div class="site-blogs-hero mx-auto max-w-3xl">
+        <h1 class="mb-4 text-3xl font-bold text-white max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-6xl md:[text-shadow:none]">Contact Us</h1>
+        <p class="mx-auto text-base leading-relaxed text-blue-100 max-md:[text-shadow:0_1px_12px_rgba(0,0,0,0.3)] sm:text-lg md:max-w-3xl md:text-2xl md:[text-shadow:none]">
           Reach out to LITUS Group - our team is ready to help
         </p>
       </div>
@@ -42,115 +42,115 @@
   {{-- Contact.tsx: useInView(once, margin -100px) gates header + columns; map uses separate useInView --}}
   <section
     id="contact"
-    class="py-24 bg-gray-50 overflow-x-hidden"
+    class="overflow-x-hidden bg-gray-50 py-14 md:py-24"
     x-intersect.once.margin.-100px.-100px.-100px.-100px="contactInView = true"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
-        class="site-contact-header text-center mb-16 opacity-0 translate-y-[50px] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
-        :class="contactInView ? '!opacity-100 !translate-y-0' : ''"
+        class="site-contact-header mb-10 translate-y-[50px] text-center opacity-0 transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] max-md:will-change-auto md:mb-16 md:will-change-[opacity,transform]"
+        :class="contactInView ? '!translate-y-0 !opacity-100' : ''"
       >
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Get In Touch</h2>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Get In Touch</h2>
+        <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           Get in touch with us to learn more about our services and how we can help you
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+        {{-- Contact form first on mobile, right column on desktop --}}
+        <div
+          class="site-contact-form order-1 translate-y-[30px] opacity-0 transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] max-md:will-change-auto md:translate-x-[50px] md:translate-y-0 md:will-change-[opacity,transform] lg:order-2"
+          style="transition-delay: 400ms"
+          :class="contactInView ? '!translate-x-0 !translate-y-0 !opacity-100' : ''"
+        >
+          <x-contact-form :companies="$companies" />
+        </div>
+
         {{-- Contact Information --}}
         <div
-          class="site-contact-left space-y-8 opacity-0 -translate-x-[50px] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
+          class="site-contact-left order-2 translate-y-[30px] space-y-6 opacity-0 transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] max-md:will-change-auto sm:space-y-8 md:-translate-x-[50px] md:translate-y-0 md:will-change-[opacity,transform] lg:order-1"
           style="transition-delay: 200ms"
-          :class="contactInView ? '!opacity-100 !translate-x-0' : ''"
+          :class="contactInView ? '!translate-x-0 !translate-y-0 !opacity-100' : ''"
         >
-          <div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">
+          <div class="text-center lg:text-left">
+            <h3 class="mb-4 text-xl font-bold text-gray-900 sm:mb-6 sm:text-2xl">
               Get In Touch
             </h3>
-            <p class="text-gray-600 mb-8 leading-relaxed">
+            <p class="text-sm leading-relaxed text-gray-600 sm:text-base">
               Whether you're interested in our services, looking for partnership
               opportunities, or have questions about our companies, we're here to help.
             </p>
           </div>
 
-          <div class="space-y-6">
-            <div class="flex items-start gap-4">
-              <div class="bg-blue-100 p-3 rounded-lg shrink-0 transition-transform duration-200 ease-out hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600" aria-hidden="true">
+          <div class="space-y-4 sm:space-y-6">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="shrink-0 rounded-lg bg-blue-100 p-2.5 transition-transform duration-200 ease-out sm:p-3 md:hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 sm:h-6 sm:w-6" aria-hidden="true">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
               </div>
-              <div>
-                <div class="font-semibold text-gray-900 mb-1">Phone</div>
+              <div class="min-w-0 text-left">
+                <div class="mb-0.5 text-sm font-semibold text-gray-900 sm:mb-1 sm:text-base">Phone</div>
                 <a
                   href="tel:+9603322288"
-                  class="text-gray-600 hover:text-blue-600 transition-colors"
+                  class="text-sm text-gray-600 transition-colors hover:text-blue-600 sm:text-base"
                 >
                   +960 332 2288
                 </a>
               </div>
             </div>
 
-            <div class="flex items-start gap-4">
-              <div class="bg-blue-100 p-3 rounded-lg shrink-0 transition-transform duration-200 ease-out hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600" aria-hidden="true">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="shrink-0 rounded-lg bg-blue-100 p-2.5 transition-transform duration-200 ease-out sm:p-3 md:hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 sm:h-6 sm:w-6" aria-hidden="true">
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
               </div>
-              <div>
-                <div class="font-semibold text-gray-900 mb-1">Email</div>
+              <div class="min-w-0 text-left">
+                <div class="mb-0.5 text-sm font-semibold text-gray-900 sm:mb-1 sm:text-base">Email</div>
                 <a
                   href="mailto:info@litusgroup.com"
-                  class="text-gray-600 hover:text-blue-600 transition-colors"
+                  class="break-all text-sm text-gray-600 transition-colors hover:text-blue-600 sm:text-base"
                 >
                   info@litusgroup.com
                 </a>
               </div>
             </div>
 
-            <div class="flex items-start gap-4">
-              <div class="bg-blue-100 p-3 rounded-lg shrink-0 transition-transform duration-200 ease-out hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600" aria-hidden="true">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="shrink-0 rounded-lg bg-blue-100 p-2.5 transition-transform duration-200 ease-out sm:p-3 md:hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 sm:h-6 sm:w-6" aria-hidden="true">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
               </div>
-              <div>
-                <div class="font-semibold text-gray-900 mb-1">Office</div>
-                <p class="text-gray-600">
+              <div class="min-w-0 text-left">
+                <div class="mb-0.5 text-sm font-semibold text-gray-900 sm:mb-1 sm:text-base">Office</div>
+                <p class="text-sm text-gray-600 sm:text-base">
                   Male', Republic of Maldives
                 </p>
               </div>
             </div>
           </div>
 
-          <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-            <h4 class="font-semibold text-gray-900 mb-3">Office Hours</h4>
-            <div class="space-y-2 text-gray-600">
-              <div class="flex justify-between gap-4">
+          <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 sm:p-6">
+            <h4 class="mb-3 text-center text-sm font-semibold text-gray-900 sm:text-base lg:text-left">Office Hours</h4>
+            <div class="space-y-2.5 text-sm text-gray-600 sm:text-base">
+              <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
                 <span>Sunday - Thursday</span>
-                <span class="font-medium shrink-0">8:00 AM - 5:00 PM</span>
+                <span class="font-medium sm:shrink-0">8:00 AM - 5:00 PM</span>
               </div>
-              <div class="flex justify-between gap-4">
+              <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
                 <span>Saturday</span>
-                <span class="font-medium shrink-0">9:00 AM - 1:00 PM</span>
+                <span class="font-medium sm:shrink-0">9:00 AM - 1:00 PM</span>
               </div>
-              <div class="flex justify-between gap-4">
+              <div class="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
                 <span>Friday</span>
-                <span class="font-medium shrink-0">Closed</span>
+                <span class="font-medium sm:shrink-0">Closed</span>
               </div>
             </div>
           </div>
-        </div>
-
-        {{-- Contact Form --}}
-        <div
-          class="site-contact-form opacity-0 translate-x-[50px] transition-[opacity,transform] duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[opacity,transform]"
-          style="transition-delay: 400ms"
-          :class="contactInView ? '!opacity-100 !translate-x-0' : ''"
-        >
-          <x-contact-form :companies="$companies" />
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@
 
   {{-- Google Maps (second useInView in Contact.tsx) --}}
   <section
-    class="site-contact-map relative w-full h-[400px] md:h-[500px] opacity-0 transition-opacity duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-opacity"
+    class="site-contact-map relative h-[min(52vw,280px)] w-full opacity-0 transition-opacity duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)] max-md:will-change-auto sm:h-[360px] md:h-[500px] md:will-change-opacity"
     x-intersect.once.margin.-100px.-100px.-100px.-100px="mapInView = true"
     :class="mapInView ? '!opacity-100' : ''"
   >
@@ -171,18 +171,18 @@
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"
       title="LITUS Group Location"
-      class="w-full h-full"
+      class="h-full w-full"
     ></iframe>
-    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8 pointer-events-none">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 class="text-xl md:text-3xl font-bold text-white mb-2">
+    <div class="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6 md:p-8">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h3 class="mb-1.5 text-lg font-bold text-white sm:mb-2 sm:text-xl md:text-3xl">
           Visit Our Office
         </h3>
         <a
           href="https://maps.app.goo.gl/4ATBypfyR4cKs5Dj7"
           target="_blank"
           rel="noopener noreferrer"
-          class="pointer-events-auto inline-flex items-center gap-2 text-gray-200 hover:text-white transition-colors"
+          class="pointer-events-auto inline-flex items-center gap-2 text-sm text-gray-200 transition-colors hover:text-white sm:text-base"
           aria-label="Open location in Google Maps"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
