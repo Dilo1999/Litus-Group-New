@@ -45,7 +45,7 @@
 
 <div
     data-motion
-    x-data="{ shown: false, init() { if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.shown = true } }"
+    x-data="{ shown: false, init() { const mq = window.matchMedia; if (mq('(prefers-reduced-motion: reduce)').matches || mq('(max-width: 767px)').matches) this.shown = true } }"
     x-intersect.once.margin.-100px.-100px.-100px.-100px="shown = true"
     x-bind:class="shown ? '{{ $to }}' : '{{ $from }}'"
     class="transition-[opacity,transform] ease-out {{ $attributes->get('class') }}"

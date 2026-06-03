@@ -22,7 +22,7 @@
   {{-- Hero: matches src/app/pages/HomePage.tsx HeroSection --}}
   <section
     id="home"
-    class="relative min-h-screen flex items-center justify-center overflow-hidden"
+    class="relative flex min-h-[min(82svh,700px)] items-center justify-center overflow-hidden md:min-h-screen"
     @if(count($highlights) > 0)
       x-data="heroSpotlight(@js($highlights), @js($heroImageUrl))"
     @endif
@@ -55,18 +55,18 @@
           decoding="async"
         />
       @endif
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/45 via-blue-900/30 to-blue-950/15 md:bg-gradient-to-r md:from-blue-900/90 md:via-blue-800/80 md:to-transparent"></div>
     </div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-      <div class="max-w-3xl">
-        <h1 class="site-hero-title text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
+    <div class="relative z-10 mx-auto max-w-7xl px-4 pb-12 pt-20 sm:px-6 sm:pb-14 sm:pt-24 md:py-32 md:pb-[max(5rem,env(safe-area-inset-bottom))] lg:px-8">
+      <div class="mx-auto max-w-3xl text-center md:mx-0 md:text-left">
+        <h1 class="site-hero-title mb-4 text-3xl font-bold leading-tight text-white max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-7xl md:[text-shadow:none]">
           Taking Diversification
           <br />
           <span class="text-blue-300">To A Whole New Level</span>
         </h1>
 
-        <p class="site-hero-lead text-lg md:text-2xl text-gray-200 mb-10 leading-relaxed">
+        <p class="site-hero-lead mb-6 text-base leading-relaxed text-gray-200 max-md:[text-shadow:0_1px_12px_rgba(0,0,0,0.3)] sm:mb-8 sm:text-lg md:mb-10 md:text-2xl md:[text-shadow:none]">
           From hospitality to construction, automotive to technology –
           LITUS Group delivers world-class services across 16 diverse brands.
         </p>
@@ -74,9 +74,9 @@
         @if(count($highlights) > 0)
           {{-- Rotating spotlight: all companies with featured=true (DB order); Alpine cycles when 2+ --}}
           <div
-            class="site-hero-card bg-white/10 border border-white/20 rounded-2xl p-6 mb-10 md:backdrop-blur-md"
+            class="site-hero-card mx-auto mb-6 w-full max-w-sm rounded-2xl border border-white/20 bg-white/15 p-4 sm:mb-8 sm:max-w-none sm:bg-white/10 sm:p-6 md:mx-0 md:mb-10 md:backdrop-blur-md"
           >
-            <div class="min-h-[5.5rem] flex flex-col justify-center">
+            <div class="flex min-h-[4.5rem] flex-col justify-center sm:min-h-[5.5rem]">
               <div
                 x-show="visible"
                 x-transition:enter="hero-spotlight-tx-enter"
@@ -89,7 +89,7 @@
               >
                 <div class="min-w-0 w-full text-center sm:flex-1 sm:text-left">
                   <div
-                    class="text-white font-bold leading-tight tracking-tight text-[1.7rem] sm:text-3xl"
+                    class="break-words text-[1.35rem] font-bold leading-tight tracking-tight text-white sm:text-3xl"
                     x-text="items[idx].company"
                   ></div>
                 </div>
@@ -108,10 +108,10 @@
           </div>
         @endif
 
-        <div class="site-hero-ctas flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="site-hero-ctas mx-auto flex w-full max-w-sm flex-col items-center gap-3 md:mx-0 md:max-w-none md:items-stretch sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <a
             href="{{ route('site.our-companies') }}"
-            class="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            class="group flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
           >
             Explore Our Companies
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 group-hover:translate-x-1 transition-transform" aria-hidden="true">
@@ -121,7 +121,7 @@
           </a>
           <a
             href="{{ route('site.contact') }}"
-            class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all border border-white/30 md:backdrop-blur-sm flex items-center justify-center text-center sm:ml-auto"
+            class="flex w-full items-center justify-center rounded-full border border-white/30 bg-white/15 px-6 py-3.5 text-center text-base font-semibold text-white transition-all hover:bg-white/20 sm:ml-auto sm:w-auto sm:px-8 sm:py-4 sm:text-lg md:backdrop-blur-sm"
           >
             Contact Us
           </a>
@@ -129,7 +129,7 @@
       </div>
     </div>
 
-    <div class="site-scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
+    <div class="site-scroll-indicator absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 md:block md:bottom-10">
       <div class="site-scroll-indicator__mouse w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
         <div class="w-1 h-2 bg-white rounded-full"></div>
       </div>
@@ -139,28 +139,29 @@
   {{-- CompaniesOverview — matches HomePage.tsx (single useInView ref on header, shared isInView for grid + CTA) --}}
   <section
     id="companies"
-    class="py-24 bg-white"
+    class="py-14 bg-white md:py-24"
     data-companies-overview
     x-data="{
       companiesInView: false,
       init() {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.companiesInView = true;
+        else if (window.matchMedia('(max-width: 767px)').matches) this.companiesInView = true;
       }
     }"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
-        class="site-companies-overview-header text-center mb-16 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform]"
+        class="site-companies-overview-header mb-10 text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:mb-16 md:will-change-[opacity,transform]"
         x-intersect.once.margin.-100px.-100px.-100px.-100px="companiesInView = true"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Companies</h2>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Our Companies</h2>
+        <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           16 specialized companies delivering excellence across multiple industries
         </p>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 mb-12">
+      <div class="mb-10 grid grid-cols-2 gap-3 sm:gap-6 md:mb-12 md:grid-cols-4 lg:grid-cols-4">
         @foreach($displayCompanies as $index => $company)
           @php
             $companyLogoSrc = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null);
@@ -171,9 +172,9 @@
             :class="companiesInView ? 'opacity-100 scale-100' : 'opacity-0 scale-90'"
           >
             <a href="{{ route('site.company', ['slug' => $company['slug']]) }}" class="block h-full">
-              <div class="bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 p-6 rounded-xl transition-all cursor-pointer group text-center h-full flex flex-col items-center justify-center min-h-[180px]">
+              <div class="group flex h-full min-h-[128px] cursor-pointer flex-col items-center justify-center rounded-xl border border-gray-200 bg-gray-50 p-3 text-center transition-all hover:border-blue-300 hover:bg-blue-50 sm:min-h-[180px] sm:p-6">
                 @if($companyLogoSrc)
-                  <div class="w-full h-24 flex items-center justify-center mb-2">
+                  <div class="mb-1 flex h-16 w-full items-center justify-center sm:mb-2 sm:h-24">
                     <img
                       src="{{ $companyLogoSrc }}"
                       alt="{{ $company['name'] }}"
@@ -183,14 +184,14 @@
                     />
                   </div>
                 @else
-                  <div class="bg-white group-hover:bg-blue-100 w-16 h-16 rounded-xl flex items-center justify-center mb-4 transition-all">
+                  <div class="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-white transition-all group-hover:bg-blue-100 sm:mb-4 sm:h-16 sm:w-16">
                     <x-site.lucide-icon
                       :name="$company['icon'] ?? 'building2'"
-                      class="w-8 h-8 text-gray-600 group-hover:text-blue-600 transition-colors"
+                      class="h-6 w-6 text-gray-600 transition-colors group-hover:text-blue-600 sm:h-8 sm:w-8"
                     />
                   </div>
                 @endif
-                <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors text-sm">
+                <h3 class="text-xs font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:text-sm">
                   {{ $company['name'] }}
                 </h3>
               </div>
@@ -206,7 +207,7 @@
       >
         <a
           href="{{ route('site.our-companies') }}"
-          class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2"
+          class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
         >
           View All Companies
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="site-cta-btn__icon" aria-hidden="true">
@@ -220,19 +221,19 @@
 
   <section class="py-14 md:py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <x-site.motion class="text-center lg:text-left" variant="fade-left" :duration="800">
-          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Why Choose LITUS Group</h2>
-          <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+      <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <x-site.motion class="text-center lg:text-left" variant="fade-up" :duration="800">
+          <h2 class="mb-4 text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl md:text-5xl">Why Choose LITUS Group</h2>
+          <p class="mb-4 text-base leading-relaxed text-gray-600 sm:mb-6 sm:text-lg">
             LITUS Group stands as a beacon of diversification and excellence in the Maldives business landscape. With 16 specialized companies spanning multiple industries, we deliver comprehensive solutions that drive growth and create lasting value.
           </p>
-          <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+          <p class="mb-6 text-base leading-relaxed text-gray-600 sm:mb-8 sm:text-lg">
             Our commitment to quality, innovation, and customer satisfaction has made us a trusted partner for businesses and individuals alike.
           </p>
           <div class="flex justify-center lg:justify-start">
             <a
               href="{{ route('site.about') }}"
-              class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+              class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
             >
               Learn More About Us
               <span class="site-cta-btn__icon" aria-hidden="true">→</span>
@@ -246,8 +247,8 @@
         @endphp
 
         @if($whyChooseImageUrl)
-          <x-site.motion variant="fade-right" :delay="200" :duration="800">
-            <div class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+          <x-site.motion variant="fade-up" :delay="200" :duration="800">
+            <div class="group relative overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-2xl">
               <img
                 src="{{ $whyChooseImageUrl }}"
                 alt="Why Choose LITUS Group"
@@ -263,35 +264,36 @@
   </section>
 
   {{-- MissionVision: single useInView ref on Mission card (HomePage.tsx) --}}
-  <section class="py-24 bg-blue-600">
+  <section class="py-14 bg-blue-600 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-12"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12"
         data-home-mission-vision
         x-data="{
           mvInView: false,
           init() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.mvInView = true;
+            else if (window.matchMedia('(max-width: 767px)').matches) this.mvInView = true;
           }
         }"
       >
         <div
           x-intersect.once.margin.-100px.-100px.-100px.-100px="mvInView = true"
-          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
+          class="cursor-default rounded-2xl border border-white/20 bg-white/10 p-6 text-center transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto sm:p-8 md:text-left md:will-change-[opacity,transform] md:backdrop-blur-sm md:hover:-translate-y-1 md:hover:border-white/40 md:hover:bg-white/15 md:hover:shadow-xl"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
-          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
-          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
+          <h3 class="mb-3 text-xl font-bold text-white sm:mb-4 sm:text-2xl md:text-3xl">Our Mission</h3>
+          <p class="text-base leading-relaxed text-blue-100 md:text-lg">
             To deliver exceptional value across diverse industries through innovation, quality, and unwavering commitment to customer satisfaction.
           </p>
         </div>
         <div
-          class="bg-white/10 border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto md:will-change-[opacity,transform] md:backdrop-blur-sm hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
+          class="cursor-default rounded-2xl border border-white/20 bg-white/10 p-6 text-center transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto sm:p-8 md:text-left md:will-change-[opacity,transform] md:backdrop-blur-sm md:hover:-translate-y-1 md:hover:border-white/40 md:hover:bg-white/15 md:hover:shadow-xl"
           style="transition-delay: 200ms"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >
-          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Vision</h3>
-          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
+          <h3 class="mb-3 text-xl font-bold text-white sm:mb-4 sm:text-2xl md:text-3xl">Our Vision</h3>
+          <p class="text-base leading-relaxed text-blue-100 md:text-lg">
             To be the most trusted and diversified business group in the Maldives, setting industry standards and creating sustainable value for all stakeholders.
           </p>
         </div>
@@ -299,11 +301,11 @@
     </div>
   </section>
 
-  <section class="py-24 bg-white">
+  <section class="py-14 bg-white md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-site.motion class="text-center mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+      <x-site.motion class="mb-10 text-center md:mb-16" variant="fade-up" :duration="800">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Our Core Values</h2>
+        <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           The LITUS principles that guide everything we do
         </p>
       </x-site.motion>
@@ -318,15 +320,15 @@
         ];
       @endphp
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div class="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
         @foreach($values as $i => $v)
-          <x-site.motion :delay="$i * 100" :duration="500" variant="fade-up">
-            <div class="group bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 hover:border-blue-300 text-center h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-default">
-              <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                <span class="text-3xl font-bold text-white">{{ $v['letter'] }}</span>
+          <x-site.motion :delay="$i * 100" :duration="500" variant="fade-up" class="h-full">
+            <div class="group flex h-full cursor-default flex-col rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-4 text-center transition-all duration-300 sm:p-6 lg:p-8 md:hover:-translate-y-1 md:hover:border-blue-300 md:hover:shadow-xl">
+              <div class="mx-auto mb-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-600 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-lg sm:mb-4 sm:h-16 sm:w-16">
+                <span class="text-2xl font-bold text-white sm:text-3xl">{{ $v['letter'] }}</span>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $v['title'] }}</h3>
-              <p class="text-gray-600">{{ $v['description'] }}</p>
+              <h3 class="mb-1.5 text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:mb-2 sm:text-xl">{{ $v['title'] }}</h3>
+              <p class="text-xs leading-snug text-gray-600 sm:text-base">{{ $v['description'] }}</p>
             </div>
           </x-site.motion>
         @endforeach
@@ -334,21 +336,21 @@
     </div>
   </section>
 
-  <section class="py-24 bg-blue-900">
+  <section class="py-14 bg-blue-900 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-site.motion class="text-center mb-12 md:mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Our Leadership</h2>
-        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
+      <x-site.motion class="mb-10 text-center md:mb-16" variant="fade-up" :duration="800">
+        <h2 class="mb-3 text-2xl font-bold text-white sm:mb-4 sm:text-3xl md:text-5xl">Our Leadership</h2>
+        <p class="mx-auto max-w-2xl text-base text-blue-100 sm:text-lg md:text-xl">
           Meet the visionary leaders driving LITUS Group's success across all sectors
         </p>
       </x-site.motion>
 
       @if(count($leadershipTeam) > 0)
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 mb-12 md:mb-16">
+        <div class="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:mb-16 lg:grid-cols-4 lg:gap-8">
           @foreach($leadershipTeam as $index => $member)
             <x-site.motion :delay="$index * 80" :duration="600" variant="fade-up">
               <article class="group text-center">
-                <div class="relative mx-auto mb-4 aspect-square max-w-[220px] sm:max-w-[240px] rounded-2xl overflow-hidden border border-white/10 bg-white/5 shadow-xl shadow-black/30 ring-1 ring-white/10">
+                <div class="relative mx-auto mb-3 aspect-square max-w-[9.5rem] overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 ring-1 ring-white/10 sm:mb-4 sm:max-w-[220px] md:max-w-[240px]">
                   <img
                     src="{{ $member['image'] }}"
                     alt="{{ $member['name'] }}"
@@ -407,7 +409,7 @@
       <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.team') }}"
-          class="site-cta-btn group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg hover:bg-gray-100 hover:shadow-xl"
+          class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-base font-semibold text-blue-900 shadow-lg hover:bg-gray-100 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
         >
           View Full Team
           <span class="site-cta-btn__icon" aria-hidden="true">→</span>
@@ -416,24 +418,24 @@
     </div>
   </section>
 
-  <section class="py-24 bg-gray-100">
+  <section class="py-14 bg-gray-100 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <x-site.motion class="text-center mb-12 md:mb-16" variant="fade-up" :duration="800">
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">News & Media</h2>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+      <x-site.motion class="mb-10 text-center md:mb-16" variant="fade-up" :duration="800">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">News & Media</h2>
+        <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           Stay updated with the latest stories and insights from across the LITUS Group
         </p>
       </x-site.motion>
 
       @if(count($homeBlogPreviews) > 0)
-        <div class="mb-12 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 md:mb-16">
+        <div class="mb-10 grid grid-cols-2 gap-3 sm:mb-12 sm:gap-5 md:mb-16 lg:grid-cols-4">
           @foreach($homeBlogPreviews as $i => $post)
-            <x-site.motion :delay="$i * 80" :duration="600" variant="fade-up">
+            <x-site.motion :delay="$i * 80" :duration="600" variant="fade-up" class="h-full">
               <a
                 href="{{ route('site.blog-article', ['slug' => $post['slug']]) }}"
-                class="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg"
+                class="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm transition-all duration-300 md:hover:-translate-y-0.5 md:hover:border-blue-200 md:hover:shadow-lg"
               >
-                <div class="relative aspect-video overflow-hidden bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100">
+                <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-blue-50 via-gray-50 to-blue-100 sm:aspect-video">
                   @if(filled($post['image'] ?? null))
                     <img
                       src="{{ $post['image'] }}"
@@ -452,12 +454,12 @@
                     </div>
                   @endif
                 </div>
-                <div class="flex flex-1 flex-col p-3.5 text-left sm:p-4">
-                  <h3 class="text-sm font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:text-base">
+                <div class="flex flex-1 flex-col p-2.5 text-left sm:p-4">
+                  <h3 class="line-clamp-3 text-xs font-bold leading-snug text-gray-900 transition-colors group-hover:text-blue-600 sm:line-clamp-none sm:text-base">
                     {{ $post['title'] }}
                   </h3>
                   @if(filled($post['date'] ?? null))
-                    <p class="mt-1.5 text-xs text-gray-500 sm:text-sm">
+                    <p class="mt-1 text-[0.65rem] text-gray-500 sm:mt-1.5 sm:text-sm">
                       {{ $post['date'] }}
                     </p>
                   @endif
@@ -471,7 +473,7 @@
       <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.blogs') }}"
-          class="site-cta-btn group inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl"
+          class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
         >
           Read More
           <span class="site-cta-btn__icon" aria-hidden="true">→</span>
@@ -480,16 +482,16 @@
     </div>
   </section>
 
-  <section class="py-24 bg-blue-900">
+  <section class="py-14 bg-blue-900 md:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <x-site.motion variant="fade-up" :duration="800">
-        <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Join Our Team</h2>
-        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+        <h2 class="mb-4 text-2xl font-bold text-white sm:mb-6 sm:text-3xl md:text-5xl">Join Our Team</h2>
+        <p class="mx-auto mb-8 max-w-2xl text-base text-blue-100 sm:mb-10 sm:text-lg md:text-xl">
           Build your career with LITUS Group and be part of a dynamic team that's shaping the future across 16 diverse companies
         </p>
         <a
           href="{{ route('site.careers') }}"
-          class="site-cta-btn group bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+          class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-base font-semibold text-blue-900 shadow-lg hover:bg-gray-100 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
         >
           Explore Careers
           <span class="site-cta-btn__icon" aria-hidden="true">→</span>
@@ -498,19 +500,19 @@
     </div>
   </section>
 
-  <section class="py-12 bg-white">
+  <section class="py-12 bg-white md:py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-        <x-site.motion class="flex-1 text-center lg:text-left" variant="fade-left-sm" :duration="800">
-          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Let's Connect</h2>
-          <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
+      <div class="flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <x-site.motion class="flex-1 text-center lg:text-left" variant="fade-up" :duration="800">
+          <h2 class="mb-4 text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl md:text-5xl">Let's Connect</h2>
+          <p class="text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl">
             Have questions or interested in our services? Get in touch with us today
           </p>
         </x-site.motion>
-        <x-site.motion class="flex-shrink-0 flex justify-center lg:justify-end" variant="fade-right-sm" :delay="200" :duration="800">
+        <x-site.motion class="flex shrink-0 justify-center lg:justify-end" variant="fade-up" :delay="200" :duration="800">
           <a
             href="{{ route('site.contact') }}"
-            class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+            class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
           >
             Contact Us
             <span class="site-cta-btn__icon" aria-hidden="true">→</span>

@@ -131,6 +131,14 @@
   [data-motion] {
     transition-duration: 450ms !important;
   }
+
+  .site-cta-btn:hover {
+    transform: none;
+  }
+
+  .site-cta-btn:hover .site-cta-btn__icon {
+    transform: none;
+  }
 }
 
 @layer base {
