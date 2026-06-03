@@ -155,10 +155,10 @@
     x-transition:leave="transition-[transform,opacity] duration-350 ease-[cubic-bezier(0.45,0,0.55,1)]"
     x-transition:leave-start="opacity-100 translate-x-0"
     x-transition:leave-end="opacity-0 translate-x-full"
-    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white lg:hidden"
+    class="fixed inset-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full min-h-0 flex-col overflow-x-hidden bg-white/75 backdrop-blur-xl supports-[backdrop-filter]:bg-white/65 lg:hidden"
     @keydown.escape.window="mobileOpen = false"
   >
-    <div class="flex min-h-[4rem] shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+    <div class="flex min-h-[4.5rem] shrink-0 items-center justify-between border-b border-gray-200/60 bg-white/40 px-6 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-md sm:min-h-20">
       <a
         href="{{ route('site.home') }}"
         class="flex min-w-0 flex-1 items-center pr-4"
@@ -167,7 +167,7 @@
         <img
           src="{{ SiteData::brandLogoUrl() }}"
           alt="LITUS Group"
-          class="h-10 w-auto max-w-[min(240px,60vw)] object-contain object-left"
+          class="h-14 w-auto max-w-[min(280px,72vw)] object-contain object-left sm:h-16"
         />
       </a>
       <button
@@ -185,10 +185,10 @@
     <nav class="site-mobile-nav-list min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]" aria-label="Mobile">
       @foreach($navItems as $item)
         @if(!empty($item['dropdown']))
-          <div class="border-b border-gray-100">
+          <div class="border-b border-gray-200/50">
             <button
               type="button"
-              class="flex min-h-[3.5rem] w-full items-center justify-between gap-4 py-4 pl-6 pr-8 text-left text-lg font-bold leading-snug text-[var(--site-mobile-nav-ink)] transition-colors hover:text-blue-700 active:bg-gray-50/80"
+              class="flex min-h-[3.5rem] w-full items-center justify-between gap-4 py-4 pl-6 pr-8 text-left text-lg font-bold leading-snug text-[var(--site-mobile-nav-ink)] transition-colors hover:text-blue-700 active:bg-white/50"
               @click="mobileCompaniesOpen = !mobileCompaniesOpen"
             >
               <span class="min-w-0">{{ $item['label'] }}</span>
@@ -212,7 +212,7 @@
             <div
               x-show="mobileCompaniesOpen"
               x-collapse.duration.200ms
-              class="overflow-hidden bg-gray-50"
+              class="overflow-hidden bg-white/45 backdrop-blur-md"
             >
               @foreach($companies as $company)
                 @php
@@ -220,7 +220,7 @@
                 @endphp
                 <a
                   href="{{ route('site.company', ['slug' => $company['slug']]) }}"
-                  class="flex min-h-[3rem] w-full items-center gap-3 border-b border-gray-100 px-6 py-3 text-left text-sm font-semibold text-[var(--site-mobile-nav-ink)] last:border-b-0 hover:bg-blue-50/80 hover:text-blue-700 active:bg-gray-100/80"
+                  class="flex min-h-[3rem] w-full items-center gap-3 border-b border-gray-200/40 px-6 py-3 text-left text-sm font-semibold text-[var(--site-mobile-nav-ink)] last:border-b-0 hover:bg-white/55 hover:text-blue-700 active:bg-white/70"
                   @click="mobileOpen = false; mobileCompaniesOpen = false"
                 >
                   @if($logoSrc)
@@ -251,7 +251,7 @@
         @else
           <a
             href="{{ route($item['route']) }}"
-            class="flex min-h-[3.5rem] w-full items-center border-b border-gray-100 px-6 py-4 text-left text-lg font-bold leading-snug text-[var(--site-mobile-nav-ink)] transition-colors hover:text-blue-700 active:bg-gray-50/80"
+            class="flex min-h-[3.5rem] w-full items-center border-b border-gray-200/50 px-6 py-4 text-left text-lg font-bold leading-snug text-[var(--site-mobile-nav-ink)] transition-colors hover:text-blue-700 active:bg-white/50"
             @click="mobileOpen = false"
           >
             {{ $item['label'] }}
