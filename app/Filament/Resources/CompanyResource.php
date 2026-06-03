@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\CompanyResource\Pages;
 use App\Models\Company;
 use App\Models\User;
@@ -63,225 +62,315 @@ class CompanyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Identity')
-                    ->schema([
-                        TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('sort_order')
-                            ->numeric()
-                            ->default(0)
-                            ->required(),
-                        Select::make('division')
-                            ->options(SiteData::divisionOptions())
-                            ->searchable()
-                            ->required(),
-                        TextInput::make('category')
-                            ->maxLength(255),
-                        Toggle::make('featured')
-                            ->inline(false),
-                    ])
-                    ->columns(2),
-                Forms\Components\Section::make('Content')
-                    ->schema([
-                        TextInput::make('tagline')
-                            ->maxLength(500),
-                        Textarea::make('description')
-                            ->label('Description — part 1')
-                            ->rows(5)
-                            ->columnSpanFull()
-                            ->helperText('Opening paragraph (e.g. what the company is and sectors).'),
-                        Textarea::make('description_secondary')
-                            ->label('Description — part 2')
-                            ->rows(5)
-                            ->columnSpanFull()
-                            ->helperText('Second paragraph (e.g. LITUS Group family, expertise, value to clients).'),
-                    ]),
-                Forms\Components\Section::make('Contact')
-                    ->schema([
-                        TextInput::make('hotline')
-                            ->tel()
-                            ->maxLength(50),
-                        TextInput::make('email')
-                            ->email()
-                            ->maxLength(255),
-                    ])
-                    ->columns(2),
-                Forms\Components\Section::make('Branding')
-                    ->schema([
-                        FileUpload::make('hero_image')
-                            ->label('Hero section image')
-                            ->disk('public')
-                            ->directory('companies/hero')
-                            ->visibility('public')
-                            ->image()
-                            ->acceptedFileTypes([
-                                'image/jpeg',
-                                'image/png',
-                                'image/webp',
-                                'image/svg+xml',
-                            ])
-                            ->rules([
-                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-                            ])
-                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
-                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
-
-                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
-                            })
-                            ->panelLayout('integrated')
-                            ->panelAspectRatio('21:9')
-                            ->removeUploadedFileButtonPosition('left')
-                            ->uploadButtonPosition('center bottom')
-                            ->loadingIndicatorPosition('center bottom')
-                            ->uploadProgressIndicatorPosition('center bottom')
-                            ->maxSize(8192)
-                            ->nullable()
-                            ->placeholder('Drag & drop your image or browse')
-                            ->helperText('Background image for the company page hero banner. A blue overlay keeps text readable.')
-                            ->extraAttributes(['class' => 'max-w-3xl'])
-                            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                                $disk = $component->getDisk();
-
-                                try {
-                                    if ($disk->exists($file)) {
-                                        return $disk->url($file);
-                                    }
-                                } catch (\Throwable) {
-                                }
-
-                                if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
-                                    return $file;
-                                }
-
-                                return null;
-                            }),
-                        FileUpload::make('logo')
-                            ->label('Logo')
-                            ->disk('public')
-                            ->directory('companies/logos')
-                            ->visibility('public')
-                            ->image()
-                            ->acceptedFileTypes([
-                                'image/jpeg',
-                                'image/png',
-                                'image/webp',
-                                'image/svg+xml',
-                            ])
-                            ->rules([
-                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-                            ])
-                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
-                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
-
-                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
-                            })
-                            ->panelLayout('integrated')
-                            ->panelAspectRatio('13:8')
-                            ->removeUploadedFileButtonPosition('left')
-                            ->uploadButtonPosition('center bottom')
-                            ->loadingIndicatorPosition('center bottom')
-                            ->uploadProgressIndicatorPosition('center bottom')
-                            ->maxSize(4096)
-                            ->nullable()
-                            ->placeholder('Drag & drop your image or browse')
-                            ->helperText('Large preview with filename and size; use ✕ to remove. Saving applies changes.')
-                            ->extraAttributes(['class' => 'max-w-3xl'])
-                            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                                $disk = $component->getDisk();
-
-                                try {
-                                    if ($disk->exists($file)) {
-                                        return $disk->url($file);
-                                    }
-                                } catch (\Throwable) {
-                                }
-
-                                return SiteData::companyLogoUrl($file);
-                            }),
-                        FileUpload::make('about_image')
-                            ->label('About section image')
-                            ->disk('public')
-                            ->directory('companies/about')
-                            ->visibility('public')
-                            ->image()
-                            ->acceptedFileTypes([
-                                'image/jpeg',
-                                'image/png',
-                                'image/webp',
-                                'image/svg+xml',
-                            ])
-                            ->rules([
-                                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-                            ])
-                            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
-                                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
-
-                                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
-                            })
-                            ->panelLayout('integrated')
-                            ->panelAspectRatio('16:10')
-                            ->removeUploadedFileButtonPosition('left')
-                            ->uploadButtonPosition('center bottom')
-                            ->loadingIndicatorPosition('center bottom')
-                            ->uploadProgressIndicatorPosition('center bottom')
-                            ->maxSize(6144)
-                            ->nullable()
-                            ->placeholder('Drag & drop your image or browse')
-                            ->helperText('Shown on the public Company page “About” section (right side).')
-                            ->extraAttributes(['class' => 'max-w-3xl'])
-                            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                                $disk = $component->getDisk();
-
-                                try {
-                                    if ($disk->exists($file)) {
-                                        return $disk->url($file);
-                                    }
-                                } catch (\Throwable) {
-                                }
-
-                                if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
-                                    return $file;
-                                }
-
-                                return null;
-                            }),
-                    ])
-                    ->columns(1),
-                Forms\Components\Section::make('Services')
-                    ->schema([
-                        Forms\Components\Repeater::make('service_items')
+                Forms\Components\Tabs::make('Company page')
+                    ->tabs([
+                        Forms\Components\Tabs\Tab::make('Details')
+                            ->icon('heroicon-o-adjustments')
                             ->schema([
-                                TextInput::make('label')
-                                    ->label('Service')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->columnSpanFull(),
-                                static::labeledItemIconUpload('companies/service-icons'),
-                            ])
-                            ->columns(1)
-                            ->defaultItems(0)
-                            ->collapsible(),
-                    ]),
-                Forms\Components\Section::make('Strengths')
-                    ->schema([
-                        Forms\Components\Repeater::make('strength_items')
+                                Forms\Components\Section::make('General information')
+                                    ->description('Basic details used across the site navigation, listings, and company profile.')
+                                    ->schema(static::identityFields())
+                                    ->columns(2),
+                            ]),
+                        Forms\Components\Tabs\Tab::make('Overview')
+                            ->icon('heroicon-o-document-text')
                             ->schema([
-                                TextInput::make('label')
-                                    ->label('Strength')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->columnSpanFull(),
-                                static::labeledItemIconUpload('companies/strength-icons'),
-                            ])
-                            ->columns(1)
-                            ->defaultItems(0)
-                            ->collapsible(),
-                    ]),
+                                Forms\Components\Section::make('Page content')
+                                    ->description('Headline and about copy shown on the public company page.')
+                                    ->schema(static::contentFields()),
+                            ]),
+                        Forms\Components\Tabs\Tab::make('Contact')
+                            ->icon('heroicon-o-phone')
+                            ->schema([
+                                Forms\Components\Section::make('Contact details')
+                                    ->description('Phone and email shown in the company hero and contact section.')
+                                    ->schema(static::contactFields())
+                                    ->columns(2),
+                            ]),
+                        Forms\Components\Tabs\Tab::make('Media')
+                            ->icon('heroicon-o-photograph')
+                            ->schema([
+                                Forms\Components\Section::make('Logo')
+                                    ->description('Company logo used in the hero, navigation dropdown, and listings.')
+                                    ->schema([
+                                        static::logoUpload(),
+                                    ]),
+                                Forms\Components\Section::make('Hero banner')
+                                    ->description('Full-width background image behind the company page hero. A blue overlay keeps text readable.')
+                                    ->schema([
+                                        static::heroImageUpload(),
+                                    ]),
+                                Forms\Components\Section::make('About section image')
+                                    ->description('Image beside the about text on the company page.')
+                                    ->schema([
+                                        static::aboutImageUpload(),
+                                    ]),
+                            ]),
+                        Forms\Components\Tabs\Tab::make('Services')
+                            ->icon('heroicon-o-view-grid')
+                            ->schema([
+                                Forms\Components\Section::make('Services')
+                                    ->description('Add each service with a title and optional icon. Icons appear on the “Our Services” cards.')
+                                    ->schema([
+                                        static::labeledItemsRepeater(
+                                            name: 'service_items',
+                                            itemLabel: 'Service',
+                                            addButtonLabel: 'Add service',
+                                            iconDirectory: 'companies/service-icons',
+                                        ),
+                                    ]),
+                            ]),
+                        Forms\Components\Tabs\Tab::make('Strengths')
+                            ->icon('heroicon-o-star')
+                            ->schema([
+                                Forms\Components\Section::make('Why choose us')
+                                    ->description('Highlight what sets this company apart. Each item can include an optional icon.')
+                                    ->schema([
+                                        static::labeledItemsRepeater(
+                                            name: 'strength_items',
+                                            itemLabel: 'Strength',
+                                            addButtonLabel: 'Add strength',
+                                            iconDirectory: 'companies/strength-icons',
+                                        ),
+                                    ]),
+                            ]),
+                    ])
+                    ->columnSpanFull(),
             ]);
+    }
+
+    /**
+     * @return array<int, Forms\Components\Component>
+     */
+    protected static function identityFields(): array
+    {
+        return [
+            TextInput::make('name')
+                ->label('Name')
+                ->required()
+                ->maxLength(255)
+                ->columnSpan(1),
+            TextInput::make('category')
+                ->label('Category')
+                ->maxLength(255)
+                ->placeholder('e.g. Travel & Tourism')
+                ->columnSpan(1),
+            Select::make('division')
+                ->label('Division')
+                ->options(SiteData::divisionOptions())
+                ->searchable()
+                ->required()
+                ->columnSpan(1),
+            TextInput::make('sort_order')
+                ->label('Sort order')
+                ->numeric()
+                ->default(0)
+                ->required()
+                ->helperText('Lower numbers appear first in listings.')
+                ->columnSpan(1),
+            Toggle::make('featured')
+                ->label('Featured on homepage')
+                ->inline(false)
+                ->columnSpanFull(),
+        ];
+    }
+
+    /**
+     * @return array<int, Forms\Components\Component>
+     */
+    protected static function contentFields(): array
+    {
+        return [
+            TextInput::make('tagline')
+                ->label('Tagline')
+                ->maxLength(500)
+                ->placeholder('Short headline under the company name')
+                ->columnSpanFull(),
+            Textarea::make('description')
+                ->label('About — paragraph 1')
+                ->rows(5)
+                ->columnSpanFull()
+                ->helperText('Opening paragraph describing what the company does.'),
+            Textarea::make('description_secondary')
+                ->label('About — paragraph 2')
+                ->rows(5)
+                ->columnSpanFull()
+                ->helperText('Second paragraph about expertise, value, or the LITUS Group family.'),
+        ];
+    }
+
+    /**
+     * @return array<int, Forms\Components\Component>
+     */
+    protected static function contactFields(): array
+    {
+        return [
+            TextInput::make('hotline')
+                ->label('Phone')
+                ->tel()
+                ->maxLength(50)
+                ->placeholder('+960 332 2289'),
+            TextInput::make('email')
+                ->label('Email')
+                ->email()
+                ->maxLength(255)
+                ->placeholder('info@example.com'),
+        ];
+    }
+
+    protected static function labeledItemsRepeater(
+        string $name,
+        string $itemLabel,
+        string $addButtonLabel,
+        string $iconDirectory,
+    ): Forms\Components\Repeater {
+        return Forms\Components\Repeater::make($name)
+            ->label($itemLabel.' items')
+            ->schema([
+                TextInput::make('label')
+                    ->label('Title')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpan(1),
+                static::labeledItemIconUpload($iconDirectory)
+                    ->columnSpan(1),
+            ])
+            ->columns(2)
+            ->itemLabel(fn (array $state): ?string => filled($state['label'] ?? null) ? (string) $state['label'] : null)
+            ->createItemButtonLabel($addButtonLabel)
+            ->defaultItems(0)
+            ->collapsible()
+            ->orderable();
+    }
+
+    protected static function logoUpload(): FileUpload
+    {
+        return FileUpload::make('logo')
+            ->label('Logo')
+            ->disk('public')
+            ->directory('companies/logos')
+            ->visibility('public')
+            ->image()
+            ->acceptedFileTypes([
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+                'image/svg+xml',
+            ])
+            ->rules([
+                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+            ])
+            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
+            ->panelLayout('integrated')
+            ->panelAspectRatio('13:8')
+            ->removeUploadedFileButtonPosition('left')
+            ->uploadButtonPosition('center bottom')
+            ->loadingIndicatorPosition('center bottom')
+            ->uploadProgressIndicatorPosition('center bottom')
+            ->maxSize(4096)
+            ->nullable()
+            ->placeholder('Drag & drop or browse')
+            ->extraAttributes(['class' => 'max-w-2xl'])
+            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
+                $disk = $component->getDisk();
+
+                try {
+                    if ($disk->exists($file)) {
+                        return $disk->url($file);
+                    }
+                } catch (\Throwable) {
+                }
+
+                return SiteData::companyLogoUrl($file);
+            });
+    }
+
+    protected static function heroImageUpload(): FileUpload
+    {
+        return FileUpload::make('hero_image')
+            ->label('Hero image')
+            ->disk('public')
+            ->directory('companies/hero')
+            ->visibility('public')
+            ->image()
+            ->acceptedFileTypes([
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+                'image/svg+xml',
+            ])
+            ->rules([
+                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+            ])
+            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
+            ->panelLayout('integrated')
+            ->panelAspectRatio('21:9')
+            ->removeUploadedFileButtonPosition('left')
+            ->uploadButtonPosition('center bottom')
+            ->loadingIndicatorPosition('center bottom')
+            ->uploadProgressIndicatorPosition('center bottom')
+            ->maxSize(8192)
+            ->nullable()
+            ->placeholder('Drag & drop or browse')
+            ->extraAttributes(['class' => 'max-w-3xl'])
+            ->getUploadedFileUrlUsing(static::resolveBrandingUploadUrl(...));
+    }
+
+    protected static function aboutImageUpload(): FileUpload
+    {
+        return FileUpload::make('about_image')
+            ->label('About image')
+            ->disk('public')
+            ->directory('companies/about')
+            ->visibility('public')
+            ->image()
+            ->acceptedFileTypes([
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+                'image/svg+xml',
+            ])
+            ->rules([
+                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
+            ])
+            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
+            ->panelLayout('integrated')
+            ->panelAspectRatio('16:10')
+            ->removeUploadedFileButtonPosition('left')
+            ->uploadButtonPosition('center bottom')
+            ->loadingIndicatorPosition('center bottom')
+            ->uploadProgressIndicatorPosition('center bottom')
+            ->maxSize(6144)
+            ->nullable()
+            ->placeholder('Drag & drop or browse')
+            ->extraAttributes(['class' => 'max-w-3xl'])
+            ->getUploadedFileUrlUsing(static::resolveBrandingUploadUrl(...));
+    }
+
+    protected static function uploadedFileName(\Illuminate\Http\UploadedFile $file): string
+    {
+        $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
+
+        return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
+    }
+
+    protected static function resolveBrandingUploadUrl(FileUpload $component, string $file): ?string
+    {
+        $disk = $component->getDisk();
+
+        try {
+            if ($disk->exists($file)) {
+                return $disk->url($file);
+            }
+        } catch (\Throwable) {
+        }
+
+        if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
+            return $file;
+        }
+
+        return null;
     }
 
     public static function table(Table $table): Table
@@ -546,17 +635,18 @@ class CompanyResource extends Resource
             ->rules([
                 'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
             ])
-            ->getUploadedFileNameForStorageUsing(function (\Illuminate\Http\UploadedFile $file): string {
-                $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
-
-                return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
-            })
-            ->imagePreviewHeight('80')
+            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
+            ->panelLayout('integrated')
+            ->panelAspectRatio('1:1')
+            ->removeUploadedFileButtonPosition('left')
+            ->uploadButtonPosition('center bottom')
+            ->loadingIndicatorPosition('center bottom')
+            ->uploadProgressIndicatorPosition('center bottom')
             ->maxSize(2048)
             ->nullable()
-            ->columnSpanFull()
-            ->helperText('Optional SVG/PNG/WebP uploaded from storage.')
+            ->placeholder('Upload or choose from library')
+            ->helperText('Optional SVG/PNG/WebP.')
+            ->extraAttributes(['class' => 'max-w-xs'])
             ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
                 $disk = $component->getDisk();
 
