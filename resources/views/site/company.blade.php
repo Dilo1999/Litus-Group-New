@@ -238,7 +238,7 @@
             :class="whyInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'"
           >
             @if(filled($strengthDisplay['icon_url']))
-              <div class="mb-4 mx-auto flex h-[80px] w-[80px] items-center justify-center rounded-lg bg-blue-100">
+              <div class="mb-4 mx-auto flex h-[80px] w-[80px] items-center justify-center rounded-full bg-[#1d4291]">
                 <img
                   src="{{ $strengthDisplay['icon_url'] }}"
                   alt=""
