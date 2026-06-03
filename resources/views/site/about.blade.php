@@ -25,7 +25,7 @@
 
 {{-- Matches src/app/pages/AboutPage.tsx + src/app/components/About.tsx --}}
 <div>
-  <section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
+  <section class="relative flex min-h-[min(72svh,520px)] items-center justify-center overflow-hidden md:min-h-[640px]">
     <div class="absolute inset-0 z-0">
       @if(filled($heroImageUrl))
         <img
@@ -39,35 +39,74 @@
       @else
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
       @endif
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/45 via-blue-900/30 to-blue-950/15 md:bg-gradient-to-r md:from-blue-900/90 md:via-blue-800/80 md:to-transparent"></div>
     </div>
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="site-blogs-hero">
-        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">About Us</h1>
-        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 sm:py-20 md:py-24 lg:px-8">
+      <div class="site-blogs-hero mx-auto max-w-3xl">
+        <h1 class="mb-4 text-3xl font-bold text-white max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-6xl md:[text-shadow:none]">About Us</h1>
+        <p class="mx-auto text-base leading-relaxed text-blue-100 max-md:[text-shadow:0_1px_12px_rgba(0,0,0,0.3)] sm:text-lg md:max-w-3xl md:text-2xl md:[text-shadow:none]">
           Learn about LITUS Group, our values, and the diverse businesses we grow together
         </p>
       </div>
     </div>
   </section>
 
-  <section id="about" class="py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="about" class="bg-gray-50 py-14 md:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
-        class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+        class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12"
         x-data="{
           inView: false,
           init() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.inView = true;
+            else if (window.matchMedia('(max-width: 767px)').matches) this.inView = true;
           }
         }"
         x-intersect.once.margin.-100px.-100px.-100px.-100px="inView = true"
         data-about-hero
       >
-        {{-- Image side (ref + isInView drives whole block) --}}
+        {{-- Content: first on mobile, right column on desktop --}}
         <div
-          class="site-about-motion-left relative transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
-          :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[50px]'"
+          class="site-about-motion-right order-1 text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto lg:order-2 md:text-left md:will-change-[opacity,transform]"
+          style="transition-delay: 200ms"
+          :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 max-md:translate-y-[30px] md:translate-x-[50px]'"
+        >
+          <h2 class="mb-4 text-2xl font-bold text-gray-900 sm:mb-6 sm:text-3xl md:text-5xl">About LITUS Group</h2>
+          <p class="mb-4 text-base leading-relaxed text-gray-600 sm:mb-6 md:text-lg">{!! nl2br(e($aboutIntro1)) !!}</p>
+          <p class="mb-6 text-base leading-relaxed text-gray-600 sm:mb-8 md:text-lg">{!! nl2br(e($aboutIntro2)) !!}</p>
+
+          <div class="mb-6 space-y-3 text-left sm:mb-8 sm:space-y-4">
+            @foreach($highlights as $index => $highlight)
+              <div
+                class="site-about-motion-hl flex items-start gap-2.5 transition-[opacity,transform] duration-500 ease-out max-md:will-change-auto sm:gap-3 md:will-change-[opacity,transform]"
+                style="transition-delay: {{ 400 + $index * 100 }}ms"
+                :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0 text-blue-600 sm:h-6 sm:w-6" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+                <span class="text-sm text-gray-700 sm:text-base md:text-lg">{{ $highlight }}</span>
+              </div>
+            @endforeach
+          </div>
+
+          <div class="flex justify-center md:justify-start">
+            <a
+              href="{{ route('site.home') }}#companies"
+              class="site-about-motion-cta site-cta-btn inline-flex w-full max-w-sm items-center justify-center rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-opacity duration-[800ms] ease-out hover:bg-blue-700 hover:shadow-xl md:w-auto md:px-8 md:py-4 md:text-lg"
+              style="transition-delay: 800ms"
+              :class="inView ? 'opacity-100' : 'opacity-0'"
+            >
+              Explore Our Companies
+            </a>
+          </div>
+        </div>
+
+        {{-- Image: second on mobile, left column on desktop --}}
+        <div
+          class="site-about-motion-left relative order-2 transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto lg:order-1 md:will-change-[opacity,transform]"
+          :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 max-md:translate-y-[30px] md:-translate-x-[50px]'"
         >
           @php
             $aboutPartnershipPaths = \App\Models\SiteSetting::aboutPartnershipImagePaths();
@@ -81,7 +120,7 @@
             @if($aboutPartnershipSlideCount > 1)
               x-data="aboutPartnershipSlider(@js($aboutPartnershipUrls))"
             @endif
-            class="relative rounded-2xl overflow-hidden shadow-2xl"
+            class="group relative overflow-hidden rounded-2xl shadow-2xl transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-2xl"
           >
             @if($aboutPartnershipSlideCount > 1)
               <div class="overflow-hidden">
@@ -97,7 +136,7 @@
                       <img
                         :src="src"
                         alt=""
-                        class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
+                        class="h-full min-h-[220px] w-full object-cover sm:min-h-[280px] md:min-h-[420px]"
                         :fetchpriority="slideIdx === 0 ? 'high' : 'low'"
                         loading="lazy"
                         decoding="async"
@@ -122,13 +161,13 @@
               <img
                 src="{{ $aboutPartnershipUrls[0] }}"
                 alt="Business partnership"
-                class="w-full min-h-[280px] md:min-h-[420px] h-full object-cover"
+                class="h-full min-h-[220px] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 sm:min-h-[280px] md:min-h-[420px]"
                 loading="lazy"
                 decoding="async"
               />
             @else
               <div
-                class="w-full min-h-[280px] md:min-h-[420px] bg-gradient-to-br from-gray-200 to-gray-300"
+                class="min-h-[220px] w-full bg-gradient-to-br from-gray-200 to-gray-300 sm:min-h-[280px] md:min-h-[420px]"
                 role="img"
                 aria-label="Business partnership image"
               ></div>
@@ -136,86 +175,59 @@
             <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent pointer-events-none"></div>
           </div>
           <div
-            class="site-about-motion-stat absolute -bottom-8 -right-8 bg-white p-6 rounded-xl shadow-xl hidden lg:block transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+            class="site-about-motion-stat absolute -bottom-8 -right-8 hidden rounded-xl bg-white p-6 shadow-xl transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform] lg:block"
             style="transition-delay: 300ms"
             :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
           >
-            <div class="text-4xl font-bold text-blue-600 mb-1">16+</div>
-            <div class="text-gray-600 font-medium">Companies</div>
+            <div class="mb-1 text-4xl font-bold text-blue-600">16+</div>
+            <div class="font-medium text-gray-600">Companies</div>
           </div>
-        </div>
-
-        {{-- Content side --}}
-        <div
-          class="site-about-motion-right transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
-          style="transition-delay: 200ms"
-          :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
-        >
-          <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">About LITUS Group</h2>
-          <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">{!! nl2br(e($aboutIntro1)) !!}</p>
-          <p class="text-base md:text-lg text-gray-600 mb-8 leading-relaxed">{!! nl2br(e($aboutIntro2)) !!}</p>
-
-          <div class="space-y-4 mb-8">
-            @foreach($highlights as $index => $highlight)
-              <div
-                class="site-about-motion-hl flex items-start gap-3 transition-[opacity,transform] duration-500 ease-out will-change-[opacity,transform]"
-                style="transition-delay: {{ 400 + $index * 100 }}ms"
-                :class="inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-5'"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 shrink-0 mt-1" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-                <span class="text-gray-700 text-base md:text-lg">{{ $highlight }}</span>
-              </div>
-            @endforeach
-          </div>
-
-          <a
-            href="{{ route('site.home') }}#companies"
-            class="site-about-motion-cta inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-opacity duration-[800ms] ease-out shadow-lg hover:shadow-xl"
-            style="transition-delay: 800ms"
-            :class="inView ? 'opacity-100' : 'opacity-0'"
+          <div
+            class="site-about-motion-stat mx-auto mt-4 max-w-xs rounded-xl bg-white px-6 py-4 text-center shadow-xl transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto lg:hidden"
+            style="transition-delay: 300ms"
+            :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
           >
-            Explore Our Companies
-          </a>
+            <div class="text-3xl font-bold text-blue-600">16+</div>
+            <div class="text-sm font-medium text-gray-600">Companies</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   {{-- Vision & Mission: visionRef on Mission card only; both use visionInView --}}
-  <section class="py-24 bg-blue-600">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="bg-blue-600 py-14 md:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-12"
+        class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12"
         x-data="{
           visionInView: false,
           init() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.visionInView = true;
+            else if (window.matchMedia('(max-width: 767px)').matches) this.visionInView = true;
           }
         }"
       >
         <div
           x-intersect.once.margin.-100px.-100px.-100px.-100px="visionInView = true"
-          class="site-about-motion-mission bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
+          class="site-about-motion-mission cursor-default rounded-2xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-sm transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto sm:p-8 md:text-left md:will-change-[opacity,transform] md:hover:-translate-y-1 md:hover:border-white/40 md:hover:bg-white/15 md:hover:shadow-xl"
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
         >
-          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Mission</h3>
-          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
+          <h3 class="mb-3 text-xl font-bold text-white sm:mb-4 sm:text-2xl md:text-3xl">Our Mission</h3>
+          <p class="text-base leading-relaxed text-blue-100 md:text-lg">
             To deliver exceptional value across diverse industries through innovation, quality, and unwavering commitment to customer satisfaction. We strive to be the partner of choice for businesses and individuals seeking excellence.
           </p>
         </div>
 
         <div
-          class="site-about-motion-vision bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 will-change-[opacity,transform] hover:bg-white/15 hover:border-white/40 hover:shadow-xl hover:-translate-y-1 cursor-default"
+          class="site-about-motion-vision cursor-default rounded-2xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-sm transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto sm:p-8 md:text-left md:will-change-[opacity,transform] md:hover:-translate-y-1 md:hover:border-white/40 md:hover:bg-white/15 md:hover:shadow-xl"
           style="transition-delay: 200ms"
           :class="visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           data-about-vision
         >
-          <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">Our Vision</h3>
-          <p class="text-base md:text-lg text-blue-100 leading-relaxed">
+          <h3 class="mb-3 text-xl font-bold text-white sm:mb-4 sm:text-2xl md:text-3xl">Our Vision</h3>
+          <p class="text-base leading-relaxed text-blue-100 md:text-lg">
             To be the most trusted and diversified business group in the Maldives, setting industry standards and creating sustainable value for all stakeholders while contributing to national economic growth.
           </p>
         </div>

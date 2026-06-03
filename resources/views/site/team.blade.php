@@ -12,7 +12,7 @@
 
 {{-- Matches src/app/pages/TeamPage.tsx + src/app/components/Team.tsx --}}
 <div>
-  <section class="relative min-h-[520px] md:min-h-[640px] flex items-center justify-center overflow-hidden">
+  <section class="relative flex min-h-[min(72svh,520px)] items-center justify-center overflow-hidden md:min-h-[640px]">
     <div class="absolute inset-0 z-0">
       @if(filled($heroImageUrl))
         <img
@@ -26,116 +26,153 @@
       @else
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900"></div>
       @endif
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-950/45 via-blue-900/30 to-blue-950/15 md:bg-gradient-to-r md:from-blue-900/90 md:via-blue-800/80 md:to-transparent"></div>
     </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="site-blogs-hero">
-        <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">Team</h1>
-        <p class="text-lg md:text-2xl text-blue-100 max-w-3xl mx-auto">
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 sm:py-20 md:py-24 lg:px-8">
+      <div class="site-blogs-hero mx-auto max-w-3xl">
+        <h1 class="mb-4 text-3xl font-bold text-white max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-6xl md:[text-shadow:none]">Team</h1>
+        <p class="mx-auto text-base leading-relaxed text-blue-100 max-md:[text-shadow:0_1px_12px_rgba(0,0,0,0.3)] sm:text-lg md:max-w-3xl md:text-2xl md:[text-shadow:none]">
           Meet the leaders guiding LITUS Group across our portfolio of companies
         </p>
       </div>
     </div>
   </section>
 
-  <section id="team" class="py-24 bg-white" data-team-page>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section id="team" class="bg-white py-14 md:py-24" data-team-page>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       @if(empty($team))
         @php return; @endphp
       @endif
       <div
-        class="site-team-motion-header text-center mb-16 transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+        class="site-team-motion-header mb-10 text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:mb-16 md:will-change-[opacity,transform]"
         x-data="{
           inView: false,
           init() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.inView = true;
+            else if (window.matchMedia('(max-width: 767px)').matches) this.inView = true;
           }
         }"
         x-intersect.once.margin.-100px.-100px.-100px.-100px="inView = true"
         :class="inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">
           Meet Our Leadership Team
         </h2>
-        <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+        <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           Visionary leaders driving excellence across LITUS Group's diverse portfolio of companies
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
         @foreach($team as $index => $member)
           @if(empty($member['image']))
             @continue
           @endif
           <div
-            class="site-team-motion-card flex flex-col transition-[opacity,transform] duration-[800ms] ease-out will-change-[opacity,transform]"
+            class="site-team-motion-card flex flex-col text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:text-left md:will-change-[opacity,transform]"
             style="transition-delay: {{ $index * 100 }}ms"
             x-data="{
               cardInView: false,
               init() {
                 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.cardInView = true;
+                else if (window.matchMedia('(max-width: 767px)').matches) this.cardInView = true;
               }
             }"
             x-intersect.once.margin.-100px.-100px.-100px.-100px="cardInView = true"
             :class="cardInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           >
-            <div class="relative rounded-lg overflow-hidden shadow-lg group aspect-square mb-6 bg-gray-100">
+            <div class="group relative mx-auto mb-3 aspect-square w-full max-w-[9.5rem] overflow-hidden rounded-2xl bg-gray-100 shadow-lg sm:mb-4 sm:max-w-none md:mb-6 md:rounded-lg">
               <img
                 src="{{ $member['image'] }}"
                 alt="{{ $member['name'] }}"
-                class="w-full h-full object-cover object-center"
+                class="h-full w-full object-cover object-center transition duration-500 ease-out md:group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
               />
-              <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div class="absolute bottom-0 left-0 right-0 p-6 flex gap-3 justify-center">
-                  @if(!empty($member['linkedin_url']))
-                    <a
-                      href="{{ $member['linkedin_url'] }}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="bg-white text-blue-900 p-3 rounded-full hover:bg-blue-50 transition-all transform hover:scale-110 shadow-lg"
-                      aria-label="LinkedIn"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                        <rect width="4" height="12" x="2" y="9" />
-                        <circle cx="4" cy="4" r="2" />
-                      </svg>
-                    </a>
-                  @endif
-
-                  @if(!empty($member['email']))
-                    <a
-                      href="mailto:{{ $member['email'] }}"
-                      class="bg-white text-blue-900 p-3 rounded-full hover:bg-blue-50 transition-all transform hover:scale-110 shadow-lg"
-                      aria-label="Email"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
-                        <rect width="20" height="16" x="2" y="4" rx="2" />
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                      </svg>
-                    </a>
-                  @endif
+              @if(!empty($member['linkedin_url']) || !empty($member['email']))
+                <div class="absolute inset-0 hidden bg-gradient-to-t from-blue-900/90 via-blue-900/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:block">
+                  <div class="absolute bottom-0 left-0 right-0 flex justify-center gap-3 p-4 sm:p-6">
+                    @if(!empty($member['linkedin_url']))
+                      <a
+                        href="{{ $member['linkedin_url'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="rounded-full bg-white p-2.5 text-blue-900 shadow-lg transition-transform hover:scale-110 hover:bg-blue-50 sm:p-3"
+                        aria-label="LinkedIn — {{ $member['name'] }}"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                          <rect width="4" height="12" x="2" y="9" />
+                          <circle cx="4" cy="4" r="2" />
+                        </svg>
+                      </a>
+                    @endif
+                    @if(!empty($member['email']))
+                      <a
+                        href="mailto:{{ $member['email'] }}"
+                        class="rounded-full bg-white p-2.5 text-blue-900 shadow-lg transition-transform hover:scale-110 hover:bg-blue-50 sm:p-3"
+                        aria-label="Email — {{ $member['name'] }}"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                          <rect width="20" height="16" x="2" y="4" rx="2" />
+                          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                      </a>
+                    @endif
+                  </div>
                 </div>
-              </div>
+              @endif
             </div>
 
-            <div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">
+            @if(!empty($member['linkedin_url']) || !empty($member['email']))
+              <div class="mb-2 flex justify-center gap-2 md:hidden">
+                @if(!empty($member['linkedin_url']))
+                  <a
+                    href="{{ $member['linkedin_url'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-full bg-blue-50 p-2 text-blue-900 transition-colors hover:bg-blue-100"
+                    aria-label="LinkedIn — {{ $member['name'] }}"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect width="4" height="12" x="2" y="9" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                  </a>
+                @endif
+                @if(!empty($member['email']))
+                  <a
+                    href="mailto:{{ $member['email'] }}"
+                    class="rounded-full bg-blue-50 p-2 text-blue-900 transition-colors hover:bg-blue-100"
+                    aria-label="Email — {{ $member['name'] }}"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block" aria-hidden="true">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  </a>
+                @endif
+              </div>
+            @endif
+
+            <div class="w-full">
+              <h3 class="mb-1 text-sm font-bold leading-snug text-gray-900 sm:mb-2 sm:text-xl">
                 {{ $member['name'] }}
               </h3>
               @if(!empty($member['role']))
-                <div class="text-sm text-blue-600 font-semibold mb-3">
+                <div class="mb-2 text-xs font-semibold text-blue-600 sm:mb-3 sm:text-sm">
                   {{ $member['role'] }}
                 </div>
               @endif
               @if(!empty($member['bio']))
-                <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                <p class="mb-3 line-clamp-3 text-xs leading-relaxed text-gray-600 sm:line-clamp-none sm:mb-4 sm:text-sm">
                   {{ $member['bio'] }}
                 </p>
               @endif
               @if(!empty($member['expertise']))
-                <div class="border-l-[3px] border-blue-600 pl-3">
-                  <p class="text-xs text-gray-500 font-medium">
+                <div class="mx-auto max-w-full border-l-[3px] border-blue-600 pl-2 text-left sm:pl-3 md:mx-0">
+                  <p class="line-clamp-2 text-[0.65rem] font-medium text-gray-500 sm:line-clamp-none sm:text-xs">
                     {{ $member['expertise'] }}
                   </p>
                 </div>
