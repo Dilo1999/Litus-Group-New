@@ -46,7 +46,7 @@ class GalleryEventResource extends Resource
 
     protected static function canAccessForUser(?User $user): bool
     {
-        return $user?->isAdmin() || $user?->isManagement();
+        return $user?->hasAdminAccess() || $user?->isManagement();
     }
 
     public static function shouldRegisterNavigation(): bool

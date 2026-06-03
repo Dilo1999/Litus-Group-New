@@ -35,7 +35,7 @@ class ActivityLogResource extends Resource
 
     protected static function canAccessForUser(?User $user): bool
     {
-        return $user?->isAdmin() ?? false;
+        return $user?->canAccessSuperAdminSettings() ?? false;
     }
 
     public static function shouldRegisterNavigation(): bool

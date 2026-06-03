@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Concerns\BlocksHrAccess;
+use App\Filament\Concerns\AuthorizesSuperAdminSettings;
 use App\Filament\NavigationGroups;
 use App\Models\User;
 use Filament\Pages;
@@ -10,7 +10,7 @@ use Filament\Pages\Page;
 
 class PageCustomization extends Page
 {
-    use BlocksHrAccess;
+    use AuthorizesSuperAdminSettings;
 
     protected static ?string $navigationIcon = 'heroicon-o-template';
 
@@ -28,15 +28,12 @@ class PageCustomization extends Page
 
     public function mount(): void
     {
-        $user = auth()->user();
-        if (! $user instanceof User || ! $user->isAdmin()) {
-            abort(403);
-        }
+        $this->authorizeSuperAdminSettings();
     }
 
     protected static function shouldRegisterNavigation(): bool
     {
-        return auth()->user() instanceof User && auth()->user()->isAdmin();
+        return auth()->user() instanceof User && auth()->user()->canAccessSuperAdminSettings();
     }
 
     public function getBreadcrumbs(): array

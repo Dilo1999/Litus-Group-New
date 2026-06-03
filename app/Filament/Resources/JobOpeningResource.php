@@ -39,7 +39,7 @@ class JobOpeningResource extends Resource
 
     protected static function canAccessForUser(?User $user): bool
     {
-        return $user?->isAdmin() || $user?->isHr();
+        return $user?->hasAdminAccess() || $user?->isHr();
     }
 
     public static function shouldRegisterNavigation(): bool

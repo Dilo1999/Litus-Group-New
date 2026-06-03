@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages\Sales;
 
-use App\Filament\Concerns\BlocksHrAccess;
+use App\Filament\Concerns\AuthorizesSuperAdminSettings;
 use App\Filament\Pages\PageCustomization;
 use App\Filament\Support\HeroImageForm;
 use App\Models\SiteSetting;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ContactSales extends Page implements HasForms
 {
-    use BlocksHrAccess;
+    use AuthorizesSuperAdminSettings;
     use InteractsWithForms;
 
     protected static bool $shouldRegisterNavigation = false;
@@ -30,7 +30,7 @@ class ContactSales extends Page implements HasForms
 
     public function mount(): void
     {
-        $this->abortIfHr();
+        $this->authorizeSuperAdminSettings();
 
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('contact.hero.image_path'),

@@ -17,7 +17,7 @@ class SuperAdminSeeder extends Seeder
             [
                 'name' => 'Super Admin',
                 'password' => '12345678',
-                'role' => User::ROLE_ADMIN,
+                'role' => User::ROLE_SUPERADMIN,
             ]
         );
     }

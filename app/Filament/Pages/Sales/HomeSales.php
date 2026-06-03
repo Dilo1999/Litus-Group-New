@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages\Sales;
 
-use App\Filament\Concerns\BlocksHrAccess;
+use App\Filament\Concerns\AuthorizesSuperAdminSettings;
 use App\Filament\Pages\PageCustomization;
 use App\Models\SiteSetting;
 use Filament\Forms;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeSales extends Page implements HasForms
 {
-    use BlocksHrAccess;
+    use AuthorizesSuperAdminSettings;
     use InteractsWithForms;
 
     protected static bool $shouldRegisterNavigation = false;
@@ -29,7 +29,7 @@ class HomeSales extends Page implements HasForms
 
     public function mount(): void
     {
-        $this->abortIfHr();
+        $this->authorizeSuperAdminSettings();
 
         $this->form->fill([
             'hero_image_path' => SiteSetting::getValue('home.hero.image_path'),

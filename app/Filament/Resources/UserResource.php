@@ -36,7 +36,7 @@ class UserResource extends Resource
 
     protected static function canAccessForUser(?User $user): bool
     {
-        return $user?->isAdmin() ?? false;
+        return $user?->hasAdminAccess() ?? false;
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -70,13 +70,11 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->helperText('Leave blank on edit to keep current password.'),
                         Select::make('role')
-                            ->options([
-                                User::ROLE_ADMIN => 'Admin',
-                                User::ROLE_MANAGEMENT => 'Management',
-                                User::ROLE_HR => 'HR',
-                            ])
+                            ->options(fn () => User::assignableRoleOptions(auth()->user()))
                             ->required()
-                            ->helperText('Admin: full access. Management: Management section only (Gallery Events, Blog Posts). HR: HR section only (Job Openings).'),
+                            ->helperText(fn (): string => auth()->user()?->isSuperadmin()
+                                ? 'Superadmin: full access including Super admin settings. Admin: all sections except Super admin settings. Management: Gallery Events and Blog Posts only. HR: Job Openings only.'
+                                : 'Admin: full access to Settings, Management, and HR sections. Management: Gallery Events and Blog Posts only. HR: Job Openings only.'),
                     ])
                     ->columns(1),
             ]);
@@ -93,11 +91,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('role')
-                    ->enum([
-                        User::ROLE_ADMIN => 'Admin',
-                        User::ROLE_MANAGEMENT => 'Management',
-                        User::ROLE_HR => 'HR',
-                    ])
+                    ->formatStateUsing(fn (string $state): string => User::roleOptions()[$state] ?? $state)
                     ->sortable(),
             ])
             ->defaultSort('name')
@@ -120,6 +114,12 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery();
+        $query = parent::getEloquentQuery();
+
+        $actor = auth()->user();
+
+        return $actor instanceof User
+            ? $query->visibleTo($actor)
+            : $query->whereRaw('1 = 0');
     }
 }

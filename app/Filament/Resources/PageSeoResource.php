@@ -38,7 +38,7 @@ class PageSeoResource extends Resource
 
     protected static function canAccessForUser(?User $user): bool
     {
-        return $user?->isAdmin() ?? false;
+        return $user?->hasAdminAccess() ?? false;
     }
 
     public static function shouldRegisterNavigation(): bool
