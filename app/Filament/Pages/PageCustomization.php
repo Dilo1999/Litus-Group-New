@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Concerns\BlocksHrAccess;
+use App\Filament\NavigationGroups;
 use App\Models\User;
 use Filament\Pages;
 use Filament\Pages\Page;
@@ -13,9 +14,9 @@ class PageCustomization extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-template';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = NavigationGroups::CUSTOMIZATION;
 
-    protected static ?int $navigationSort = 90;
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $title = 'Page Customization';
 

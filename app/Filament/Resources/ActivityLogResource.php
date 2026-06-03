@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\NavigationGroups;
 use App\Filament\Resources\ActivityLogResource\Pages;
 use App\Models\ActivityLog;
 use App\Models\User;
@@ -28,9 +29,9 @@ class ActivityLogResource extends Resource
 
     protected static ?string $slug = 'activity-logs';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationGroup = NavigationGroups::CUSTOMIZATION;
 
-    protected static ?int $navigationSort = 95;
+    protected static ?int $navigationSort = 20;
 
     protected static function canAccessForUser(?User $user): bool
     {
