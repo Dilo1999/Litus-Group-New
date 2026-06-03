@@ -40,13 +40,13 @@
     :class="navSolid ? 'bg-white shadow-md lg:bg-white/95 lg:backdrop-blur-md' : 'bg-transparent'"
   >
     <div class="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
-      <div class="flex items-center h-16">
+      <div class="flex items-center h-20">
         <div class="flex min-w-0 flex-1 items-center justify-start">
           <a href="{{ route('site.home') }}" class="flex shrink-0 cursor-pointer select-none items-center">
             <img
               src="{{ SiteData::brandLogoUrl() }}"
               alt="LITUS Group"
-              class="h-14 md:h-16 w-auto transition-all duration-300"
+              class="h-16 md:h-20 w-auto transition-all duration-300"
               :class="navOnDarkHero ? 'brightness-0 invert' : ''"
             />
           </a>
