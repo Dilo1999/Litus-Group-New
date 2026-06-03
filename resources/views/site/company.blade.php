@@ -135,11 +135,13 @@
             style="transition-delay: 200ms"
             :class="aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[50px]'"
           >
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div class="group relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
               <img
                 src="{{ $aboutImageUrl }}"
                 alt="{{ $company['name'] }}"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>

@@ -43,6 +43,9 @@ class CompanyResource extends Resource
 
     protected static ?int $navigationSort = 88;
 
+    /** Maximum upload size for company images (kilobytes). */
+    public const MAX_IMAGE_SIZE_KB = 500;
+
     protected static function canAccessForUser(?User $user): bool
     {
         return $user?->isAdmin() ?? false;
@@ -91,17 +94,17 @@ class CompanyResource extends Resource
                             ->icon('heroicon-o-photograph')
                             ->schema([
                                 Forms\Components\Section::make('Logo')
-                                    ->description('Company logo used in the hero, navigation dropdown, and listings.')
+                                    ->description('Company logo used in the hero, navigation dropdown, and listings. Maximum file size: 500 KB.')
                                     ->schema([
                                         static::logoUpload(),
                                     ]),
                                 Forms\Components\Section::make('Hero banner')
-                                    ->description('Full-width background image behind the company page hero. A blue overlay keeps text readable.')
+                                    ->description('Full-width background image behind the company page hero. Maximum file size: 500 KB. A blue overlay keeps text readable.')
                                     ->schema([
                                         static::heroImageUpload(),
                                     ]),
                                 Forms\Components\Section::make('About section image')
-                                    ->description('Image beside the about text on the company page.')
+                                    ->description('Image beside the about text on the company page. Maximum file size: 500 KB.')
                                     ->schema([
                                         static::aboutImageUpload(),
                                     ]),
@@ -267,7 +270,7 @@ class CompanyResource extends Resource
             ->uploadButtonPosition('center bottom')
             ->loadingIndicatorPosition('center bottom')
             ->uploadProgressIndicatorPosition('center bottom')
-            ->maxSize(4096)
+            ->maxSize(self::MAX_IMAGE_SIZE_KB)
             ->nullable()
             ->placeholder('Drag & drop or browse')
             ->extraAttributes(['class' => 'max-w-2xl'])
@@ -309,7 +312,7 @@ class CompanyResource extends Resource
             ->uploadButtonPosition('center bottom')
             ->loadingIndicatorPosition('center bottom')
             ->uploadProgressIndicatorPosition('center bottom')
-            ->maxSize(8192)
+            ->maxSize(self::MAX_IMAGE_SIZE_KB)
             ->nullable()
             ->placeholder('Drag & drop or browse')
             ->extraAttributes(['class' => 'max-w-3xl'])
@@ -340,7 +343,7 @@ class CompanyResource extends Resource
             ->uploadButtonPosition('center bottom')
             ->loadingIndicatorPosition('center bottom')
             ->uploadProgressIndicatorPosition('center bottom')
-            ->maxSize(6144)
+            ->maxSize(self::MAX_IMAGE_SIZE_KB)
             ->nullable()
             ->placeholder('Drag & drop or browse')
             ->extraAttributes(['class' => 'max-w-3xl'])
@@ -642,10 +645,10 @@ class CompanyResource extends Resource
             ->uploadButtonPosition('center bottom')
             ->loadingIndicatorPosition('center bottom')
             ->uploadProgressIndicatorPosition('center bottom')
-            ->maxSize(2048)
+            ->maxSize(self::MAX_IMAGE_SIZE_KB)
             ->nullable()
             ->placeholder('Upload or choose from library')
-            ->helperText('Optional SVG/PNG/WebP.')
+            ->helperText('Optional SVG/PNG/WebP. Maximum file size: 500 KB.')
             ->extraAttributes(['class' => 'max-w-xs'])
             ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
                 $disk = $component->getDisk();

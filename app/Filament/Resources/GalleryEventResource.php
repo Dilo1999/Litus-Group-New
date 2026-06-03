@@ -25,6 +25,9 @@ class GalleryEventResource extends Resource
 {
     protected static ?string $model = GalleryEvent::class;
 
+    /** Maximum upload size for cover and gallery images (kilobytes). */
+    public const MAX_IMAGE_SIZE_KB = 500;
+
     protected static ?string $navigationIcon = 'heroicon-o-photograph';
 
     protected static ?string $navigationLabel = 'Gallery Events';
@@ -107,10 +110,10 @@ class GalleryEventResource extends Resource
                         ->preserveFilenames()
                         ->image()
                         ->imagePreviewHeight('180')
-                        ->maxSize(4096)
+                        ->maxSize(self::MAX_IMAGE_SIZE_KB)
                         ->nullable()
                         ->columnSpanFull()
-                        ->helperText('Thumbnail on News & Media. You can use an uploaded file or keep an external URL stored from a previous import.')
+                        ->helperText('Thumbnail on News & Media. Maximum file size: 500 KB. You can use an uploaded file or keep an external URL stored from a previous import.')
                         ->getUploadedFileUrlUsing($resolveUrl),
 
                     FileUpload::make('gallery_images')
@@ -122,10 +125,10 @@ class GalleryEventResource extends Resource
                         ->image()
                         ->multiple()
                         ->enableReordering()
-                        ->maxSize(4096)
+                        ->maxSize(self::MAX_IMAGE_SIZE_KB)
                         ->nullable()
                         ->columnSpanFull()
-                        ->helperText('Photos on the event gallery page. If empty, the cover image is repeated as a placeholder grid.')
+                        ->helperText('Photos on the event gallery page. Maximum file size: 500 KB per image. If empty, the cover image is repeated as a placeholder grid.')
                         ->getUploadedFileUrlUsing($resolveUrl),
 
                     Toggle::make('is_active')
