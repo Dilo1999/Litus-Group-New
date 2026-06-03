@@ -206,10 +206,10 @@
       >
         <a
           href="{{ route('site.our-companies') }}"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2"
+          class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2"
         >
           View All Companies
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="site-cta-btn__icon" aria-hidden="true">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />
           </svg>
@@ -232,10 +232,10 @@
           <div class="flex justify-center lg:justify-start">
             <a
               href="{{ route('site.about') }}"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+              class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
             >
               Learn More About Us
-              <span>→</span>
+              <span class="site-cta-btn__icon" aria-hidden="true">→</span>
             </a>
           </div>
         </x-site.motion>
@@ -407,10 +407,10 @@
       <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.team') }}"
-          class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg transition-all hover:bg-gray-100 hover:shadow-xl"
+          class="site-cta-btn group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg hover:bg-gray-100 hover:shadow-xl"
         >
           View Full Team
-          <span>→</span>
+          <span class="site-cta-btn__icon" aria-hidden="true">→</span>
         </a>
       </x-site.motion>
     </div>
@@ -471,10 +471,10 @@
       <x-site.motion class="text-center" variant="fade-up" :delay="200" :duration="800">
         <a
           href="{{ route('site.blogs') }}"
-          class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl"
+          class="site-cta-btn group inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl"
         >
           Read More
-          <span>→</span>
+          <span class="site-cta-btn__icon" aria-hidden="true">→</span>
         </a>
       </x-site.motion>
     </div>
@@ -489,10 +489,10 @@
         </p>
         <a
           href="{{ route('site.careers') }}"
-          class="bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+          class="site-cta-btn group bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
         >
           Explore Careers
-          <span>→</span>
+          <span class="site-cta-btn__icon" aria-hidden="true">→</span>
         </a>
       </x-site.motion>
     </div>
@@ -510,10 +510,10 @@
         <x-site.motion class="flex-shrink-0 flex justify-center lg:justify-end" variant="fade-right-sm" :delay="200" :duration="800">
           <a
             href="{{ route('site.contact') }}"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+            class="site-cta-btn group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center gap-2"
           >
             Contact Us
-            <span>→</span>
+            <span class="site-cta-btn__icon" aria-hidden="true">→</span>
           </a>
         </x-site.motion>
       </div>

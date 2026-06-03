@@ -285,6 +285,27 @@
   animation: site-fade-in-up 0.8s ease-out 0.8s both;
 }
 
+/* Pill CTA links — lift + arrow slide on hover */
+.site-cta-btn {
+  transition-property: transform, box-shadow, background-color, color, border-color;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-cta-btn:hover {
+  transform: translateY(-2px);
+}
+
+.site-cta-btn__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-cta-btn:hover .site-cta-btn__icon {
+  transform: translateX(0.25rem);
+}
+
 .site-scroll-indicator {
   animation: site-fade-in 1s ease-out 1s both;
 }
@@ -318,6 +339,14 @@
   .site-our-companies-hero,
   .site-company-hero {
     animation: none !important;
+  }
+
+  .site-cta-btn:hover {
+    transform: none;
+  }
+
+  .site-cta-btn:hover .site-cta-btn__icon {
+    transform: none;
   }
 
   .hero-spotlight-tx-enter,
