@@ -19,7 +19,7 @@
   id="company-contact-form"
   method="POST"
   action="{{ route('site.contact.submit') }}"
-  class="bg-white p-8 rounded-2xl shadow-lg"
+  class="rounded-2xl bg-white p-4 shadow-lg sm:p-8"
   x-data="{
     canSubmit: false,
     submitting: false,
@@ -40,9 +40,9 @@
     <input type="hidden" name="company_id" value="{{ $companyId }}" />
   @endif
 
-  <h3 class="text-2xl font-bold text-gray-900 mb-6">Send Us A Message</h3>
+  <h3 class="mb-4 text-xl font-bold text-gray-900 sm:mb-6 sm:text-2xl">Send Us A Message</h3>
 
-  <div class="space-y-6">
+  <div class="space-y-4 sm:space-y-6">
     <div>
       <label for="company-contact-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
       <input
@@ -105,7 +105,7 @@
       type="submit"
       :disabled="!canSubmit || submitting"
       :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
-      class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1d4291] px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:bg-[#163570] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-[#1d4291]/50"
+      class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1d4291] px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-[#163570] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-[#1d4291]/50 sm:px-8 sm:py-4 sm:text-lg"
     >
       Send Message
       <x-site.lucide-icon name="send" class="w-5 h-5 text-white" />
