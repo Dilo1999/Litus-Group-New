@@ -8,8 +8,43 @@ import intersect from '@alpinejs/intersect';
 Alpine.plugin(collapse);
 Alpine.plugin(intersect);
 
-/** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */
+const SITE_REVEAL_FALLBACK_MS = 1200;
+
+/** Scroll-in-view reveal with intersect + timeout fallback (desktop when x-intersect never fires). */
 document.addEventListener('alpine:init', () => {
+  Alpine.data('siteInViewReveal', (stateKey = 'inView') => {
+    const data = {
+      _fallbackTimer: null,
+      reveal() {
+        this[stateKey] = true;
+        if (this._fallbackTimer) {
+          window.clearTimeout(this._fallbackTimer);
+          this._fallbackTimer = null;
+        }
+      },
+      init() {
+        this[stateKey] = false;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          this.reveal();
+          return;
+        }
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          this.reveal();
+          return;
+        }
+        this._fallbackTimer = window.setTimeout(() => this.reveal(), SITE_REVEAL_FALLBACK_MS);
+      },
+      destroy() {
+        if (this._fallbackTimer) {
+          window.clearTimeout(this._fallbackTimer);
+        }
+      },
+    };
+    data[stateKey] = false;
+    return data;
+  });
+
+  /** Home hero “Featured Company” — matches HomePage.tsx AnimatePresence mode="wait" (leave 500ms, then swap, then enter; timeout 520ms). */
   Alpine.data('siteNavbar', (config = {}) => ({
     heroTopIsDark: config.heroTopIsDark ?? false,
     companyLogoUrls: Array.isArray(config.companyLogoUrls) ? config.companyLogoUrls : [],
@@ -69,6 +104,7 @@ document.addEventListener('alpine:init', () => {
   /** Careers — matches Careers.tsx useInView(once, margin -100px); skip animation if reduced motion. */
   Alpine.data('careersPage', (cfg = {}) => ({
     careersInView: false,
+    _careersFallback: null,
     activeJobIndex: null,
     showApplyModal: false,
     applyJobTitle: '',
@@ -78,6 +114,10 @@ document.addEventListener('alpine:init', () => {
         this.careersInView = true;
       } else if (window.matchMedia('(max-width: 767px)').matches) {
         this.careersInView = true;
+      } else {
+        this._careersFallback = window.setTimeout(() => {
+          this.careersInView = true;
+        }, SITE_REVEAL_FALLBACK_MS);
       }
       if (cfg.reopenJobModal) {
         this.applyJobTitle = cfg.jobModalTitle || '';
@@ -102,12 +142,18 @@ document.addEventListener('alpine:init', () => {
       this.applyJobTitleLocked = true;
       document.documentElement.classList.remove('overflow-y-hidden');
     },
+    destroy() {
+      if (this._careersFallback) {
+        window.clearTimeout(this._careersFallback);
+      }
+    },
   }));
 
   /** Contact — Contact.tsx: useInView ×2 (header block + map); skip motion if reduced. */
   Alpine.data('contactPage', () => ({
     contactInView: false,
     mapInView: false,
+    _contactFallback: null,
     init() {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         this.contactInView = true;
@@ -115,6 +161,16 @@ document.addEventListener('alpine:init', () => {
       } else if (window.matchMedia('(max-width: 767px)').matches) {
         this.contactInView = true;
         this.mapInView = true;
+      } else {
+        this._contactFallback = window.setTimeout(() => {
+          this.contactInView = true;
+          this.mapInView = true;
+        }, SITE_REVEAL_FALLBACK_MS);
+      }
+    },
+    destroy() {
+      if (this._contactFallback) {
+        window.clearTimeout(this._contactFallback);
       }
     },
   }));
@@ -281,17 +337,17 @@ document.addEventListener('alpine:init', () => {
     get heroTrackStyle() {
       const style = { transform: this.heroSlideTransform };
 
-      if (this._trackNoTransition) {
+      if (this._trackNoTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         style.transition = 'none';
       }
 
       return style;
     },
+    get prefersReducedMotion() {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    },
     init() {
       if (!Array.isArray(items) || items.length < 2) {
-        return;
-      }
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
       }
 
@@ -332,9 +388,6 @@ document.addEventListener('alpine:init', () => {
         return;
       }
       if (document.hidden) {
-        return;
-      }
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
       }
 
@@ -395,6 +448,15 @@ document.addEventListener('alpine:init', () => {
 
       const count = this.items.length;
       const nextIdx = (this.idx + 1) % count;
+
+      if (this.prefersReducedMotion) {
+        this.idx = nextIdx;
+        this.slideIdx = nextIdx;
+        this.visible = true;
+        this._cycling = false;
+        this._cycleStartedAt = null;
+        return;
+      }
 
       this._cycling = true;
       this._cycleStartedAt = Date.now();

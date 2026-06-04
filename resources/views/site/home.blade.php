@@ -141,18 +141,12 @@
     id="companies"
     class="py-14 bg-white md:py-24"
     data-companies-overview
-    x-data="{
-      companiesInView: false,
-      init() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.companiesInView = true;
-        else if (window.matchMedia('(max-width: 767px)').matches) this.companiesInView = true;
-      }
-    }"
+    x-data="siteInViewReveal('companiesInView')"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div
         class="site-companies-overview-header mb-10 text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:mb-16 md:will-change-[opacity,transform]"
-        x-intersect.once.margin.-100px.-100px.-100px.-100px="companiesInView = true"
+        x-intersect.once.margin.0px.0px.0px.0px="reveal()"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
         <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Our Companies</h2>
@@ -280,16 +274,10 @@
       <div
         class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12"
         data-home-mission-vision
-        x-data="{
-          mvInView: false,
-          init() {
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.mvInView = true;
-            else if (window.matchMedia('(max-width: 767px)').matches) this.mvInView = true;
-          }
-        }"
+        x-data="siteInViewReveal('mvInView')"
       >
         <div
-          x-intersect.once.margin.-100px.-100px.-100px.-100px="mvInView = true"
+          x-intersect.once.margin.0px.0px.0px.0px="reveal()"
           class="cursor-default rounded-2xl border border-white/20 bg-white/10 p-6 text-center transition-[opacity,transform,box-shadow,background-color,border-color] duration-[800ms] ease-out hover:duration-300 max-md:will-change-auto sm:p-8 md:text-left md:will-change-[opacity,transform] md:backdrop-blur-sm md:hover:-translate-y-1 md:hover:border-white/40 md:hover:bg-white/15 md:hover:shadow-xl"
           :class="mvInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
         >

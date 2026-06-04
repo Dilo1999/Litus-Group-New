@@ -45,8 +45,29 @@
 
 <div
     data-motion
-    x-data="{ shown: false, init() { const mq = window.matchMedia; if (mq('(prefers-reduced-motion: reduce)').matches || mq('(max-width: 767px)').matches) this.shown = true } }"
-    x-intersect.once.margin.-100px.-100px.-100px.-100px="shown = true"
+    x-data="{
+      shown: false,
+      _fallback: null,
+      reveal() {
+        this.shown = true;
+        if (this._fallback) {
+          clearTimeout(this._fallback);
+          this._fallback = null;
+        }
+      },
+      init() {
+        const mq = window.matchMedia;
+        if (mq('(prefers-reduced-motion: reduce)').matches || mq('(max-width: 767px)').matches) {
+          this.reveal();
+          return;
+        }
+        this._fallback = setTimeout(() => this.reveal(), 1200);
+      },
+      destroy() {
+        if (this._fallback) clearTimeout(this._fallback);
+      }
+    }"
+    x-intersect.once.margin.0px.0px.0px.0px="reveal()"
     x-bind:class="shown ? '{{ $to }}' : '{{ $from }}'"
     class="transition-[opacity,transform] ease-out {{ $attributes->get('class') }}"
     style="transition-duration: {{ $durationMs }}ms; transition-delay: {{ $delayMs }}ms"
