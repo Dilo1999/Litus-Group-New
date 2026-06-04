@@ -121,7 +121,7 @@
       type="submit"
       :disabled="!canSubmit || submitting"
       :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
-      class="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl disabled:cursor-not-allowed disabled:bg-blue-400 sm:px-8 sm:py-4 sm:text-lg"
+      class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1d4291] px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-[#163570] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-[#1d4291]/50 sm:px-8 sm:py-4 sm:text-lg"
     >
       Send Message
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

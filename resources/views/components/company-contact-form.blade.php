@@ -105,7 +105,7 @@
       type="submit"
       :disabled="!canSubmit || submitting"
       :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
-      class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+      class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1d4291] px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:bg-[#163570] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-[#1d4291]/50"
     >
       Send Message
       <x-site.lucide-icon name="send" class="w-5 h-5 text-white" />
