@@ -247,11 +247,14 @@ document.addEventListener('alpine:init', () => {
     idx: 0,
     slideIdx: 0,
     visible: true,
-    _interval: null,
+    _autoplayTimer: null,
     _cyclePending: null,
     _snapPending: null,
     _cycling: false,
+    _cycleStartedAt: null,
     _trackNoTransition: false,
+    _boundVisibilityChange: null,
+    _boundPageShow: null,
     get heroSlides() {
       const slides = this.items.map((item) => {
         const url = item?.heroImage;
@@ -285,37 +288,116 @@ document.addEventListener('alpine:init', () => {
       return style;
     },
     init() {
-      if (!Array.isArray(items) || items.length === 0) {
+      if (!Array.isArray(items) || items.length < 2) {
         return;
       }
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
       }
-      if (items.length < 2) {
-        return;
-      }
-      this._interval = window.setInterval(() => this.cycle(), 6000);
+
+      this._boundVisibilityChange = () => this._handleVisibilityChange();
+      this._boundPageShow = (event) => this._handlePageShow(event);
+      document.addEventListener('visibilitychange', this._boundVisibilityChange);
+      window.addEventListener('pageshow', this._boundPageShow);
+
+      this._scheduleAutoplay(6000);
     },
     destroy() {
+      this._clearAutoplayTimer();
       if (this._cyclePending) {
         window.clearTimeout(this._cyclePending);
+        this._cyclePending = null;
       }
       if (this._snapPending) {
         window.clearTimeout(this._snapPending);
+        this._snapPending = null;
       }
-      if (this._interval) {
-        window.clearInterval(this._interval);
+      if (this._boundVisibilityChange) {
+        document.removeEventListener('visibilitychange', this._boundVisibilityChange);
+      }
+      if (this._boundPageShow) {
+        window.removeEventListener('pageshow', this._boundPageShow);
       }
     },
-    cycle() {
-      if (this._cycling || !Array.isArray(this.items) || this.items.length < 2) {
+    _clearAutoplayTimer() {
+      if (this._autoplayTimer) {
+        window.clearTimeout(this._autoplayTimer);
+        this._autoplayTimer = null;
+      }
+    },
+    _scheduleAutoplay(delayMs = 6000) {
+      this._clearAutoplayTimer();
+
+      if (!Array.isArray(this.items) || this.items.length < 2) {
         return;
+      }
+      if (document.hidden) {
+        return;
+      }
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+      }
+
+      this._autoplayTimer = window.setTimeout(() => {
+        this.cycle();
+        this._scheduleAutoplay(6000);
+      }, delayMs);
+    },
+    _recoverFromStaleState() {
+      if (this._cyclePending) {
+        window.clearTimeout(this._cyclePending);
+        this._cyclePending = null;
+      }
+      if (this._snapPending) {
+        window.clearTimeout(this._snapPending);
+        this._snapPending = null;
+      }
+
+      this._cycling = false;
+      this._cycleStartedAt = null;
+      this.visible = true;
+      this._trackNoTransition = false;
+
+      if (Array.isArray(this.items) && this.items.length >= 2) {
+        this.slideIdx = this.idx % this.items.length;
+      }
+    },
+    _handleVisibilityChange() {
+      if (document.hidden) {
+        this._clearAutoplayTimer();
+        return;
+      }
+
+      this._recoverFromStaleState();
+      this._scheduleAutoplay(6000);
+    },
+    _handlePageShow(event) {
+      if (!event.persisted) {
+        return;
+      }
+
+      this._recoverFromStaleState();
+      this._scheduleAutoplay(6000);
+    },
+    cycle() {
+      if (!Array.isArray(this.items) || this.items.length < 2) {
+        return;
+      }
+
+      if (this._cycling) {
+        const stuckMs = this._cycleStartedAt ? Date.now() - this._cycleStartedAt : Number.POSITIVE_INFINITY;
+        if (stuckMs < 2500) {
+          return;
+        }
+
+        this._recoverFromStaleState();
       }
 
       const count = this.items.length;
       const nextIdx = (this.idx + 1) % count;
 
       this._cycling = true;
+      this._cycleStartedAt = Date.now();
       this.visible = false;
       this.idx = nextIdx;
 
@@ -325,6 +407,7 @@ document.addEventListener('alpine:init', () => {
           window.clearTimeout(this._snapPending);
         }
         this._snapPending = window.setTimeout(() => {
+          this._snapPending = null;
           this._trackNoTransition = true;
           this.slideIdx = 0;
           window.requestAnimationFrame(() => {
@@ -341,8 +424,10 @@ document.addEventListener('alpine:init', () => {
         window.clearTimeout(this._cyclePending);
       }
       this._cyclePending = window.setTimeout(() => {
+        this._cyclePending = null;
         this.visible = true;
         this._cycling = false;
+        this._cycleStartedAt = null;
       }, 520);
     },
   }));
