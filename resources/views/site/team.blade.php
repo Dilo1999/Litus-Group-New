@@ -65,15 +65,12 @@
 
       @php
         $visibleTeam = array_values(array_filter($team, fn ($m) => ! empty($m['image'])));
-        $gridCols = count($visibleTeam) <= 2
-          ? 'md:grid-cols-2'
-          : (count($visibleTeam) === 3 ? 'md:grid-cols-3' : 'md:grid-cols-3 lg:grid-cols-4');
       @endphp
 
-      <div class="grid grid-cols-2 items-stretch gap-4 sm:gap-6 {{ $gridCols }} lg:gap-8">
+      <div class="flex flex-wrap justify-center gap-3 sm:gap-5 lg:gap-6">
         @foreach($visibleTeam as $index => $member)
           <div
-            class="site-team-motion-card flex h-full min-w-0 flex-col transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto md:will-change-[opacity,transform]"
+            class="site-team-motion-card flex w-[calc(50%-0.375rem)] max-w-[280px] flex-col text-center transition-[opacity,transform] duration-[800ms] ease-out max-md:will-change-auto sm:w-[280px] md:will-change-[opacity,transform]"
             style="transition-delay: {{ $index * 100 }}ms"
             x-data="{
               cardInView: false,
@@ -85,7 +82,7 @@
             x-intersect.once.margin.-100px.-100px.-100px.-100px="cardInView = true"
             :class="cardInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
           >
-            <div class="group relative mx-auto mb-3 aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-xl bg-gray-100 shadow-lg sm:mb-3 sm:max-w-[9rem] md:mx-0 md:max-w-[10rem] md:rounded-lg lg:max-w-[11rem]">
+            <div class="group relative mx-auto mb-2 aspect-square w-full overflow-hidden rounded-xl bg-gray-100 shadow-lg sm:mb-3 md:mb-4 md:rounded-lg">
               <img
                 src="{{ $member['image'] }}"
                 alt="{{ $member['name'] }}"
@@ -160,23 +157,23 @@
               </div>
             @endif
 
-            <div class="flex w-full min-w-0 flex-1 flex-col text-center md:text-left">
-              <h3 class="mb-1 text-sm font-bold leading-snug text-gray-900 sm:text-base md:text-lg">
+            <div class="w-full">
+              <h3 class="mb-1 text-xs font-bold leading-snug text-gray-900 sm:mb-1.5 sm:text-base md:text-lg">
                 {{ $member['name'] }}
               </h3>
               @if(!empty($member['role']))
-                <div class="mb-2 text-xs font-semibold leading-snug text-blue-600 sm:mb-2 sm:text-xs">
+                <div class="mb-1.5 text-[0.7rem] font-semibold text-blue-600 sm:mb-2 sm:text-xs">
                   {{ $member['role'] }}
                 </div>
               @endif
               @if(!empty($member['bio']))
-                <p class="mb-2 line-clamp-3 overflow-hidden text-xs leading-relaxed text-gray-600 sm:line-clamp-4 sm:text-xs md:mb-3">
+                <p class="mb-2 line-clamp-3 text-[0.7rem] leading-relaxed text-gray-600 sm:line-clamp-none sm:mb-3 sm:text-xs">
                   {{ $member['bio'] }}
                 </p>
               @endif
               @if(!empty($member['expertise']))
-                <div class="mt-auto shrink-0 border-l-[3px] border-blue-600 pl-2 pt-1 text-left sm:pl-3">
-                  <p class="line-clamp-2 text-[0.65rem] font-medium leading-snug text-gray-500 sm:text-[0.7rem]">
+                <div class="mx-auto inline-block max-w-full border-l-[3px] border-blue-600 pl-2 text-left sm:pl-2.5">
+                  <p class="line-clamp-2 text-[0.625rem] font-medium text-gray-500 sm:line-clamp-none sm:text-[0.7rem]">
                     {{ $member['expertise'] }}
                   </p>
                 </div>
