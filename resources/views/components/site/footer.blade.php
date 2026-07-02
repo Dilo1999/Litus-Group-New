@@ -1,7 +1,7 @@
 @php
   $currentYear = now()->year;
   $footerLinks = [
-    'LITUS Companies' => [
+    'LITUS ' => [
       ['name' => 'LITUS Maldives', 'slug' => 'litus-maldives'],
       ['name' => 'LITUS Shipping', 'slug' => 'litus-shipping'],
       ['name' => 'LITUS Automobiles', 'slug' => 'litus-automobiles'],
@@ -13,14 +13,14 @@
       ['name' => 'Zaha Travels', 'slug' => 'zaha-travels'],
       ['name' => 'Al Zaha General Trading', 'slug' => 'al-zaha-general-trading'],
     ],
-    'Favala Companies' => [
+    'Favala ' => [
       ['name' => 'Favala Supply', 'slug' => 'favala-supply'],
       ['name' => 'Favala Hardware', 'slug' => 'favala-hardware'],
       ['name' => 'Favala Paint', 'slug' => 'favala-paint'],
     ],
     'Quick Links' => [
       ['name' => 'About Us', 'route' => 'site.about'],
-      ['name' => 'Our Companies', 'route' => 'site.our-companies'],
+      ['name' => 'Our Entities', 'route' => 'site.our-companies'],
       ['name' => 'Careers', 'route' => 'site.careers'],
       ['name' => 'Contact Us', 'route' => 'site.contact'],
     ],

@@ -3,7 +3,7 @@
 
   $navItems = [
     ['label' => 'Home', 'route' => 'site.home'],
-    ['label' => 'Our Companies', 'route' => 'site.our-companies', 'dropdown' => true],
+    ['label' => 'Our Entities', 'route' => 'site.our-companies', 'dropdown' => true],
     ['label' => 'About Us', 'route' => 'site.about'],
     ['label' => 'Team', 'route' => 'site.team'],
     ['label' => 'Careers', 'route' => 'site.careers'],

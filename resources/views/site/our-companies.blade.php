@@ -40,7 +40,7 @@
   </div>
   <div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 md:py-24 lg:px-8">
     <div class="site-our-companies-hero mx-auto max-w-3xl text-center text-white">
-      <h1 class="mb-4 text-3xl font-bold max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-6xl md:[text-shadow:none]">Our Companies</h1>
+      <h1 class="mb-4 text-3xl font-bold max-md:[text-shadow:0_2px_16px_rgba(0,0,0,0.35)] sm:mb-6 sm:text-4xl md:text-6xl md:[text-shadow:none]">Our Entities</h1>
       <p class="mx-auto text-base leading-relaxed text-blue-100 max-md:[text-shadow:0_1px_12px_rgba(0,0,0,0.3)] sm:text-lg md:max-w-3xl md:text-2xl md:[text-shadow:none]">
         Explore our diverse portfolio of 16 specialized companies delivering excellence across multiple industries
       </p>

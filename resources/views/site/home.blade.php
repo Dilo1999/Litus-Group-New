@@ -113,7 +113,7 @@
             href="{{ route('site.our-companies') }}"
             class="group flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
           >
-            Explore Our Companies
+            Explore Our Entities
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 group-hover:translate-x-1 transition-transform" aria-hidden="true">
               <path d="M5 12h14"></path>
               <path d="m12 5 7 7-7 7"></path>
@@ -149,7 +149,7 @@
         x-intersect.once.margin.0px.0px.0px.0px="reveal()"
         :class="companiesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[50px]'"
       >
-        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Our Companies</h2>
+        <h2 class="mb-3 text-2xl font-bold text-gray-900 sm:mb-4 sm:text-3xl md:text-5xl">Our Entities</h2>
         <p class="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg md:text-xl">
           16 specialized companies delivering excellence across multiple industries
         </p>
@@ -203,7 +203,7 @@
           href="{{ route('site.our-companies') }}"
           class="site-cta-btn group inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg hover:bg-blue-700 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-lg"
         >
-          View All Companies
+          View All Entities
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="site-cta-btn__icon" aria-hidden="true">
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />
@@ -345,11 +345,16 @@
       </x-site.motion>
 
       @if(count($leadershipTeam) > 0)
-        <div class="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:mb-16 lg:grid-cols-4 lg:gap-8">
+        <div class="mb-10 flex flex-wrap justify-center gap-4 sm:gap-6 md:mb-16 lg:gap-8">
           @foreach($leadershipTeam as $index => $member)
-            <x-site.motion :delay="$index * 80" :duration="600" variant="fade-up">
-              <article class="group text-center">
-                <div class="relative mx-auto mb-3 aspect-square max-w-[9.5rem] overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 ring-1 ring-white/10 sm:mb-4 sm:max-w-[220px] md:max-w-[240px]">
+            <x-site.motion
+              :delay="$index * 80"
+              :duration="600"
+              variant="fade-up"
+              class="h-full w-[calc(50%-0.5rem)] max-w-[280px] sm:w-[280px]"
+            >
+              <article class="group flex h-full flex-col text-center">
+                <div class="relative mx-auto mb-3 aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/30 ring-1 ring-white/10 sm:mb-4">
                   <img
                     src="{{ $member['image'] }}"
                     alt="{{ $member['name'] }}"
@@ -391,14 +396,16 @@
                     </div>
                   @endif
                 </div>
-                <h3 class="text-base font-bold leading-snug text-white sm:text-lg">
-                  {{ $member['name'] }}
-                </h3>
-                @if(!empty($member['role']))
-                  <p class="mt-1 text-xs font-semibold text-blue-200 sm:text-sm">
-                    {{ $member['role'] }}
-                  </p>
-                @endif
+                <div class="flex flex-1 flex-col">
+                  <h3 class="text-base font-bold leading-snug text-white sm:text-lg">
+                    {{ $member['name'] }}
+                  </h3>
+                  @if(!empty($member['role']))
+                    <p class="mt-1 min-h-[2.5rem] text-xs font-semibold leading-snug text-blue-200 sm:min-h-[3rem] sm:text-sm">
+                      {{ $member['role'] }}
+                    </p>
+                  @endif
+                </div>
               </article>
             </x-site.motion>
           @endforeach
