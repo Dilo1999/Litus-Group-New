@@ -16,7 +16,7 @@ class PageSeoFields
     public static function section(string $imageDirectory = 'site/seo/pages'): Forms\Components\Section
     {
         return Forms\Components\Section::make('Search engine optimization')
-            ->description('Controls the page title, search-result snippet, and how this page appears when shared on social networks.')
+            ->description('Controls the page title, search-result snippet, and how this page appears when shared on social networks. Leave fields empty to fall back to Global SEO defaults.')
             ->schema([
                 TextInput::make('meta_title')
                     ->label('Meta title')
@@ -36,6 +36,16 @@ class PageSeoFields
                     ->rows(2)
                     ->maxLength(300)
                     ->helperText('Defaults to meta description if empty.'),
+                FileUpload::make('og_image')
+                    ->label('Social / Open Graph image')
+                    ->disk('public')
+                    ->directory($imageDirectory)
+                    ->visibility('public')
+                    ->image()
+                    ->imagePreviewHeight('160')
+                    ->maxSize(4096)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->helperText('Recommended: 1200×630px. Leave empty to use the Global SEO default image.'),
                 TextInput::make('twitter_title')
                     ->label('Twitter / X title')
                     ->maxLength(70),
@@ -43,6 +53,16 @@ class PageSeoFields
                     ->label('Twitter / X description')
                     ->rows(2)
                     ->maxLength(300),
+                FileUpload::make('twitter_image')
+                    ->label('Twitter / X image')
+                    ->disk('public')
+                    ->directory($imageDirectory.'/twitter')
+                    ->visibility('public')
+                    ->image()
+                    ->imagePreviewHeight('160')
+                    ->maxSize(4096)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                    ->helperText('Optional. Defaults to the Open Graph image above if empty.'),
                 TextInput::make('canonical_url')
                     ->label('Canonical URL')
                     ->url()
@@ -51,11 +71,10 @@ class PageSeoFields
                 TextInput::make('robots')
                     ->label('Robots')
                     ->maxLength(120)
-                    ->helperText('Examples: index,follow | noindex,nofollow. Leave blank to use site defaults.'),
+                    ->helperText('Examples: index,follow | noindex,nofollow. Leave blank to use Global SEO / site defaults.'),
             ])
             ->columns(1)
             ->collapsible()
             ->collapsed(false);
     }
 }
-

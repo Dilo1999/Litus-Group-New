@@ -30,6 +30,7 @@ class PageSeoResource extends Resource
 
     // Only admins should manage SEO, so surface this under Settings
     // alongside Users rather than Management content modules.
+    // Global SEO (site-wide defaults) sits just above this at sort 94.
     protected static ?string $navigationGroup = 'Settings';
 
     protected static ?int $navigationSort = 95;
