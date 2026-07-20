@@ -1,40 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://alzahageneraltrading.com/</loc>
+        <loc>https://litusgroup.mv/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/about</loc>
+        <loc>https://litusgroup.mv/our-companies</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/solutions</loc>
+        <loc>https://litusgroup.mv/about</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/solutions/sourcing</loc>
+        <loc>https://litusgroup.mv/team</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/solutions/supply-chain</loc>
+        <loc>https://litusgroup.mv/careers</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/solutions/logistics</loc>
+        <loc>https://litusgroup.mv/blogs</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/solutions/consulting</loc>
+        <loc>https://litusgroup.mv/contact</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/industries</loc>
+        <loc>https://litusgroup.mv/our-companies/litus-group</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/how-it-works</loc>
+        <loc>https://litusgroup.mv/our-companies/litus-maldives</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/blogs</loc>
+        <loc>https://litusgroup.mv/our-companies/litus-shipping</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/quote</loc>
+        <loc>https://litusgroup.mv/our-companies/litus-automobiles</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://alzahageneraltrading.com/contact</loc>
+        <loc>https://litusgroup.mv/our-companies/litus-service-center</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/litus-parts</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/litus-general-trading</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/litus-connect</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/litus-connect-office-tech</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/litus-constructions</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/zaha-residence-hotels</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/zaha-travels</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/al-zaha-general-trading</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/favala-supply</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/favala-hardware</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://litusgroup.mv/our-companies/favala-paint</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
 </urlset>
-

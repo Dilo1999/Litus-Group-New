@@ -10,5 +10,5 @@ Disallow: /password/
 # Allow all other content to be crawled
 Allow: /
 
-# XML sitemap (Laravel-generated)
-Sitemap: https://alzahageneraltrading.com/sitemap.xml
+# XML sitemap
+Sitemap: https://litusgroup.mv/sitemap.xml
