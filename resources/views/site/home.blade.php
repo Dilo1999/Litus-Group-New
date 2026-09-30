@@ -175,15 +175,15 @@
 
   {{-- ============================== LOGO MARQUEE ============================== --}}
   @if(count($marqueeLogos) > 0)
-    <section class="border-b border-ink-100 bg-white py-10 md:py-12" aria-label="Our brands">
-      <p class="ui-container mb-7 text-center text-xs font-bold uppercase tracking-[0.22em] text-ink-400">The LITUS family of brands</p>
+    <section class="border-b border-ink-100 bg-white py-6 md:py-7" aria-label="Our brands">
+      <p class="ui-container mb-5 text-center text-xs font-bold uppercase tracking-[0.22em] text-ink-400">The LITUS family of brands</p>
       <div class="ui-marquee overflow-hidden">
         <div class="ui-marquee__track items-center gap-14 md:gap-20">
           @foreach([0, 1] as $loopCopy)
             @foreach($marqueeLogos as $logo)
               <a
                 href="{{ route('site.company', ['slug' => $logo['slug']]) }}"
-                class="flex h-14 w-32 shrink-0 items-center justify-center opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-16 md:w-40"
+                class="flex h-20 w-44 shrink-0 items-center justify-center opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-24 md:w-56"
                 @if($loopCopy === 1) aria-hidden="true" tabindex="-1" @endif
               >
                 <img src="{{ $logo['src'] }}" alt="{{ $loopCopy === 0 ? $logo['name'] : '' }}" class="max-h-full max-w-full object-contain" loading="lazy" decoding="async" />
