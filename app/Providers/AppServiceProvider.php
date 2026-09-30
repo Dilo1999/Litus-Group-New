@@ -11,6 +11,7 @@ use App\Models\SiteSetting;
 use App\Models\TeamMember;
 use App\Models\User;
 use App\Observers\AuditableModelObserver;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -49,5 +50,14 @@ class AppServiceProvider extends ServiceProvider
         SiteSetting::observe($observer);
         TeamMember::observe($observer);
         User::observe($observer);
+
+        // LITUS brand theme for the admin panel (navy primary + dashboard styles).
+        Filament::serving(function () {
+            Filament::registerStyles(collect(['admin-primary', 'admin'])
+                ->mapWithKeys(fn (string $file) => [
+                    "litus-{$file}" => '<link rel="stylesheet" href="'.asset("css/{$file}.css").'?v='.@filemtime(public_path("css/{$file}.css")).'" />',
+                ])
+                ->all());
+        });
     }
 }
