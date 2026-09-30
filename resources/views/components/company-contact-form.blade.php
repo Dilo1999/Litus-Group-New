@@ -4,8 +4,11 @@
 ])
 
 @if (session('status'))
-  <div class="mb-6 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-green-800" role="status">
-    {{ session('status') }}
+  <div class="mb-6 flex items-start gap-3 rounded-2xl border border-lagoon-300/60 bg-lagoon-100/60 px-5 py-4 text-ink-800" role="status">
+    <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lagoon-500 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+    </span>
+    <span class="text-sm font-medium leading-relaxed sm:text-[0.95rem]">{{ session('status') }}</span>
   </div>
   <script>
     window.addEventListener('load', () => {
@@ -19,7 +22,7 @@
   id="company-contact-form"
   method="POST"
   action="{{ route('site.contact.submit') }}"
-  class="rounded-2xl bg-white p-4 shadow-lg sm:p-8"
+  class="relative scroll-mt-28 overflow-hidden rounded-[2rem] border border-ink-100 bg-white p-5 shadow-[0_2px_4px_rgba(6,22,52,0.04),0_40px_80px_-40px_rgba(6,22,52,0.3)] sm:p-8 lg:p-10"
   x-data="{
     canSubmit: false,
     submitting: false,
@@ -34,81 +37,89 @@
   @change.debounce.50ms="update()"
   @submit="submitting = true; update()"
 >
+  <span class="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-600 via-brand-400 to-lagoon-400" aria-hidden="true"></span>
   @csrf
   <input type="hidden" name="company" value="{{ $companyName }}" />
   @if(! empty($companyId))
     <input type="hidden" name="company_id" value="{{ $companyId }}" />
   @endif
 
-  <h3 class="mb-4 text-xl font-bold text-gray-900 sm:mb-6 sm:text-2xl">Send Us A Message</h3>
+  <div class="mb-6 sm:mb-8">
+    <h3 class="ui-h3">Send us a message</h3>
+  </div>
 
-  <div class="space-y-4 sm:space-y-6">
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
     <div>
-      <label for="company-contact-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+      <label for="company-contact-name" class="ui-label">Full Name</label>
       <input
         type="text"
         id="company-contact-name"
         name="name"
         value="{{ old('name') }}"
         required
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+        autocomplete="name"
+        class="ui-input"
       />
       @error('name')
-        <div class="text-sm text-red-600 mt-2">{{ $message }}</div>
+        <div class="mt-2 text-sm font-medium text-red-600">{{ $message }}</div>
       @enderror
     </div>
 
     <div>
-      <label for="company-contact-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+      <label for="company-contact-email" class="ui-label">Email Address</label>
       <input
         type="email"
         id="company-contact-email"
         name="email"
         value="{{ old('email') }}"
         required
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+        autocomplete="email"
+        class="ui-input"
       />
       @error('email')
-        <div class="text-sm text-red-600 mt-2">{{ $message }}</div>
+        <div class="mt-2 text-sm font-medium text-red-600">{{ $message }}</div>
       @enderror
     </div>
 
-    <div>
-      <label for="company-contact-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+    <div class="sm:col-span-2">
+      <label for="company-contact-phone" class="ui-label">Phone Number <span class="font-normal text-ink-400">(optional)</span></label>
       <input
         type="tel"
         id="company-contact-phone"
         name="phone"
         value="{{ old('phone') }}"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+        autocomplete="tel"
+        class="ui-input"
       />
       @error('phone')
-        <div class="text-sm text-red-600 mt-2">{{ $message }}</div>
+        <div class="mt-2 text-sm font-medium text-red-600">{{ $message }}</div>
       @enderror
     </div>
 
-    <div>
-      <label for="company-contact-message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+    <div class="sm:col-span-2">
+      <label for="company-contact-message" class="ui-label">Message</label>
       <textarea
         id="company-contact-message"
         name="message"
         required
         rows="5"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
+        class="ui-input resize-none"
       >{{ old('message') }}</textarea>
       @error('message')
-        <div class="text-sm text-red-600 mt-2">{{ $message }}</div>
+        <div class="mt-2 text-sm font-medium text-red-600">{{ $message }}</div>
       @enderror
     </div>
 
-    <button
-      type="submit"
-      :disabled="!canSubmit || submitting"
-      :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
-      class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#1d4291] px-6 py-3.5 text-base font-semibold text-white shadow-lg transition-all hover:bg-[#163570] hover:shadow-xl disabled:cursor-not-allowed disabled:bg-[#1d4291]/50 sm:px-8 sm:py-4 sm:text-lg"
-    >
-      Send Message
-      <x-site.lucide-icon name="send" class="w-5 h-5 text-white" />
-    </button>
+    <div class="sm:col-span-2">
+      <button
+        type="submit"
+        :disabled="!canSubmit || submitting"
+        :aria-disabled="(!canSubmit || submitting) ? 'true' : 'false'"
+        class="ui-btn ui-btn--primary w-full disabled:cursor-not-allowed disabled:bg-brand-600/45 disabled:shadow-none disabled:hover:translate-y-0"
+      >
+        Send Message
+        <x-site.lucide-icon name="send" class="h-5 w-5 text-white" />
+      </button>
+    </div>
   </div>
 </form>
