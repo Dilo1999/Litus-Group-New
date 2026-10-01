@@ -6,7 +6,8 @@
   $company = $company ?? [];
   $name = $company['name'] ?? 'Zaha Travels';
   $site = 'https://www.zahatravels.com';
-  $logo = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null) ?: $site.'/images/logo-web.png';
+  // Official logo from zahatravels.com: tightly cropped, so it lines up with the hero text.
+  $logo = $site.'/images/logo-web.png';
   $maldivesImg = $site.'/storage/destinations/hero/maldives.jpeg';
   $sriLankaImg = $site.'/storage/destinations/hero/3PC3DLBPxxUgHfFQhHlwQtWDswuJlr-metaMHgwLndlYnA%3D-.webp';
 
@@ -163,8 +164,8 @@
           </ol>
         </nav>
 
-        <div class="-ml-2 mb-4 flex h-20 items-center sm:h-24 md:mb-6 md:h-32">
-          <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-[min(100%,300px)] object-contain object-left brightness-0 invert sm:max-w-[360px] md:max-w-[440px]" onerror="this.parentElement.hidden=true">
+        <div class="mb-8 flex h-12 items-center sm:h-14 md:mb-10 md:h-16">
+          <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-full object-contain object-left brightness-0 invert" width="192" height="48" decoding="async" onerror="this.parentElement.hidden=true">
         </div>
 
         <span class="ui-eyebrow ui-eyebrow--light">{{ $category }} · A LITUS Group company</span>
