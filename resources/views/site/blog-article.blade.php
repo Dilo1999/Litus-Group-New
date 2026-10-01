@@ -111,54 +111,10 @@
         </div>
       @endif
 
-      @php
-        $blocks = is_array($post['content_blocks'] ?? null)
-          ? ($post['content_blocks'] ?? [])
-          : [];
-      @endphp
-
-      @if(count($blocks) > 0)
-        <div class="space-y-7">
-          @foreach($blocks as $block)
-            @php
-              $type = $block['type'] ?? null;
-              $data = $block['data'] ?? [];
-            @endphp
-
-            @if($type === 'paragraph')
-              @php
-                $text = $data['text'] ?? null;
-                if (!is_string($text) || $text === '') {
-                    $text = isset($data['html']) && is_string($data['html']) ? strip_tags($data['html']) : '';
-                }
-              @endphp
-              @if($text !== '')
-                <p class="text-[1.075rem] leading-[1.9] text-ink-600 [overflow-wrap:anywhere] whitespace-pre-line sm:text-[1.15rem] {{ $loop->first && empty($post['excerpt']) ? 'first-letter:float-left first-letter:mr-3 first-letter:font-serif first-letter:text-[4.5rem] first-letter:leading-[0.85] first-letter:text-brand-600' : '' }}">
-                  {{ $text }}
-                </p>
-              @endif
-            @elseif($type === 'quote')
-              <figure class="relative my-12 overflow-hidden rounded-3xl bg-sand-100 px-7 py-9 sm:px-12 sm:py-12">
-                <svg class="absolute top-5 right-6 text-brand-600/10 sm:top-6 sm:right-8" width="96" height="96" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.6 5C6 6.4 3.5 9.6 3.5 13.6V19h6.2v-6.2H6.6c0-2.6 1.4-4.6 3.9-5.6L9.6 5Zm10.9 0c-3.6 1.4-6.1 4.6-6.1 8.6V19h6.2v-6.2h-3.1c0-2.6 1.4-4.6 3.9-5.6L20.5 5Z"/></svg>
-                <span class="absolute inset-y-8 left-0 w-1 rounded-r-full bg-gradient-to-b from-brand-600 to-lagoon-400" aria-hidden="true"></span>
-                <blockquote class="relative">
-                  <p class="m-0 font-serif text-[1.6rem] leading-[1.35] text-ink-900 italic whitespace-pre-line sm:text-[2rem]">
-                    “{{ $data['text'] ?? '' }}”
-                  </p>
-                </blockquote>
-                @if(!empty($data['attribution']))
-                  <figcaption class="relative mt-6 flex items-center gap-3 text-sm font-semibold text-ink-600">
-                    <span class="h-px w-8 bg-ink-300" aria-hidden="true"></span>
-                    {{ $data['attribution'] }}
-                  </figcaption>
-                @endif
-              </figure>
-            @endif
-          @endforeach
-        </div>
-      @elseif(!empty($post['content']))
-        <div class="text-[1.075rem] leading-[1.9] text-ink-600 [overflow-wrap:anywhere] whitespace-pre-line sm:text-[1.15rem]">
-          {{ $post['content'] }}
+      @if(filled($post['body'] ?? null))
+        {{-- Article HTML written in the admin editor (styled by .blog-article-body in app.css) --}}
+        <div class="blog-article-body {{ empty($post['excerpt']) ? 'blog-article-body--dropcap' : '' }}">
+          {!! $post['body'] !!}
         </div>
       @endif
 

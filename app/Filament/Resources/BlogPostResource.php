@@ -2,15 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\AssetPicker;
 use App\Filament\Forms\Components\SeoFields;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\Builder as ContentBuilder;
-use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -83,60 +81,36 @@ class BlogPostResource extends Resource
                         ->maxLength(50)
                         ->helperText('Example: 4 min read'),
 
-                    FileUpload::make('image')
+                    AssetPicker::make('image')
                         ->label('Cover image')
-                        ->disk('public')
-                        ->directory('blogs')
-                        ->visibility('public')
-                        ->preserveFilenames()
-                        ->image()
-                        ->imagePreviewHeight('180')
-                        ->maxSize(4096)
+                        ->imagePreviewHeight(180)
                         ->columnSpanFull(),
 
                     Textarea::make('excerpt')
                         ->rows(3)
                         ->maxLength(2000)
                         ->columnSpanFull(),
-
-                    Textarea::make('content')
-                        ->label('Content (plain text)')
-                        ->rows(6)
-                        ->columnSpanFull()
-                        ->helperText('Optional. If you don’t use sections below, this will be shown on the article page.'),
-
-                    ContentBuilder::make('content_blocks')
-                        ->label('Content')
-                        ->columnSpanFull()
-                        ->blocks([
-                            Block::make('paragraph')
-                                ->label('Normal content')
-                                ->schema([
-                                    Textarea::make('text')
-                                        ->label('Text')
-                                        ->rows(8)
-                                        ->required()
-                                        ->columnSpanFull(),
-                                ]),
-                            Block::make('quote')
-                                ->label('Quote section')
-                                ->schema([
-                                    Textarea::make('text')
-                                        ->rows(3)
-                                        ->required()
-                                        ->columnSpanFull(),
-                                    TextInput::make('attribution')
-                                        ->label('Attribution (optional)')
-                                        ->maxLength(255)
-                                        ->columnSpanFull(),
-                                ]),
-                        ])
-                        ->collapsible()
-                        ->cloneable()
-                        ->createItemButtonLabel('Add content section')
-                        ->helperText('Add normal content and/or quote sections. Cover image is used for images.'),
                 ])
                 ->columns(2),
+
+            Forms\Components\Section::make('Article content')
+                ->description('Write or paste the article HTML, or edit it directly in the preview: click any text to type, click an image to resize, align or replace it.')
+                ->schema([
+                    Textarea::make('body')
+                        ->label('HTML')
+                        ->rows(18)
+                        ->helperText('Example: <h2>…</h2><p>…</p><img src="…" alt="…">')
+                        ->extraAttributes([
+                            'class' => 'font-mono text-sm',
+                            'data-blog-post-body' => '1',
+                        ])
+                        ->columnSpanFull(),
+                    Forms\Components\ViewField::make('body_html_preview')
+                        ->disableLabel()
+                        ->view('filament.forms.blog-post-html-preview')
+                        ->dehydrated(false)
+                        ->columnSpanFull(),
+                ]),
             SeoFields::section(),
         ]);
     }

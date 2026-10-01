@@ -25,7 +25,8 @@ class SiteData
             return $basename;
         }
 
-        if (str_starts_with($basename, 'companies/')) {
+        // Storage paths (uploads / Assets library) contain a folder; default logos are bare file names.
+        if (str_contains($basename, '/')) {
             return Storage::disk('public')->url($basename);
         }
 
@@ -40,7 +41,7 @@ class SiteData
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
             return $path;
         }
-        if (str_starts_with($path, 'companies/')) {
+        if (str_contains($path, '/')) {
             return Storage::disk('public')->url($path);
         }
 
@@ -281,6 +282,7 @@ class SiteData
             'excerpt' => $p->excerpt ?? '',
             'content' => $p->content,
             'content_blocks' => $p->content_blocks,
+            'body' => $p->bodyHtml(),
             'image' => $image,
             'author' => $p->author ?? '',
             'date' => $date,
@@ -479,7 +481,7 @@ class SiteData
             ->get()
             ->map(function (TeamMember $m): array {
                 $photo = $m->photo;
-                if ($photo && str_starts_with($photo, 'team/')) {
+                if ($photo && ! str_starts_with($photo, 'http://') && ! str_starts_with($photo, 'https://')) {
                     $photo = Storage::disk('public')->url($photo);
                 }
 

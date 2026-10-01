@@ -13,19 +13,19 @@ class Company extends Model
             foreach (['logo', 'hero_image', 'about_image'] as $field) {
                 $path = $company->{$field};
                 if ($path && str_starts_with($path, 'companies/')) {
-                    Storage::disk('public')->delete($path);
+                    \App\Support\MediaAssetLibrary::deleteUnlessShared($path);
                 }
             }
 
             foreach (\App\Support\CompanyPageIcons::iconPathsFromItems($company->services ?? []) as $path) {
                 if (str_starts_with($path, 'companies/service-icons/')) {
-                    Storage::disk('public')->delete($path);
+                    \App\Support\MediaAssetLibrary::deleteUnlessShared($path);
                 }
             }
 
             foreach (\App\Support\CompanyPageIcons::iconPathsFromItems($company->strengths ?? []) as $path) {
                 if (str_starts_with($path, 'companies/strength-icons/')) {
-                    Storage::disk('public')->delete($path);
+                    \App\Support\MediaAssetLibrary::deleteUnlessShared($path);
                 }
             }
         });

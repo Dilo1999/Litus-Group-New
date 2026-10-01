@@ -7,6 +7,7 @@ use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
 use App\Models\JobOpening;
+use App\Models\MediaAsset;
 use App\Models\PageSeo;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -15,6 +16,7 @@ use App\Policies\BlogPostPolicy;
 use App\Policies\CompanyPolicy;
 use App\Policies\GalleryEventPolicy;
 use App\Policies\JobOpeningPolicy;
+use App\Policies\MediaAssetPolicy;
 use App\Policies\PageSeoPolicy;
 use App\Policies\TeamMemberPolicy;
 use App\Policies\UserPolicy;
@@ -33,6 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         Company::class => CompanyPolicy::class,
         GalleryEvent::class => GalleryEventPolicy::class,
         JobOpening::class => JobOpeningPolicy::class,
+        MediaAsset::class => MediaAssetPolicy::class,
         PageSeo::class => PageSeoPolicy::class,
         TeamMember::class => TeamMemberPolicy::class,
         User::class => UserPolicy::class,

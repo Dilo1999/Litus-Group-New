@@ -9,7 +9,7 @@
   if (filled($heroImageRaw)) {
     if (str_starts_with($heroImageRaw, 'http://') || str_starts_with($heroImageRaw, 'https://')) {
       $heroImageUrl = $heroImageRaw;
-    } elseif (str_starts_with($heroImageRaw, 'companies/')) {
+    } elseif (str_contains($heroImageRaw, '/')) {
       $heroImageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($heroImageRaw);
     }
   }
@@ -18,7 +18,7 @@
   if (filled($aboutImageRaw)) {
     if (str_starts_with($aboutImageRaw, 'http://') || str_starts_with($aboutImageRaw, 'https://')) {
       $aboutImageUrl = $aboutImageRaw;
-    } elseif (str_starts_with($aboutImageRaw, 'companies/')) {
+    } elseif (str_contains($aboutImageRaw, '/')) {
       $aboutImageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($aboutImageRaw);
     }
   }

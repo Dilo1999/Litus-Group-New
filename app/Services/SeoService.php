@@ -105,6 +105,7 @@ class SeoService
             ?: ($post->title.' | '.$this->siteName);
         $metaDesc = $post->meta_description
             ?: $this->plainDescription($post->excerpt)
+            ?: $this->plainDescription($post->body)
             ?: $this->plainDescription($post->content)
             ?: ($this->global['meta_description'] ?? null);
 
@@ -403,6 +404,8 @@ HTML;
         if ($html === null || $html === '') {
             return null;
         }
+        // Keep words apart where block tags meet ("<h2>Title</h2><p>Text" -> "Title Text").
+        $html = preg_replace('~<(?:br|/(?:p|h[1-6]|li|blockquote|div|td|th|cite|figcaption|section|article))\b[^>]*>~i', '$0 ', $html) ?? $html;
         $text = trim(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
 

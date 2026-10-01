@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Admin\MediaAssetController;
 use App\Http\Controllers\LlmsController;
+use App\Models\MediaAsset;
 use App\Http\Controllers\SiteController;
 
 // Serve storage files when symlink doesn't work (e.g. shared hosting / cPanel)
@@ -29,6 +31,12 @@ Route::match(['get', 'head'], 'storage/{path}', function () {
 
     return response()->file($realPath);
 })->where('path', '.*')->name('storage.serve');
+
+// Assets library API for the admin image pickers (Asset picker fields, blog post HTML editor)
+Route::middleware(['auth', 'can:viewAny,'.MediaAsset::class])->prefix('admin/api/media-assets')->group(function () {
+    Route::get('/', [MediaAssetController::class, 'index'])->name('admin.media-assets.index');
+    Route::post('/', [MediaAssetController::class, 'store'])->middleware('can:create,'.MediaAsset::class)->name('admin.media-assets.store');
+});
 
 // AI assistants / LLM crawlers (https://llmstxt.org), built from live admin data
 Route::get('/llms.txt', [LlmsController::class, 'index'])->name('llms.index');

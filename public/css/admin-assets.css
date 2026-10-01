@@ -1,0 +1,56 @@
+/* Asset picker field (app/Filament/Forms/Components/AssetPicker.php).
+   Self-contained: Filament's compiled CSS only ships the utilities it uses itself.
+   Buttons use "button.lap-…" so they win over the base [type=button] reset, which loads later. */
+.lap { display: flex; flex-direction: column; gap: .75rem; }
+.lap-selected { display: grid; grid-template-columns: minmax(0, 28rem); gap: .75rem; }
+.lap-selected--multi { grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); }
+.lap-item { position: relative; margin: 0; overflow: hidden; border: 1px solid var(--lg-border, #e6e9f0); border-radius: 12px; background: #f6f8fb; }
+.lap-item img { display: block; width: 100%; height: var(--lap-preview-h, 160px); object-fit: contain; background: repeating-conic-gradient(#eef1f6 0 25%, #fff 0 50%) 50% / 16px 16px; }
+.lap-selected--multi .lap-item img { object-fit: cover; height: 8.5rem; }
+.lap-item__bar { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .4rem .5rem; border-top: 1px solid var(--lg-border, #e6e9f0); background: #fff; }
+.lap-item__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: #5b6477; }
+.lap-item__actions { display: inline-flex; flex-shrink: 0; gap: .25rem; }
+button.lap-icon-btn { appearance: none; cursor: pointer; width: 1.6rem; height: 1.6rem; border: 1px solid #d6dbe6; border-radius: 6px; background: #fff; color: #0f172a; font-size: 12px; line-height: 1; }
+button.lap-icon-btn:hover { background: #f1f3f8; }
+button.lap-icon-btn--danger { color: #dc2626; border-color: #fca5a5; }
+button.lap-icon-btn--danger:hover { background: #fef2f2; }
+.lap-empty { padding: 1.75rem 1rem; border: 1px dashed #d6dbe6; border-radius: 12px; background: #f6f8fb; text-align: center; font-size: .85rem; color: #8a93a6; }
+.lap-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+button.lap-btn { appearance: none; cursor: pointer; display: inline-flex; align-items: center; gap: .35rem; border: 1px solid #d6dbe6; border-radius: 8px; background: #fff; color: #0f172a; padding: .45rem .8rem; font-size: .78rem; font-weight: 600; line-height: 1.2; }
+button.lap-btn:hover { background: #f6f8fb; border-color: #b9c1d3; }
+button.lap-btn:disabled { opacity: .45; cursor: not-allowed; }
+button.lap-btn--primary { background: #142d87; border-color: #142d87; color: #fff; }
+button.lap-btn--primary:hover { background: #0e2675; border-color: #0e2675; }
+.lap-hint { font-size: .75rem; color: #8a93a6; }
+.lap-error { margin: 0; font-size: .78rem; color: #dc2626; }
+
+.lap-overlay { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.lap-backdrop { position: absolute; inset: 0; background: rgba(3, 11, 31, .7); }
+.lap-dialog { position: relative; display: flex; flex-direction: column; width: 100%; max-width: min(64rem, 96vw); height: min(44rem, 88vh); overflow: hidden; border: 1px solid #e6e9f0; border-radius: 14px; background: #fff; color: #0f172a; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .55); }
+.lap-dialog__head, .lap-dialog__tools, .lap-dialog__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: .65rem 1rem; flex-shrink: 0; }
+.lap-dialog__head { border-bottom: 1px solid #e6e9f0; }
+.lap-dialog__tools { border-bottom: 1px solid #e6e9f0; background: #f6f8fb; }
+.lap-dialog__foot { border-top: 1px solid #e6e9f0; background: #f6f8fb; font-size: .75rem; color: #5b6477; }
+.lap-dialog__title { margin: 0; font-size: .95rem; font-weight: 700; }
+.lap-dialog__sub { margin: .1rem 0 0; font-size: .75rem; color: #5b6477; }
+.lap-dialog__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 1rem; }
+button.lap-close { appearance: none; cursor: pointer; width: 2rem; height: 2rem; border: 0; border-radius: 8px; background: transparent; color: #5b6477; font-size: 1rem; }
+button.lap-close:hover { background: #f1f3f8; }
+.lap-search { flex: 1 1 14rem; max-width: 24rem; border: 1px solid #d6dbe6; border-radius: 8px; padding: .45rem .7rem; font-size: .8rem; }
+.lap-search:focus { outline: 2px solid rgba(30, 58, 158, .3); border-color: #1e3a9e; }
+.lap-pager { display: inline-flex; align-items: center; gap: .5rem; }
+.lap-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+@media (min-width: 640px) { .lap-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .lap-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+button.lap-card { appearance: none; cursor: pointer; position: relative; display: flex; flex-direction: column; overflow: hidden; padding: 0; border: 1px solid #e6e9f0; border-radius: 10px; background: #fff; text-align: left; box-shadow: 0 1px 2px rgba(15, 23, 42, .06); }
+button.lap-card:hover, button.lap-card:focus { outline: none; border-color: #1e3a9e; box-shadow: 0 0 0 2px rgba(30, 58, 158, .3); }
+button.lap-card.is-picked { border-color: #1e3a9e; box-shadow: 0 0 0 3px rgba(30, 58, 158, .45); }
+button.lap-card.is-picked::after { content: "✓"; position: absolute; top: .4rem; right: .4rem; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background: #142d87; color: #fff; font-size: .8rem; font-weight: 700; }
+button.lap-card.is-too-big { opacity: .5; }
+.lap-card__thumb { display: block; aspect-ratio: 4 / 3; overflow: hidden; background: #f1f3f8; }
+.lap-card__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lap-card__label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: .35rem .5rem 0; font-size: 12px; color: #0f172a; }
+.lap-card__size { display: block; padding: 0 .5rem .4rem; font-size: 11px; color: #8a93a6; }
+.lap-none { display: flex; min-height: 10rem; align-items: center; justify-content: center; border: 1px dashed #d6dbe6; border-radius: 10px; font-size: .85rem; color: #5b6477; }
+.lap-skeleton { aspect-ratio: 4 / 3; border-radius: 10px; background: #eef1f6; animation: lap-pulse 1.2s ease-in-out infinite; }
+@keyframes lap-pulse { 50% { opacity: .45; } }

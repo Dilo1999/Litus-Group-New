@@ -16,6 +16,7 @@ class BlogPost extends Model
         'excerpt',
         'content',
         'content_blocks',
+        'body',
         'published_at',
         'is_active',
         'meta_title',
@@ -35,5 +36,13 @@ class BlogPost extends Model
         'published_at' => 'datetime',
         'content_blocks' => 'array',
     ];
+
+    /**
+     * Article HTML for the public page (written in the admin HTML editor).
+     */
+    public function bodyHtml(): string
+    {
+        return trim((string) $this->body);
+    }
 }
 

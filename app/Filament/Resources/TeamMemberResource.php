@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\AssetPicker;
 use App\Filament\Resources\TeamMemberResource\Pages;
 use App\Models\TeamMember;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -82,39 +82,11 @@ class TeamMemberResource extends Resource
                         ->email()
                         ->maxLength(255)
                         ->columnSpanFull(),
-                    FileUpload::make('photo')
+                    AssetPicker::make('photo')
                         ->label('Photo')
-                        ->disk('public')
-                        ->directory('team/photos')
-                        ->visibility('public')
-                        ->preserveFilenames()
-                        ->image()
-                        ->panelLayout('integrated')
-                        ->panelAspectRatio('1:1')
-                        ->uploadButtonPosition('center bottom')
-                        ->loadingIndicatorPosition('center bottom')
-                        ->uploadProgressIndicatorPosition('center bottom')
-                        ->removeUploadedFileButtonPosition('left')
-                        ->maxSize(4096)
-                        ->nullable()
-                        ->placeholder('Drag & drop your image or browse')
-                        ->helperText('Shown on the public Team page. Remove to clear.')
-                        ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                            $disk = $component->getDisk();
-
-                            try {
-                                if ($disk->exists($file)) {
-                                    return $disk->url($file);
-                                }
-                            } catch (\Throwable) {
-                            }
-
-                            if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
-                                return $file;
-                            }
-
-                            return null;
-                        }),
+                        ->imagePreviewHeight(200)
+                        ->extraAttributes(['class' => 'max-w-md'])
+                        ->helperText('Shown on the public Team page. Remove to clear.'),
                     TextInput::make('sort_order')
                         ->numeric()
                         ->default(0)

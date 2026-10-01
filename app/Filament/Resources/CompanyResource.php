@@ -6,9 +6,10 @@ use App\Filament\Resources\CompanyResource\Pages;
 use App\Models\Company;
 use App\Models\User;
 use App\Support\CompanyPageIcons;
+use App\Support\MediaAssetLibrary;
 use App\Support\SiteData;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
+use App\Filament\Forms\Components\AssetPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -259,134 +260,33 @@ class CompanyResource extends Resource
             ->orderable();
     }
 
-    protected static function logoUpload(): FileUpload
+    protected static function logoUpload(): AssetPicker
     {
-        return FileUpload::make('logo')
+        return AssetPicker::make('logo')
             ->label('Logo')
-            ->disk('public')
-            ->directory('companies/logos')
-            ->visibility('public')
-            ->image()
-            ->acceptedFileTypes([
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/svg+xml',
-            ])
-            ->rules([
-                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-            ])
-            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
-            ->panelLayout('integrated')
-            ->panelAspectRatio('13:8')
-            ->removeUploadedFileButtonPosition('left')
-            ->uploadButtonPosition('center bottom')
-            ->loadingIndicatorPosition('center bottom')
-            ->uploadProgressIndicatorPosition('center bottom')
+            ->imagePreviewHeight(140)
             ->maxSize(self::MAX_IMAGE_SIZE_KB)
-            ->nullable()
-            ->placeholder('Drag & drop or browse')
-            ->extraAttributes(['class' => 'max-w-2xl'])
-            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                $disk = $component->getDisk();
-
-                try {
-                    if ($disk->exists($file)) {
-                        return $disk->url($file);
-                    }
-                } catch (\Throwable) {
-                }
-
-                return SiteData::companyLogoUrl($file);
-            });
+            // Default logos are bare file names shipped in public/assets/logo.
+            ->fallbackBaseUrl(asset('assets/logo'))
+            ->extraAttributes(['class' => 'max-w-2xl']);
     }
 
-    protected static function heroImageUpload(): FileUpload
+    protected static function heroImageUpload(): AssetPicker
     {
-        return FileUpload::make('hero_image')
+        return AssetPicker::make('hero_image')
             ->label('Hero image')
-            ->disk('public')
-            ->directory('companies/hero')
-            ->visibility('public')
-            ->image()
-            ->acceptedFileTypes([
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/svg+xml',
-            ])
-            ->rules([
-                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-            ])
-            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
-            ->panelLayout('integrated')
-            ->panelAspectRatio('21:9')
-            ->removeUploadedFileButtonPosition('left')
-            ->uploadButtonPosition('center bottom')
-            ->loadingIndicatorPosition('center bottom')
-            ->uploadProgressIndicatorPosition('center bottom')
+            ->imagePreviewHeight(200)
             ->maxSize(self::MAX_IMAGE_SIZE_KB)
-            ->nullable()
-            ->placeholder('Drag & drop or browse')
-            ->extraAttributes(['class' => 'max-w-3xl'])
-            ->getUploadedFileUrlUsing(static::resolveBrandingUploadUrl(...));
+            ->extraAttributes(['class' => 'max-w-3xl']);
     }
 
-    protected static function aboutImageUpload(): FileUpload
+    protected static function aboutImageUpload(): AssetPicker
     {
-        return FileUpload::make('about_image')
+        return AssetPicker::make('about_image')
             ->label('About image')
-            ->disk('public')
-            ->directory('companies/about')
-            ->visibility('public')
-            ->image()
-            ->acceptedFileTypes([
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/svg+xml',
-            ])
-            ->rules([
-                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-            ])
-            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
-            ->panelLayout('integrated')
-            ->panelAspectRatio('16:10')
-            ->removeUploadedFileButtonPosition('left')
-            ->uploadButtonPosition('center bottom')
-            ->loadingIndicatorPosition('center bottom')
-            ->uploadProgressIndicatorPosition('center bottom')
+            ->imagePreviewHeight(180)
             ->maxSize(self::MAX_IMAGE_SIZE_KB)
-            ->nullable()
-            ->placeholder('Drag & drop or browse')
-            ->extraAttributes(['class' => 'max-w-3xl'])
-            ->getUploadedFileUrlUsing(static::resolveBrandingUploadUrl(...));
-    }
-
-    protected static function uploadedFileName(\Illuminate\Http\UploadedFile $file): string
-    {
-        $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $ext = strtolower($file->getClientOriginalExtension() ?: 'bin');
-
-        return Str::slug($name).'-'.Str::lower(Str::random(10)).'.'.$ext;
-    }
-
-    protected static function resolveBrandingUploadUrl(FileUpload $component, string $file): ?string
-    {
-        $disk = $component->getDisk();
-
-        try {
-            if ($disk->exists($file)) {
-                return $disk->url($file);
-            }
-        } catch (\Throwable) {
-        }
-
-        if (str_starts_with($file, 'http://') || str_starts_with($file, 'https://')) {
-            return $file;
-        }
-
-        return null;
+            ->extraAttributes(['class' => 'max-w-3xl']);
     }
 
     public static function table(Table $table): Table
@@ -537,7 +437,7 @@ class CompanyResource extends Resource
     {
         foreach ($previousPaths as $path) {
             if (! in_array($path, $nextPaths, true) && str_starts_with($path, $prefix)) {
-                Storage::disk('public')->delete($path);
+                MediaAssetLibrary::deleteUnlessShared($path);
             }
         }
     }
@@ -586,7 +486,7 @@ class CompanyResource extends Resource
         if ($existing && $existing->getKey()) {
             $prev = $existing->getAttribute($field);
             if ($prev !== $next && $prev && str_starts_with((string) $prev, $deleteWhenReplacedPrefix)) {
-                Storage::disk('public')->delete((string) $prev);
+                MediaAssetLibrary::deleteUnlessShared((string) $prev);
             }
         }
 
@@ -638,46 +538,13 @@ class CompanyResource extends Resource
             ->all();
     }
 
-    protected static function labeledItemIconUpload(string $directory): FileUpload
+    protected static function labeledItemIconUpload(string $directory): AssetPicker
     {
-        return FileUpload::make('icon_path')
+        return AssetPicker::make('icon_path')
             ->label('Icon')
-            ->disk('public')
-            ->directory($directory)
-            ->visibility('public')
-            ->image()
-            ->acceptedFileTypes([
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/svg+xml',
-            ])
-            ->rules([
-                'mimetypes:image/jpeg,image/png,image/webp,image/svg+xml',
-            ])
-            ->getUploadedFileNameForStorageUsing(static::uploadedFileName(...))
-            ->panelLayout('integrated')
-            ->panelAspectRatio('1:1')
-            ->removeUploadedFileButtonPosition('left')
-            ->uploadButtonPosition('center bottom')
-            ->loadingIndicatorPosition('center bottom')
-            ->uploadProgressIndicatorPosition('center bottom')
+            ->imagePreviewHeight(96)
             ->maxSize(self::MAX_IMAGE_SIZE_KB)
-            ->nullable()
-            ->placeholder('Upload or choose from library')
             ->helperText('Optional SVG/PNG/WebP. Maximum file size: 500 KB.')
-            ->extraAttributes(['class' => 'max-w-xs'])
-            ->getUploadedFileUrlUsing(function (FileUpload $component, string $file): ?string {
-                $disk = $component->getDisk();
-
-                try {
-                    if ($disk->exists($file)) {
-                        return $disk->url($file);
-                    }
-                } catch (\Throwable) {
-                }
-
-                return CompanyPageIcons::storedIconUrl($file);
-            });
+            ->extraAttributes(['class' => 'max-w-xs']);
     }
 }

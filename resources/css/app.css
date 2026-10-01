@@ -370,6 +370,133 @@
     transform-origin: left;
     animation: ui-progress 6s linear both;
   }
+
+  /* Blog article HTML from the admin editor. Keep in sync with ARTICLE_CSS in
+     public/js/filament/blog-post-html-preview.js so the admin preview matches. */
+  .blog-article-body {
+    font-size: 1.075rem;
+    line-height: 1.9;
+    color: var(--color-ink-600);
+    overflow-wrap: anywhere;
+  }
+  .blog-article-body > :first-child { margin-top: 0; }
+  .blog-article-body > :last-child { margin-bottom: 0; }
+  .blog-article-body p { margin: 0 0 1.75rem; }
+  .blog-article-body :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--color-ink-900);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .blog-article-body h1 { font-size: 2.25rem; margin: 3rem 0 1rem; }
+  .blog-article-body h2 { font-size: 1.75rem; margin: 3rem 0 1rem; }
+  .blog-article-body h3 { font-size: 1.375rem; margin: 2.25rem 0 0.75rem; }
+  .blog-article-body :is(h4, h5, h6) { font-size: 1.125rem; margin: 2rem 0 0.75rem; }
+  .blog-article-body a {
+    color: var(--color-brand-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .blog-article-body a:hover { color: var(--color-brand-700); }
+  .blog-article-body :is(strong, b) { color: var(--color-ink-900); font-weight: 700; }
+  .blog-article-body :is(ul, ol) { margin: 0 0 1.75rem; padding-left: 1.5rem; }
+  .blog-article-body ul { list-style: disc; }
+  .blog-article-body ol { list-style: decimal; }
+  .blog-article-body li { margin: 0 0 0.5rem; padding-left: 0.25rem; }
+  .blog-article-body li::marker { color: var(--color-brand-600); }
+  .blog-article-body img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 1rem;
+  }
+  .blog-article-body figure { margin: 2.5rem 0; }
+  .blog-article-body figcaption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-ink-500);
+  }
+  .blog-article-body blockquote {
+    position: relative;
+    margin: 3rem 0;
+    padding: 2.25rem 1.75rem;
+    border-radius: 1.5rem;
+    background: var(--color-sand-100);
+    overflow: hidden;
+  }
+  .blog-article-body blockquote::before {
+    content: "";
+    position: absolute;
+    inset-block: 2rem;
+    left: 0;
+    width: 4px;
+    border-radius: 0 9999px 9999px 0;
+    background: linear-gradient(to bottom, var(--color-brand-600), var(--color-lagoon-400));
+  }
+  .blog-article-body blockquote p {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    line-height: 1.35;
+    font-style: italic;
+    color: var(--color-ink-900);
+  }
+  .blog-article-body blockquote p + p { margin-top: 1rem; }
+  .blog-article-body blockquote cite {
+    display: block;
+    margin-top: 1.5rem;
+    font-style: normal;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink-600);
+  }
+  .blog-article-body blockquote cite::before {
+    content: "";
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    margin-right: 0.75rem;
+    vertical-align: middle;
+    background: var(--color-ink-300);
+  }
+  .blog-article-body table {
+    width: 100%;
+    margin: 0 0 1.75rem;
+    border-collapse: collapse;
+    font-size: 1rem;
+  }
+  .blog-article-body :is(th, td) {
+    border: 1px solid var(--color-ink-200);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .blog-article-body th { background: var(--color-ink-100); color: var(--color-ink-900); font-weight: 700; }
+  .blog-article-body hr { margin: 3rem 0; border: 0; border-top: 1px solid var(--color-ink-200); }
+  .blog-article-body :is(pre, code) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; }
+  .blog-article-body pre {
+    margin: 0 0 1.75rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--color-ink-100);
+    overflow-x: auto;
+  }
+  /* Drop cap on the opening paragraph when there is no excerpt (as before). */
+  .blog-article-body--dropcap > p:first-child::first-letter {
+    float: left;
+    margin-right: 0.75rem;
+    font-family: var(--font-serif);
+    font-size: 4.5rem;
+    line-height: 0.85;
+    color: var(--color-brand-600);
+  }
+  @media (min-width: 640px) {
+    .blog-article-body { font-size: 1.15rem; }
+    .blog-article-body blockquote { padding: 3rem; }
+    .blog-article-body blockquote p { font-size: 2rem; }
+  }
 }
 
 /* Scroll-in motion: shorter transitions on small viewports (less main-thread work). */

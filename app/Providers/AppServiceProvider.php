@@ -6,6 +6,7 @@ use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
 use App\Models\JobOpening;
+use App\Models\MediaAsset;
 use App\Models\PageSeo;
 use App\Models\SiteSetting;
 use App\Models\TeamMember;
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         Company::observe($observer);
         GalleryEvent::observe($observer);
         JobOpening::observe($observer);
+        MediaAsset::observe($observer);
         PageSeo::observe($observer);
         SiteSetting::observe($observer);
         TeamMember::observe($observer);
@@ -55,9 +57,21 @@ class AppServiceProvider extends ServiceProvider
 
         // LITUS brand theme for the admin panel (navy primary + dashboard styles).
         Filament::serving(function () {
-            Filament::registerStyles(collect(['admin-primary', 'admin'])
+            Filament::registerStyles(collect(['admin-primary', 'admin', 'admin-assets'])
                 ->mapWithKeys(fn (string $file) => [
                     "litus-{$file}" => '<link rel="stylesheet" href="'.asset("css/{$file}.css").'?v='.@filemtime(public_path("css/{$file}.css")).'" />',
+                ])
+                ->all());
+
+            // Asset picker fields: must be registered before Alpine starts (core scripts).
+            Filament::registerScripts([
+                'litus-asset-picker' => asset('js/filament/asset-picker.js').'?v='.@filemtime(public_path('js/filament/asset-picker.js')),
+            ], true);
+
+            // Blog post HTML editor (live editable preview) + unsaved-changes warning.
+            Filament::registerScripts(collect(['blog-post-html-preview', 'unsaved-changes-guard'])
+                ->mapWithKeys(fn (string $file) => [
+                    "litus-{$file}" => asset("js/filament/{$file}.js").'?v='.@filemtime(public_path("js/filament/{$file}.js")),
                 ])
                 ->all());
         });
