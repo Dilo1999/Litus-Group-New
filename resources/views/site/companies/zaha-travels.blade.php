@@ -1,0 +1,393 @@
+@extends('layouts.site')
+
+{{-- Bespoke Zaha Travels entity page (design: zaha-travels-litus.html). Shared navbar/footer come from the layout. --}}
+
+@php
+  $company = $company ?? [];
+  $name = $company['name'] ?? 'Zaha Travels';
+  $site = 'https://www.zahatravels.com';
+  $logo = \App\Support\SiteData::companyLogoUrl($company['logo'] ?? null) ?: $site.'/images/logo-web.png';
+  $maldivesImg = $site.'/storage/destinations/hero/maldives.jpeg';
+  $sriLankaImg = $site.'/storage/destinations/hero/3PC3DLBPxxUgHfFQhHlwQtWDswuJlr-metaMHgwLndlYnA%3D-.webp';
+
+  $external = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+  $arrow = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  $chevron = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+
+  // Admin-editable fields (Companies → Zaha Travels); the approved design copy is the fallback.
+  $mediaUrl = function (?string $raw): ?string {
+    if (blank($raw)) {
+      return null;
+    }
+    if (str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+      return $raw;
+    }
+
+    return \Illuminate\Support\Facades\Storage::disk('public')->url($raw);
+  };
+  $heroImageUrl = $mediaUrl($company['hero_image'] ?? null);
+  $aboutImageUrl = $mediaUrl($company['about_image'] ?? null) ?? $sriLankaImg;
+  $category = filled($company['category'] ?? null) ? $company['category'] : 'Travel & tourism';
+  $tagline = filled($company['tagline'] ?? null) ? $company['tagline'] : 'Travel guided by Experts';
+  $aboutPrimary = filled($company['description'] ?? null)
+    ? $company['description']
+    : 'Zaha Travels is a destination management company within LITUS Group, specialising in the Maldives and Sri Lanka. We serve individual travellers, travel agencies and tour operators with destination knowledge and personalised travel arrangements.';
+  $aboutSecondary = $company['description_secondary'] ?? null;
+
+  // Strengths → highlights strip. Known labels keep the design's caption.
+  $proofCaptions = [
+    '100+' => 'Resort & hotel partners',
+    'two destinations' => 'Maldives & Sri Lanka',
+    'personal experts' => 'Guidance from start to finish',
+    '24/7 support' => 'During your trip',
+  ];
+  $proof = collect($company['strengths'] ?? [])
+    ->map(fn ($item) => \App\Support\CompanyPageIcons::resolveLabeledItem($item)['label'])
+    ->filter()
+    ->map(fn ($label) => [$label, $proofCaptions[mb_strtolower($label)] ?? null])
+    ->values()
+    ->all();
+
+  $destinations = [
+    [
+      'title' => 'Maldives',
+      'tag' => 'Island escapes',
+      'image' => $maldivesImg,
+      'alt' => 'Aerial view of a Maldives island resort and turquoise lagoon',
+      'text' => 'Private island resorts, overwater villas and local island stays. Discover honeymoons, family holidays, snorkelling and marine adventures, with resort and transfer advice from our team.',
+      'link' => $site.'/destinations/maldives',
+      'cta' => 'Explore Maldives holidays',
+    ],
+    [
+      'title' => 'Sri Lanka',
+      'tag' => 'Discovery & culture',
+      'image' => $sriLankaImg,
+      'alt' => 'Sri Lanka destination scenery',
+      'text' => 'Cultural landmarks, wildlife safaris, tea country and coastal retreats. Explore private tours, scenic rail journeys and beach holidays, with personalised itineraries supported by our Colombo team.',
+      'link' => $site.'/destinations/sri-lanka',
+      'cta' => 'Explore Sri Lanka tours',
+    ],
+  ];
+
+  $partnerRows = [
+    ['Maldives island stays', 'Beach villas, overwater retreats and stays selected around the island experience.'],
+    ['Sri Lanka hotels & retreats', 'City hotels, boutique stays and coastal resorts to complement a personalised route.'],
+    ['A stay that fits the journey', 'Thoughtful recommendations for couples, families and travellers combining destinations.'],
+  ];
+
+  // Services come from the admin. Known titles keep the design's description and icon;
+  // an uploaded icon always wins.
+  $serviceDefaults = [
+    'personal travel planning' => ['Destination advice and itineraries shaped around interests, preferences and budget.', '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>'],
+    'stays & private tours' => ['Resort reservations, split stays and Sri Lanka touring for couples, families and groups.', '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>'],
+    'transfers & experiences' => ['Airport assistance, island connections, ground transport and memorable excursions.', '<path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/>'],
+    'support during the journey' => ['Personal guidance before departure and 24/7 assistance during the trip.', '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>'],
+    'combined holidays' => ['Sri Lanka discovery and Maldives relaxation, coordinated in one personalised journey.', '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>'],
+    'travel trade partnerships' => ['Destination advice, property recommendations and booking coordination for agencies and tour operators.', '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>'],
+  ];
+  $fallbackServiceIcon = '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>';
+  $services = collect($company['services'] ?? [])
+    ->map(fn ($item) => \App\Support\CompanyPageIcons::resolveLabeledItem($item))
+    ->filter(fn ($item) => $item['label'] !== '')
+    ->map(function ($item) use ($serviceDefaults, $fallbackServiceIcon) {
+      [$text, $svg] = $serviceDefaults[mb_strtolower($item['label'])] ?? [null, $fallbackServiceIcon];
+
+      return ['title' => $item['label'], 'text' => $text, 'svg' => $svg, 'icon_url' => $item['icon_url']];
+    })
+    ->values()
+    ->all();
+
+  $offices = ['Malé · Headquarters', 'Colombo · Sri Lanka office', 'Dubai · Support office'];
+
+  $pageUrl = route('site.company', ['slug' => 'zaha-travels']);
+  $schema = [
+    '@context' => 'https://schema.org',
+    '@graph' => [
+      [
+        '@type' => 'TravelAgency',
+        '@id' => $site.'/#organization',
+        'name' => $name,
+        'url' => $site.'/',
+        'logo' => $site.'/images/logo-web.png',
+        'slogan' => $tagline,
+        'description' => 'A destination management company within LITUS Group, specialising in Maldives and Sri Lanka travel for individual travellers, travel agencies and tour operators.',
+        'parentOrganization' => ['@type' => 'Organization', 'name' => 'LITUS Group', 'url' => url('/')],
+        'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Malé', 'addressCountry' => 'MV'],
+        'areaServed' => [
+          ['@type' => 'Country', 'name' => 'Maldives'],
+          ['@type' => 'Country', 'name' => 'Sri Lanka'],
+        ],
+      ],
+      [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+          ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+          ['@type' => 'ListItem', 'position' => 2, 'name' => 'Our Entities', 'item' => route('site.our-companies')],
+          ['@type' => 'ListItem', 'position' => 3, 'name' => $name, 'item' => $pageUrl],
+        ],
+      ],
+    ],
+  ];
+@endphp
+
+@push('head')
+  <link rel="preload" as="image" href="{{ $heroImageUrl ?? $maldivesImg }}" fetchpriority="high">
+  <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
+
+@section('content')
+<div data-company-detail data-company="zaha-travels">
+
+  {{-- Hero --}}
+  <section class="relative isolate flex min-h-[min(92svh,760px)] flex-col overflow-hidden bg-ink-950 text-white" aria-labelledby="page-title">
+    <div class="absolute inset-0 -z-10 grid {{ $heroImageUrl ? 'grid-cols-1' : 'grid-cols-2' }}" aria-hidden="true">
+      @if($heroImageUrl)
+        <img src="{{ $heroImageUrl }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
+      @else
+        <img src="{{ $maldivesImg }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async" width="1000" height="700">
+        <img src="{{ $sriLankaImg }}" alt="" class="h-full w-full object-cover" decoding="async" width="1000" height="700">
+      @endif
+      <div class="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/55 to-ink-950/50"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-ink-950/75 to-transparent"></div>
+    </div>
+
+    <div class="ui-container flex flex-1 flex-col justify-end pt-32 pb-14 md:pt-40 md:pb-20">
+      <div class="max-w-3xl">
+        <nav aria-label="Breadcrumb" class="mb-8">
+          <ol class="flex flex-wrap items-center gap-2 text-sm text-ink-300">
+            <li><a href="{{ url('/') }}" class="inline-flex min-h-11 items-center transition-colors hover:text-white">Home</a></li>
+            <li aria-hidden="true">{!! $chevron !!}</li>
+            <li><a href="{{ route('site.our-companies') }}" class="inline-flex min-h-11 items-center transition-colors hover:text-white">Our Entities</a></li>
+            <li aria-hidden="true">{!! $chevron !!}</li>
+            <li class="font-semibold text-white" aria-current="page">{{ $name }}</li>
+          </ol>
+        </nav>
+
+        <div class="-ml-1 mb-8 flex h-16 items-center sm:h-20">
+          <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-[220px] object-contain object-left brightness-0 invert" onerror="this.parentElement.hidden=true">
+        </div>
+
+        <span class="ui-eyebrow ui-eyebrow--light">{{ $category }} · A LITUS Group company</span>
+        <h1 id="page-title" class="mt-5 text-[2.75rem] leading-[1.04] font-extrabold tracking-[-0.035em] text-white sm:text-6xl md:text-7xl">{{ $name }}</h1>
+        <p class="mt-4 font-serif text-3xl leading-snug text-lagoon-300 italic sm:text-4xl md:text-[2.4rem]">{{ $tagline }}</p>
+        <p class="mt-5 max-w-xl text-base leading-relaxed text-ink-200 sm:text-lg">Personalised holidays and destination expertise in the Maldives and Sri Lanka.</p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="{{ $site }}/" class="ui-btn ui-btn--light" target="_blank" rel="noopener">Explore Zaha Travels {!! $external !!}</a>
+          @if(filled($company['hotline'] ?? null))
+            <a href="tel:{{ preg_replace('/\s+/', '', $company['hotline']) }}" class="ui-btn ui-btn--glass tabular-nums">{{ $company['hotline'] }}</a>
+          @endif
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute right-5 bottom-7 hidden gap-3 text-[0.65rem] font-semibold tracking-[0.15em] uppercase md:flex lg:right-10" aria-hidden="true">
+      <span class="ui-chip ui-chip--dark">Maldives</span>
+      <span class="ui-chip ui-chip--dark">Sri Lanka</span>
+    </div>
+  </section>
+
+  {{-- Highlights --}}
+  @if(count($proof))
+    <div class="border-b border-ink-100 bg-white">
+      <div class="ui-container grid grid-cols-2 gap-y-6 py-8 md:grid-cols-4 md:py-10" aria-label="{{ $name }} highlights">
+        @foreach($proof as $i => [$value, $caption])
+          <div class="border-ink-100 {{ $i % 2 === 0 ? 'border-r pr-4' : 'pl-4' }} md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+            <strong class="block text-xl font-extrabold tracking-[-0.03em] text-ink-900 sm:text-2xl">{{ $value }}</strong>
+            @if($caption)
+              <span class="mt-1.5 block text-xs text-ink-500 sm:text-sm">{{ $caption }}</span>
+            @endif
+          </div>
+        @endforeach
+      </div>
+    </div>
+  @endif
+
+  {{-- About --}}
+  <section class="ui-section overflow-x-clip bg-white" aria-labelledby="intro-title">
+    <div class="ui-container grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <span class="ui-eyebrow">Who we are</span>
+        <h2 id="intro-title" class="ui-h2 mt-5">About <span class="ui-accent text-brand-600">{{ $name }}</span></h2>
+        <p class="mt-6 text-lg leading-relaxed text-ink-700 sm:text-xl">{{ $aboutPrimary }}</p>
+        @if(filled($aboutSecondary))
+          <p class="mt-4 text-base leading-relaxed text-ink-500 sm:text-lg">{{ $aboutSecondary }}</p>
+        @endif
+      </div>
+
+      <div class="relative">
+        <div class="absolute -top-8 -right-8 h-48 w-48 rounded-full bg-lagoon-300/40 blur-3xl" aria-hidden="true"></div>
+        <div class="ui-zoom relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-ink-800 shadow-[0_40px_80px_-30px_rgba(6,22,52,0.45)]">
+          <img src="{{ $aboutImageUrl }}" alt="{{ $aboutImageUrl === $sriLankaImg ? 'Sri Lanka destination scenery' : $name }}" class="h-full w-full object-cover" loading="lazy" decoding="async" width="700" height="460">
+        </div>
+
+        <aside class="relative mt-6 rounded-3xl bg-sand-100 p-6 sm:p-8" aria-label="Company facts">
+          <h3 class="text-xl font-bold tracking-[-0.015em] text-ink-900">Zaha at a glance</h3>
+          <dl class="mt-3 divide-y divide-sand-200 text-sm">
+            @foreach([
+              'Group' => 'LITUS Group',
+              'Maldives headquarters' => 'Malé',
+              'Sri Lanka office' => 'Colombo',
+              'Dubai presence' => 'Support office',
+            ] as $term => $value)
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-500">{{ $term }}</dt>
+                <dd class="text-right font-bold text-ink-900">{{ $value }}</dd>
+              </div>
+            @endforeach
+            @if(filled($company['email'] ?? null))
+              <div class="flex justify-between gap-4 py-3">
+                <dt class="text-ink-500">Email</dt>
+                <dd class="text-right font-bold"><a href="mailto:{{ $company['email'] }}" class="break-all text-brand-600 hover:underline">{{ $company['email'] }}</a></dd>
+              </div>
+            @endif
+            <div class="flex justify-between gap-4 py-3">
+              <dt class="text-ink-500">Official website</dt>
+              <dd class="text-right font-bold"><a href="{{ $site }}/" class="text-brand-600 hover:underline" target="_blank" rel="noopener">zahatravels.com ↗</a></dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  {{-- Destinations --}}
+  <section class="ui-section bg-sand-100" aria-labelledby="destination-title">
+    <div class="ui-container">
+      <div class="mb-10 grid grid-cols-1 items-end gap-6 md:mb-14 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <span class="ui-eyebrow">Our destinations</span>
+          <h2 id="destination-title" class="ui-h2 mt-5">Explore our <span class="ui-accent text-brand-600">destinations</span></h2>
+        </div>
+        <p class="ui-lead lg:col-span-5">Explore each destination in its own right, or bring them together in one thoughtfully planned holiday.</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        @foreach($destinations as $d)
+          <article class="ui-card ui-card--hover group flex flex-col overflow-hidden">
+            <div class="ui-zoom relative aspect-[16/10] overflow-hidden bg-ink-700">
+              <img src="{{ $d['image'] }}" alt="{{ $d['alt'] }}" class="h-full w-full object-cover" loading="lazy" decoding="async" width="900" height="600">
+              <span class="ui-chip ui-chip--dark absolute bottom-5 left-5 bg-ink-900/60 text-[0.65rem] tracking-[0.12em] uppercase">{{ $d['tag'] }}</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-8">
+              <h3 class="text-2xl font-extrabold tracking-[-0.03em] text-ink-900 sm:text-3xl">{{ $d['title'] }}</h3>
+              <p class="mt-4 mb-6 flex-1 text-base leading-relaxed text-ink-500">{{ $d['text'] }}</p>
+              <a href="{{ $d['link'] }}" class="ui-link text-sm text-brand-600" target="_blank" rel="noopener">{{ $d['cta'] }} {!! $external !!}</a>
+            </div>
+          </article>
+        @endforeach
+      </div>
+
+      <div class="mt-6 flex flex-col items-start justify-between gap-5 rounded-3xl bg-white p-6 sm:p-8 md:flex-row md:items-center">
+        <div>
+          <p class="text-lg font-bold tracking-[-0.015em] text-ink-900 sm:text-xl">Sri Lanka discovery. Maldives relaxation.</p>
+          <p class="mt-1 text-sm text-ink-500">Combine a Sri Lanka tour with an island stay in the Maldives.</p>
+        </div>
+        <a href="{{ $site }}/destinations/maldives-sri-lanka" class="ui-link shrink-0 text-sm text-brand-600" target="_blank" rel="noopener">Explore combined holidays {!! $external !!}</a>
+      </div>
+    </div>
+  </section>
+
+  {{-- Property network --}}
+  <section class="ui-section ui-bg-ink" aria-labelledby="partners-title">
+    <div class="ui-grid-texture--light pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" aria-hidden="true"></div>
+    <div class="ui-container grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <span class="ui-eyebrow ui-eyebrow--light">Our property network</span>
+        <div class="mt-6 text-7xl leading-none font-extrabold tracking-[-0.05em] text-lagoon-300 sm:text-8xl" aria-hidden="true">100+</div>
+        <h2 id="partners-title" class="ui-h2 mt-4 !text-white">Resort &amp; hotel <span class="ui-accent text-lagoon-300">partners</span></h2>
+        <p class="mt-6 text-base leading-relaxed text-ink-300 sm:text-lg">Our partner network opens up a broad choice of stays. Experts help travellers compare locations, room types and experiences, with access to partner rates and applicable offers.</p>
+        <a href="{{ $site }}/properties" class="ui-link mt-8 text-sm !text-lagoon-300 hover:!text-white" target="_blank" rel="noopener">Explore resorts &amp; hotels {!! $external !!}</a>
+      </div>
+
+      <div class="grid gap-4">
+        @foreach($partnerRows as $i => [$title, $text])
+          <div class="ui-glass flex gap-5 rounded-3xl p-6 transition-colors duration-500 hover:bg-white/[0.1]">
+            <span class="font-serif text-3xl leading-none text-lagoon-300 italic tabular-nums" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+            <div>
+              <h3 class="text-lg font-bold tracking-tight text-white">{{ $title }}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-ink-300">{{ $text }}</p>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  {{-- Services --}}
+  @if(count($services))
+  <section class="ui-section bg-sand-100" aria-labelledby="services-title">
+    <div class="ui-container">
+      <div class="mb-10 flex flex-col items-start justify-between gap-6 md:mb-14 md:flex-row md:items-end">
+        <div>
+          <span class="ui-eyebrow">What we do</span>
+          <h2 id="services-title" class="ui-h2 mt-5">Our <span class="ui-accent text-brand-600">services</span></h2>
+        </div>
+        <a href="{{ $site }}/our-experts" class="ui-link text-sm text-brand-600" target="_blank" rel="noopener">Meet our travel experts {!! $external !!}</a>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        @foreach($services as $i => $service)
+          <article class="ui-card ui-card--hover group relative flex h-full flex-col overflow-hidden p-6 sm:p-7">
+            <span class="absolute top-0 left-0 h-1 w-0 bg-gradient-to-r from-brand-500 to-lagoon-400 transition-all duration-700 ease-out-expo group-hover:w-full" aria-hidden="true"></span>
+            <div class="flex items-start justify-between">
+              <span class="ui-icon-tile h-14 w-14 group-hover:bg-white group-hover:shadow-[0_10px_30px_-12px_rgba(31,79,224,0.45)]">
+                @if(filled($service['icon_url']))
+                  <img src="{{ $service['icon_url'] }}" alt="" class="h-8 w-8 object-contain" loading="lazy" decoding="async">
+                @else
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $service['svg'] !!}</svg>
+                @endif
+              </span>
+              <span class="font-serif text-4xl leading-none text-ink-200 italic tabular-nums transition-colors duration-500 group-hover:text-brand-400" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+            </div>
+            <h3 class="mt-8 text-lg font-bold leading-snug tracking-[-0.01em] text-ink-900 sm:text-xl">{{ $service['title'] }}</h3>
+            @if(filled($service['text']))
+              <p class="mt-3 text-sm leading-relaxed text-ink-500 sm:text-[0.95rem]">{{ $service['text'] }}</p>
+            @endif
+          </article>
+        @endforeach
+      </div>
+    </div>
+  </section>
+  @endif
+
+  {{-- Travellers & travel trade --}}
+  <section class="ui-section bg-white" aria-labelledby="trade-title">
+    <div class="ui-container grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-7">
+        <span class="ui-eyebrow">Travellers &amp; travel trade</span>
+        <h2 id="trade-title" class="ui-h2 mt-5">Travellers &amp; <span class="ui-accent text-brand-600">travel partners</span></h2>
+        <p class="mt-6 text-base leading-relaxed text-ink-500 sm:text-lg">Alongside personalised holidays, Zaha Travels supports travel agencies and tour operators with property recommendations, destination advice and booking coordination for the Maldives and Sri Lanka.</p>
+        <a href="{{ $site }}/" class="ui-link mt-6 text-sm text-brand-600" target="_blank" rel="noopener">Connect with Zaha Travels {!! $external !!}</a>
+        <ul class="mt-8 flex flex-wrap gap-2" aria-label="Office locations">
+          @foreach($offices as $office)
+            <li class="ui-chip">{{ $office }}</li>
+          @endforeach
+        </ul>
+      </div>
+
+      <aside class="rounded-[2rem] bg-sand-100 p-7 sm:p-10 lg:col-span-5">
+        <span class="ui-eyebrow">Our group connection</span>
+        <h3 class="mt-4 text-2xl font-extrabold tracking-[-0.03em] text-ink-900 sm:text-3xl">A member of <span class="ui-accent text-brand-600">LITUS Group</span></h3>
+        <p class="mt-4 text-base leading-relaxed text-ink-500">Zaha Travels is part of LITUS Group, a diversified business group in the Maldives. This corporate connection is an integral part of our identity as a destination partner for travellers and the international travel trade.</p>
+        <a href="{{ route('site.about') }}" class="ui-link mt-6 text-sm">Discover LITUS Group {!! $arrow !!}</a>
+      </aside>
+    </div>
+  </section>
+
+  {{-- Closing CTA --}}
+  <section class="border-t border-ink-100 bg-white py-16 md:py-24" aria-labelledby="closing-title">
+    <div class="ui-container flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-center">
+      <div class="max-w-2xl">
+        <span class="ui-eyebrow">Discover more with Zaha Travels</span>
+        <h2 id="closing-title" class="ui-h2 mt-5">Discover <span class="ui-accent text-brand-600">{{ $name }}</span></h2>
+        <p class="mt-5 text-base leading-relaxed text-ink-500 sm:text-lg">Explore Maldives holidays, Sri Lanka tours and journeys that bring both destinations together.</p>
+      </div>
+      <div class="flex shrink-0 flex-col items-start gap-4 lg:items-center">
+        <a href="{{ $site }}/" class="ui-btn ui-btn--dark" target="_blank" rel="noopener">Visit zahatravels.com {!! $external !!}</a>
+        <a href="{{ $site }}/travel-packages" class="ui-link text-sm text-brand-600" target="_blank" rel="noopener">View travel packages {!! $external !!}</a>
+      </div>
+    </div>
+  </section>
+</div>
+@endsection

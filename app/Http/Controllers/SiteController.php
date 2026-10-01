@@ -59,6 +59,17 @@ class SiteController extends Controller
         $company = SiteData::companyBySlug($slug);
         abort_if(! $company, 404);
 
+        // Companies with a bespoke design get their own view in site/companies/{slug}.blade.php.
+        $customView = 'site.companies.'.$slug;
+        if (view()->exists($customView)) {
+            $seo->applyForPage('site.company.'.$slug, config('company_pages.'.$slug.'.seo', []));
+
+            return view($customView, [
+                'company' => $company,
+                'companyRow' => $companyRow,
+            ]);
+        }
+
         if ($companyRow) {
             $seo->applyForCompany($companyRow);
         } else {
