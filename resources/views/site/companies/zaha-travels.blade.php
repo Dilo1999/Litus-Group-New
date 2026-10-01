@@ -167,12 +167,12 @@
 
   {{-- Hero --}}
   <section class="relative isolate flex min-h-[min(92svh,760px)] flex-col overflow-hidden bg-ink-950 text-white" aria-labelledby="page-title">
-    <div class="absolute inset-0 -z-10 grid {{ $heroImageUrl ? 'grid-cols-1' : 'grid-cols-2' }}" aria-hidden="true">
+    <div class="absolute inset-0 -z-10 grid {{ $heroImageUrl ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2' }}" aria-hidden="true">
       @if($heroImageUrl)
         <img src="{{ $heroImageUrl }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
       @else
         <img src="{{ $maldivesImg }}" alt="" class="h-full w-full object-cover" fetchpriority="high" decoding="async" width="1000" height="700">
-        <img src="{{ $sriLankaImg }}" alt="" class="h-full w-full object-cover" decoding="async" width="1000" height="700">
+        <img src="{{ $sriLankaImg }}" alt="" class="hidden h-full w-full object-cover sm:block" decoding="async" width="1000" height="700">
       @endif
       <div class="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/55 to-ink-950/50"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-ink-950/75 to-transparent"></div>
@@ -194,7 +194,7 @@
           <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-full object-contain object-left brightness-0 invert" width="192" height="48" decoding="async" onerror="this.parentElement.hidden=true">
         </div>
 
-        <span class="ui-eyebrow ui-eyebrow--light">{{ $category }} · A LITUS Group company</span>
+        <span class="ui-eyebrow ui-eyebrow--light"><span>{{ $category }}<span class="hidden sm:inline"> · A LITUS Group company</span></span></span>
         <h1 id="page-title" class="mt-5 text-[2.75rem] leading-[1.04] font-extrabold tracking-[-0.035em] text-white sm:text-6xl md:text-7xl">{{ $name }}</h1>
         <p class="mt-4 font-serif text-3xl leading-snug text-lagoon-300 italic sm:text-4xl md:text-[2.4rem]">{{ $tagline }}</p>
         <p class="mt-5 max-w-xl text-base leading-relaxed text-ink-200 sm:text-lg">Personalised holidays and destination expertise in the Maldives and Sri Lanka.</p>
@@ -256,12 +256,12 @@
 
         <dl class="mt-10 grid grid-cols-2 gap-3" aria-label="{{ $name }} at a glance">
           @foreach($glance as [$term, $value, $icon])
-            <div class="group flex items-start gap-3 rounded-2xl border border-ink-100 bg-sand-50 p-4 transition-colors duration-300 hover:border-brand-100 hover:bg-white sm:p-5">
+            <div class="group flex flex-col items-start gap-3 rounded-2xl border border-ink-100 bg-sand-50 p-4 transition-colors duration-300 hover:border-brand-100 hover:bg-white sm:flex-row sm:p-5">
               <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand-600 ring-1 ring-ink-100 transition-colors duration-300 group-hover:bg-brand-50 group-hover:ring-brand-100">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $icon !!}</svg>
               </span>
               <div class="min-w-0">
-                <dt class="text-[0.7rem] font-bold tracking-[0.14em] text-ink-400 uppercase">{{ $term }}</dt>
+                <dt class="text-[0.65rem] font-bold tracking-[0.1em] text-ink-400 uppercase sm:text-[0.7rem] sm:tracking-[0.14em]">{{ $term }}</dt>
                 <dd class="mt-1 text-sm font-bold text-ink-900 sm:text-base">{{ $value }}</dd>
               </div>
             </div>
@@ -383,19 +383,19 @@
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         @foreach($services as $i => $service)
-          <article class="ui-card ui-card--hover group relative flex h-full flex-col overflow-hidden p-6 sm:p-7">
+          <article class="ui-card ui-card--hover group relative flex h-full flex-col overflow-hidden p-5 sm:p-7">
             <span class="absolute top-0 left-0 h-1 w-0 bg-gradient-to-r from-brand-500 to-lagoon-400 transition-all duration-700 ease-out-expo group-hover:w-full" aria-hidden="true"></span>
-            <div class="flex items-start justify-between">
-              <span class="ui-icon-tile h-14 w-14 group-hover:bg-white group-hover:shadow-[0_10px_30px_-12px_rgba(31,79,224,0.45)]">
+            <span class="absolute top-5 right-5 font-serif text-2xl leading-none text-ink-200 italic tabular-nums transition-colors duration-500 group-hover:text-brand-400 sm:top-7 sm:right-7 sm:text-4xl" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+            <div class="flex items-center gap-4 pr-10 sm:block sm:pr-0">
+              <span class="ui-icon-tile h-12 w-12 group-hover:bg-white group-hover:shadow-[0_10px_30px_-12px_rgba(31,79,224,0.45)] sm:h-14 sm:w-14">
                 @if(filled($service['icon_url']))
-                  <img src="{{ $service['icon_url'] }}" alt="" class="h-8 w-8 object-contain" loading="lazy" decoding="async">
+                  <img src="{{ $service['icon_url'] }}" alt="" class="h-7 w-7 object-contain sm:h-8 sm:w-8" loading="lazy" decoding="async">
                 @else
-                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $service['svg'] !!}</svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $service['svg'] !!}</svg>
                 @endif
               </span>
-              <span class="font-serif text-4xl leading-none text-ink-200 italic tabular-nums transition-colors duration-500 group-hover:text-brand-400" aria-hidden="true">{{ sprintf('%02d', $i + 1) }}</span>
+              <h3 class="text-base font-bold leading-snug tracking-[-0.01em] text-ink-900 sm:mt-8 sm:text-xl">{{ $service['title'] }}</h3>
             </div>
-            <h3 class="mt-8 text-lg font-bold leading-snug tracking-[-0.01em] text-ink-900 sm:text-xl">{{ $service['title'] }}</h3>
             @if(filled($service['text']))
               <p class="mt-3 text-sm leading-relaxed text-ink-500 sm:text-[0.95rem]">{{ $service['text'] }}</p>
             @endif
@@ -449,8 +449,8 @@
         <h2 id="closing-title" class="ui-h2 mt-5">Discover <span class="ui-accent text-brand-600">{{ $name }}</span></h2>
         <p class="mt-5 text-base leading-relaxed text-ink-500 sm:text-lg">Explore Maldives holidays, Sri Lanka tours and journeys that bring both destinations together.</p>
       </div>
-      <div class="flex shrink-0 flex-col items-start gap-4 lg:items-center">
-        <a href="{{ $site }}/" class="ui-btn ui-btn--dark" target="_blank" rel="noopener">Visit zahatravels.com {!! $external !!}</a>
+      <div class="flex w-full shrink-0 flex-col items-center gap-4 sm:w-auto sm:items-start lg:items-center">
+        <a href="{{ $site }}/" class="ui-btn ui-btn--dark w-full sm:w-auto" target="_blank" rel="noopener">Visit zahatravels.com {!! $external !!}</a>
         <a href="{{ $site }}/travel-packages" class="ui-link text-sm text-brand-600" target="_blank" rel="noopener">View travel packages {!! $external !!}</a>
       </div>
     </div>
