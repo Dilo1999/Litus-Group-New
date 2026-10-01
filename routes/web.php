@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\SiteController;
 
 // Serve storage files when symlink doesn't work (e.g. shared hosting / cPanel)
@@ -28,6 +29,10 @@ Route::match(['get', 'head'], 'storage/{path}', function () {
 
     return response()->file($realPath);
 })->where('path', '.*')->name('storage.serve');
+
+// AI assistants / LLM crawlers (https://llmstxt.org), built from live admin data
+Route::get('/llms.txt', [LlmsController::class, 'index'])->name('llms.index');
+Route::get('/llms-full.txt', [LlmsController::class, 'full'])->name('llms.full');
 
 Route::get('/', [SiteController::class, 'home'])->name('site.home');
 Route::get('/our-companies', [SiteController::class, 'ourCompanies'])->name('site.our-companies');

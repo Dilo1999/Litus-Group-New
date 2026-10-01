@@ -12,3 +12,7 @@ Allow: /
 
 # XML sitemap
 Sitemap: https://litusgroup.mv/sitemap.xml
+
+# Site guide for AI assistants and LLM crawlers (https://llmstxt.org)
+# https://litusgroup.mv/llms.txt
+# https://litusgroup.mv/llms-full.txt
