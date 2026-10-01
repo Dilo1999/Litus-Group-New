@@ -120,6 +120,8 @@ class CompanyResource extends Resource
                                             itemLabel: 'Service',
                                             addButtonLabel: 'Add service',
                                             iconDirectory: 'companies/service-icons',
+                                            descriptionLabel: 'Description',
+                                            descriptionHelp: 'Optional. Short sentence shown under the title on pages that support it (e.g. Zaha Travels).',
                                         ),
                                     ]),
                             ]),
@@ -134,6 +136,8 @@ class CompanyResource extends Resource
                                             itemLabel: 'Strength',
                                             addButtonLabel: 'Add strength',
                                             iconDirectory: 'companies/strength-icons',
+                                            descriptionLabel: 'Caption',
+                                            descriptionHelp: 'Optional. Small line under the value on pages with a highlights strip (e.g. Zaha Travels: “100+” → “Resort & hotel partners”).',
                                         ),
                                     ]),
                             ]),
@@ -226,6 +230,8 @@ class CompanyResource extends Resource
         string $itemLabel,
         string $addButtonLabel,
         string $iconDirectory,
+        ?string $descriptionLabel = null,
+        ?string $descriptionHelp = null,
     ): Forms\Components\Repeater {
         return Forms\Components\Repeater::make($name)
             ->label($itemLabel.' items')
@@ -237,6 +243,13 @@ class CompanyResource extends Resource
                     ->columnSpan(1),
                 static::labeledItemIconUpload($iconDirectory)
                     ->columnSpan(1),
+                Forms\Components\Textarea::make('description')
+                    ->label($descriptionLabel ?? 'Description')
+                    ->helperText($descriptionHelp)
+                    ->rows(2)
+                    ->maxLength(500)
+                    ->columnSpanFull()
+                    ->visible($descriptionLabel !== null),
             ])
             ->columns(2)
             ->itemLabel(fn (array $state): ?string => filled($state['label'] ?? null) ? (string) $state['label'] : null)
@@ -483,7 +496,7 @@ class CompanyResource extends Resource
 
     /**
      * @param  list<array<string, mixed>>  $items
-     * @return list<string|array{label: string, icon_path: string}>
+     * @return list<string|array{label: string, icon_path?: string, description?: string}>
      */
     protected static function normalizeLabeledItems(array $items): array
     {
@@ -499,15 +512,17 @@ class CompanyResource extends Resource
                     $iconPath = reset($iconPath) ?: null;
                 }
                 $iconPath = is_string($iconPath) && $iconPath !== '' ? $iconPath : null;
+                $description = trim((string) ($item['description'] ?? ''));
 
-                if ($iconPath === null) {
+                if ($iconPath === null && $description === '') {
                     return $label;
                 }
 
-                return [
+                return array_filter([
                     'label' => $label,
                     'icon_path' => $iconPath,
-                ];
+                    'description' => $description !== '' ? $description : null,
+                ], fn ($value) => $value !== null);
             })
             ->filter()
             ->values()
@@ -604,6 +619,7 @@ class CompanyResource extends Resource
                     return [
                         'label' => $item,
                         'icon_path' => null,
+                        'description' => null,
                     ];
                 }
 
@@ -614,6 +630,7 @@ class CompanyResource extends Resource
                 return [
                     'label' => $item['label'] ?? '',
                     'icon_path' => $item['icon_path'] ?? null,
+                    'description' => $item['description'] ?? null,
                 ];
             })
             ->filter(fn ($item) => filled($item['label'] ?? null))

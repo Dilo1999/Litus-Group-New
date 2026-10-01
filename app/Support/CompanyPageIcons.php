@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 class CompanyPageIcons
 {
     /**
-     * @return array{label: string, icon_url: ?string}
+     * @return array{label: string, icon_url: ?string, description: ?string}
      */
     public static function resolveLabeledItem(mixed $item): array
     {
@@ -16,10 +16,12 @@ class CompanyPageIcons
             : trim((string) $item);
 
         $iconPath = is_array($item) ? ($item['icon_path'] ?? null) : null;
+        $description = is_array($item) ? trim((string) ($item['description'] ?? '')) : '';
 
         return [
             'label' => $label,
             'icon_url' => filled($iconPath) ? self::storedIconUrl((string) $iconPath) : null,
+            'description' => $description !== '' ? $description : null,
         ];
     }
 

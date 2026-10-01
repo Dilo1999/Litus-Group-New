@@ -34,20 +34,34 @@
     ? $company['description']
     : 'Zaha Travels is a destination management company within LITUS Group, specialising in the Maldives and Sri Lanka. We serve individual travellers, travel agencies and tour operators with destination knowledge and personalised travel arrangements.';
   $aboutSecondary = $company['description_secondary'] ?? null;
+  // First mention of the company name links to the official site (escaped first, then linked).
+  $aboutPrimaryHtml = \Illuminate\Support\Str::replaceFirst(
+    e($name),
+    '<a href="'.$site.'/" class="font-semibold text-brand-600 underline decoration-brand-600/30 underline-offset-4 transition-colors hover:decoration-brand-600" target="_blank" rel="noopener">'.e($name).'</a>',
+    e($aboutPrimary)
+  );
+  $hotline = $company['hotline'] ?? null;
+  $email = $company['email'] ?? null;
 
-  // Strengths → highlights strip. Known labels keep the design's caption.
+  // Strengths → highlights strip. Caption comes from the admin, else the design's caption for known values.
+  // A numeric strength such as "100+" is the partner count, reused in the property network section.
+  $isCount = fn (string $label): bool => (bool) preg_match('/^\d[\d,]*\+?$/', $label);
   $proofCaptions = [
-    '100+' => 'Resort & hotel partners',
     'two destinations' => 'Maldives & Sri Lanka',
     'personal experts' => 'Guidance from start to finish',
     '24/7 support' => 'During your trip',
   ];
   $proof = collect($company['strengths'] ?? [])
-    ->map(fn ($item) => \App\Support\CompanyPageIcons::resolveLabeledItem($item)['label'])
-    ->filter()
-    ->map(fn ($label) => [$label, $proofCaptions[mb_strtolower($label)] ?? null])
+    ->map(fn ($item) => \App\Support\CompanyPageIcons::resolveLabeledItem($item))
+    ->filter(fn ($item) => $item['label'] !== '')
+    ->map(fn ($item) => [
+      $item['label'],
+      $item['description']
+        ?? ($isCount($item['label']) ? 'Resort & hotel partners' : ($proofCaptions[mb_strtolower($item['label'])] ?? null)),
+    ])
     ->values()
     ->all();
+  $partnerCount = collect($proof)->first(fn ($row) => $isCount($row[0]))[0] ?? '100+';
 
   $destinations = [
     [
@@ -76,8 +90,8 @@
     ['A stay that fits the journey', 'Thoughtful recommendations for couples, families and travellers combining destinations.'],
   ];
 
-  // Services come from the admin. Known titles keep the design's description and icon;
-  // an uploaded icon always wins.
+  // Services come from the admin. The admin description and uploaded icon win; known titles
+  // fall back to the design's description and icon.
   $serviceDefaults = [
     'personal travel planning' => ['Destination advice and itineraries shaped around interests, preferences and budget.', '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>'],
     'stays & private tours' => ['Resort reservations, split stays and Sri Lanka touring for couples, families and groups.', '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>'],
@@ -93,7 +107,7 @@
     ->map(function ($item) use ($serviceDefaults, $fallbackServiceIcon) {
       [$text, $svg] = $serviceDefaults[mb_strtolower($item['label'])] ?? [null, $fallbackServiceIcon];
 
-      return ['title' => $item['label'], 'text' => $text, 'svg' => $svg, 'icon_url' => $item['icon_url']];
+      return ['title' => $item['label'], 'text' => $item['description'] ?? $text, 'svg' => $svg, 'icon_url' => $item['icon_url']];
     })
     ->values()
     ->all();
@@ -175,8 +189,11 @@
 
         <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a href="{{ $site }}/" class="ui-btn ui-btn--light" target="_blank" rel="noopener">Explore Zaha Travels {!! $external !!}</a>
-          @if(filled($company['hotline'] ?? null))
-            <a href="tel:{{ preg_replace('/\s+/', '', $company['hotline']) }}" class="ui-btn ui-btn--glass tabular-nums">{{ $company['hotline'] }}</a>
+          @if(filled($hotline))
+            <a href="tel:{{ preg_replace('/\s+/', '', $hotline) }}" class="ui-btn ui-btn--glass" aria-label="Call {{ $name }} on {{ $hotline }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>Call <span class="tabular-nums">{{ $hotline }}</span></span>
+            </a>
           @endif
         </div>
       </div>
@@ -206,48 +223,73 @@
 
   {{-- About --}}
   <section class="ui-section overflow-x-clip bg-white" aria-labelledby="intro-title">
-    <div class="ui-container grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-20">
-      <div>
+    @php
+      $pin = '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>';
+      $glance = [
+        ['Group', 'LITUS Group', '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>'],
+        ['Headquarters', 'Malé, Maldives', $pin],
+        ['Sri Lanka office', 'Colombo', $pin],
+        ['Dubai presence', 'Support office', '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>'],
+      ];
+    @endphp
+    <div class="ui-container grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-16 xl:gap-20">
+      {{-- Story + key facts --}}
+      <div class="lg:col-span-6">
         <span class="ui-eyebrow">Who we are</span>
         <h2 id="intro-title" class="ui-h2 mt-5">About <span class="ui-accent text-brand-600">{{ $name }}</span></h2>
-        <p class="mt-6 text-lg leading-relaxed text-ink-700 sm:text-xl">{{ $aboutPrimary }}</p>
+        <p class="mt-6 text-lg leading-relaxed text-ink-700 sm:text-xl">{!! $aboutPrimaryHtml !!}</p>
         @if(filled($aboutSecondary))
           <p class="mt-4 text-base leading-relaxed text-ink-500 sm:text-lg">{{ $aboutSecondary }}</p>
         @endif
+
+        <dl class="mt-10 grid grid-cols-2 gap-3" aria-label="{{ $name }} at a glance">
+          @foreach($glance as [$term, $value, $icon])
+            <div class="group flex items-start gap-3 rounded-2xl border border-ink-100 bg-sand-50 p-4 transition-colors duration-300 hover:border-brand-100 hover:bg-white sm:p-5">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand-600 ring-1 ring-ink-100 transition-colors duration-300 group-hover:bg-brand-50 group-hover:ring-brand-100">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $icon !!}</svg>
+              </span>
+              <div class="min-w-0">
+                <dt class="text-[0.7rem] font-bold tracking-[0.14em] text-ink-400 uppercase">{{ $term }}</dt>
+                <dd class="mt-1 text-sm font-bold text-ink-900 sm:text-base">{{ $value }}</dd>
+              </div>
+            </div>
+          @endforeach
+        </dl>
+
+        {{-- Contact channels, each with a visible label --}}
+        @php
+          $channels = array_values(array_filter([
+            filled($hotline) ? ['Phone', $hotline, 'tel:'.preg_replace('/\s+/', '', $hotline), false, '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>'] : null,
+            filled($email) ? ['Email', $email, 'mailto:'.$email, false, '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>'] : null,
+            ['Website', 'zahatravels.com', $site.'/', true, '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>'],
+          ]));
+        @endphp
+        <ul class="mt-8 grid grid-cols-1 gap-x-6 gap-y-5 border-t border-ink-100 pt-8 sm:grid-cols-3" aria-label="Contact {{ $name }}">
+          @foreach($channels as [$label, $value, $href, $isExternal, $icon])
+            <li>
+              <a href="{{ $href }}" class="group flex items-center gap-3" @if($isExternal) target="_blank" rel="noopener" @endif>
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 ring-1 ring-brand-100 transition-colors duration-300 group-hover:bg-brand-600 group-hover:text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $icon !!}</svg>
+                </span>
+                <span class="min-w-0">
+                  <span class="block text-[0.7rem] font-bold tracking-[0.14em] text-ink-400 uppercase">{{ $label }}</span>
+                  <span class="block truncate text-sm font-semibold text-ink-900 transition-colors group-hover:text-brand-600 {{ $label === 'Phone' ? 'tabular-nums' : '' }}">{{ $value }}@if($isExternal) <span aria-hidden="true">↗</span>@endif</span>
+                </span>
+              </a>
+            </li>
+          @endforeach
+        </ul>
       </div>
 
-      <div class="relative">
-        <div class="absolute -top-8 -right-8 h-48 w-48 rounded-full bg-lagoon-300/40 blur-3xl" aria-hidden="true"></div>
-        <div class="ui-zoom relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-ink-800 shadow-[0_40px_80px_-30px_rgba(6,22,52,0.45)]">
-          <img src="{{ $aboutImageUrl }}" alt="{{ $aboutImageUrl === $sriLankaImg ? 'Sri Lanka destination scenery' : $name }}" class="h-full w-full object-cover" loading="lazy" decoding="async" width="700" height="460">
-        </div>
+      {{-- Image --}}
+      <div class="relative lg:col-span-6">
+        <div class="absolute -top-10 -right-10 h-56 w-56 rounded-full bg-lagoon-300/40 blur-3xl" aria-hidden="true"></div>
+        <div class="absolute -bottom-10 -left-10 h-56 w-56 rounded-full bg-brand-400/20 blur-3xl" aria-hidden="true"></div>
 
-        <aside class="relative mt-6 rounded-3xl bg-sand-100 p-6 sm:p-8" aria-label="Company facts">
-          <h3 class="text-xl font-bold tracking-[-0.015em] text-ink-900">Zaha at a glance</h3>
-          <dl class="mt-3 divide-y divide-sand-200 text-sm">
-            @foreach([
-              'Group' => 'LITUS Group',
-              'Maldives headquarters' => 'Malé',
-              'Sri Lanka office' => 'Colombo',
-              'Dubai presence' => 'Support office',
-            ] as $term => $value)
-              <div class="flex justify-between gap-4 py-3">
-                <dt class="text-ink-500">{{ $term }}</dt>
-                <dd class="text-right font-bold text-ink-900">{{ $value }}</dd>
-              </div>
-            @endforeach
-            @if(filled($company['email'] ?? null))
-              <div class="flex justify-between gap-4 py-3">
-                <dt class="text-ink-500">Email</dt>
-                <dd class="text-right font-bold"><a href="mailto:{{ $company['email'] }}" class="break-all text-brand-600 hover:underline">{{ $company['email'] }}</a></dd>
-              </div>
-            @endif
-            <div class="flex justify-between gap-4 py-3">
-              <dt class="text-ink-500">Official website</dt>
-              <dd class="text-right font-bold"><a href="{{ $site }}/" class="text-brand-600 hover:underline" target="_blank" rel="noopener">zahatravels.com ↗</a></dd>
-            </div>
-          </dl>
-        </aside>
+        <figure class="ui-zoom relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-ink-800 shadow-[0_40px_80px_-30px_rgba(6,22,52,0.45)] lg:aspect-[4/5]">
+          <img src="{{ $aboutImageUrl }}" alt="{{ $aboutImageUrl === $sriLankaImg ? 'Sri Lanka destination scenery' : $name }}" class="h-full w-full object-cover" loading="lazy" decoding="async" width="800" height="1000">
+          <div class="absolute inset-0 bg-gradient-to-t from-ink-950/50 via-transparent to-transparent" aria-hidden="true"></div>
+        </figure>
       </div>
     </div>
   </section>
@@ -295,7 +337,7 @@
     <div class="ui-container grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
       <div>
         <span class="ui-eyebrow ui-eyebrow--light">Our property network</span>
-        <div class="mt-6 text-7xl leading-none font-extrabold tracking-[-0.05em] text-lagoon-300 sm:text-8xl" aria-hidden="true">100+</div>
+        <div class="mt-6 text-7xl leading-none font-extrabold tracking-[-0.05em] text-lagoon-300 sm:text-8xl" aria-hidden="true">{{ $partnerCount }}</div>
         <h2 id="partners-title" class="ui-h2 mt-4 !text-white">Resort &amp; hotel <span class="ui-accent text-lagoon-300">partners</span></h2>
         <p class="mt-6 text-base leading-relaxed text-ink-300 sm:text-lg">Our partner network opens up a broad choice of stays. Experts help travellers compare locations, room types and experiences, with access to partner rates and applicable offers.</p>
         <a href="{{ $site }}/properties" class="ui-link mt-8 text-sm !text-lagoon-300 hover:!text-white" target="_blank" rel="noopener">Explore resorts &amp; hotels {!! $external !!}</a>
@@ -347,6 +389,17 @@
             @endif
           </article>
         @endforeach
+      </div>
+
+      {{-- Experiences: contextual next step after the services --}}
+      <div class="ui-bg-ink mt-6 flex flex-col items-start justify-between gap-6 rounded-3xl p-7 sm:p-9 md:flex-row md:items-center">
+        <div class="ui-grid-texture--light pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_right,black,transparent_70%)]" aria-hidden="true"></div>
+        <div class="max-w-xl">
+          <p class="text-[0.7rem] font-bold tracking-[0.18em] text-lagoon-300 uppercase">Excursions &amp; activities</p>
+          <h3 class="mt-2 text-xl font-extrabold tracking-[-0.02em] text-white sm:text-2xl">Make every day of the trip <span class="ui-accent text-lagoon-300">memorable</span></h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-300 sm:text-base">Snorkelling, island hopping, safaris and cultural tours across the Maldives and Sri Lanka.</p>
+        </div>
+        <a href="{{ $site }}/experiences" class="ui-btn ui-btn--light shrink-0" target="_blank" rel="noopener">Explore travel experiences {!! $external !!}</a>
       </div>
     </div>
   </section>
