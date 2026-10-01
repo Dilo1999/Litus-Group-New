@@ -76,7 +76,7 @@
     [
       'title' => 'Sri Lanka',
       'tag' => 'Discovery & culture',
-      'image' => $sriLankaImg,
+      'image' => 'https://litusgroup.mv/storage/media-assets/srilanka-d82gk8.webp',
       'alt' => 'Sri Lanka destination scenery',
       'text' => 'Cultural landmarks, wildlife safaris, tea country and coastal retreats. Explore private tours, scenic rail journeys and beach holidays, with personalised itineraries supported by our Colombo team.',
       'link' => $site.'/destinations/sri-lanka',
