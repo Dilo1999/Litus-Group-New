@@ -151,9 +151,9 @@
       <div class="absolute inset-0 bg-gradient-to-r from-ink-950/75 to-transparent"></div>
     </div>
 
-    <div class="ui-container flex flex-1 flex-col justify-end pt-32 pb-14 md:pt-40 md:pb-20">
+    <div class="ui-container flex flex-1 flex-col justify-end pt-32 pb-12 md:pt-40 md:pb-16">
       <div class="max-w-3xl">
-        <nav aria-label="Breadcrumb" class="mb-8">
+        <nav aria-label="Breadcrumb" class="mb-6">
           <ol class="flex flex-wrap items-center gap-2 text-sm text-ink-300">
             <li><a href="{{ url('/') }}" class="inline-flex min-h-11 items-center transition-colors hover:text-white">Home</a></li>
             <li aria-hidden="true">{!! $chevron !!}</li>
@@ -163,8 +163,8 @@
           </ol>
         </nav>
 
-        <div class="-ml-1 mb-8 flex h-16 items-center sm:h-20">
-          <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-[220px] object-contain object-left brightness-0 invert" onerror="this.parentElement.hidden=true">
+        <div class="-ml-2 mb-4 flex h-20 items-center sm:h-24 md:mb-6 md:h-32">
+          <img src="{{ $logo }}" alt="{{ $name }}" class="h-full w-auto max-w-[min(100%,300px)] object-contain object-left brightness-0 invert sm:max-w-[360px] md:max-w-[440px]" onerror="this.parentElement.hidden=true">
         </div>
 
         <span class="ui-eyebrow ui-eyebrow--light">{{ $category }} · A LITUS Group company</span>
