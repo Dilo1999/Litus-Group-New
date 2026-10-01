@@ -82,8 +82,9 @@ class BlogPostResource extends Resource
                         ->helperText('Example: 4 min read'),
 
                     AssetPicker::make('image')
-                        ->label('Cover image')
+                        ->label('Hero image')
                         ->imagePreviewHeight(180)
+                        ->helperText('Full-width background of the article\'s hero section, behind the title (also used for the card on News & Media and as the default share image). Use a wide landscape image, about 1920×1080.')
                         ->columnSpanFull(),
 
                     Textarea::make('excerpt')

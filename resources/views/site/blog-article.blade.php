@@ -16,20 +16,22 @@
 <div class="min-h-screen overflow-x-hidden bg-white font-sans antialiased">
 
   {{-- Hero --}}
-  <section class="relative isolate overflow-hidden bg-ink-950 text-white {{ $hasImage ? 'pb-40 sm:pb-52 lg:pb-64' : 'pb-16 md:pb-24' }}">
-    <div class="absolute inset-0 -z-10" aria-hidden="true">
+  {{-- The post's hero image fills the hero; without one, the brand glow/texture is shown (same as company pages). --}}
+  <section class="relative isolate flex flex-col overflow-hidden bg-ink-950 text-white {{ $hasImage ? 'min-h-[min(88svh,760px)]' : '' }}">
+    <div class="absolute inset-0 -z-10">
       @if($hasImage)
-        <img src="{{ $post['image'] }}" alt="" class="h-full w-full scale-110 object-cover opacity-60 blur-[2px]" fetchpriority="high" decoding="async">
+        <img src="{{ $post['image'] }}" alt="{{ $post['title'] ?? '' }}" class="h-full w-full object-cover" fetchpriority="high" decoding="async">
+      @else
+        <div class="ui-page-hero__glow"></div>
+        <div class="ui-grid-texture--light absolute inset-0 opacity-40"></div>
       @endif
-      <div class="ui-page-hero__glow"></div>
-      <div class="absolute inset-0 bg-ink-950/45"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-ink-950/90 via-ink-950/60 to-ink-950/30"></div>
-      <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink-950 via-ink-950/70 to-transparent"></div>
-      <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink-950/70 to-transparent"></div>
-      <div class="ui-grid-texture--light absolute inset-0 opacity-40"></div>
+      <div class="absolute inset-0 bg-ink-950/35"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-ink-950/90 via-ink-950/55 to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink-950 via-ink-950/60 to-transparent"></div>
+      <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-ink-950/60 to-transparent"></div>
     </div>
 
-    <div class="ui-container pt-32 md:pt-40">
+    <div class="ui-container flex flex-1 flex-col justify-end pt-32 pb-12 md:pt-40 md:pb-16">
       <div class="site-blogs-hero mx-auto max-w-4xl">
         <a
           href="{{ route('site.blogs') }}"
@@ -83,19 +85,6 @@
       </div>
     </div>
   </section>
-
-  {{-- Featured image --}}
-  @if($hasImage)
-    <div class="ui-container relative z-10 -mt-32 sm:-mt-44 lg:-mt-56">
-      <x-site.motion variant="fade-up" :duration="700" class="mx-auto max-w-5xl">
-        <figure class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-50 to-lagoon-100 shadow-[0_40px_90px_-30px_rgba(3,11,31,0.55)] ring-1 ring-ink-950/5 sm:rounded-[2rem]">
-          <div class="aspect-[4/3] sm:aspect-[16/8]">
-            <img src="{{ $post['image'] }}" alt="{{ $post['title'] ?? '' }}" class="h-full w-full object-cover" decoding="async">
-          </div>
-        </figure>
-      </x-site.motion>
-    </div>
-  @endif
 
   {{-- Article --}}
   <div class="ui-container pt-12 pb-20 md:pt-20 md:pb-28">
