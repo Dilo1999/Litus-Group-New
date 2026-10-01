@@ -67,7 +67,7 @@
     [
       'title' => 'Maldives',
       'tag' => 'Island escapes',
-      'image' => $maldivesImg,
+      'image' => $site.'/storage/media-assets/T4Fu5EJ2hUnRCK0bNWKSCSQKnk0TVP-metaTWFsZGl2ZXMud2VicA%3D%3D-.webp',
       'alt' => 'Aerial view of a Maldives island resort and turquoise lagoon',
       'text' => 'Private island resorts, overwater villas and local island stays. Discover honeymoons, family holidays, snorkelling and marine adventures, with resort and transfer advice from our team.',
       'link' => $site.'/destinations/maldives',
