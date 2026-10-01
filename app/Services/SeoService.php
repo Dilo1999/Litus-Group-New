@@ -10,7 +10,6 @@ use App\Support\GlobalSeo;
 use Artesaos\SEOTools\Facades\JsonLdMulti;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
-use Artesaos\SEOTools\Facades\SEOTools;
 use Artesaos\SEOTools\Facades\TwitterCard;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,6 +24,14 @@ class SeoService
     protected array $global;
 
     protected bool $globalExtrasApplied = false;
+
+    /**
+     * Page-specific JSON-LD entities. When set, they replace the default WebPage block
+     * and are emitted in one @graph together with the site Organization and WebSite.
+     *
+     * @var array<int, array<string, mixed>>|null
+     */
+    protected ?array $pageGraph = null;
 
     public function __construct()
     {
@@ -200,7 +207,37 @@ class SeoService
     {
         $this->applyGlobalExtras();
 
-        return SEOTools::generate().$this->analyticsScriptHtml();
+        $html = SEOMeta::generate().PHP_EOL
+            .OpenGraph::generate().PHP_EOL
+            .TwitterCard::generate().PHP_EOL;
+
+        if ($this->pageGraph === null) {
+            $html .= JsonLdMulti::generate();
+        }
+
+        $html .= $this->jsonLdGraphHtml([...$this->siteGraph(), ...($this->pageGraph ?? [])]);
+
+        return $html.$this->analyticsScriptHtml();
+    }
+
+    /**
+     * Replace the default WebPage JSON-LD with page-specific entities (linked by @id).
+     *
+     * @param  array<int, array<string, mixed>>  $entities
+     */
+    public function setPageGraph(array $entities): void
+    {
+        $this->pageGraph = array_values($entities);
+    }
+
+    public function organizationId(): string
+    {
+        return url('/').'/#organization';
+    }
+
+    public function websiteId(): string
+    {
+        return url('/').'/#website';
     }
 
     protected function applyGlobalExtras(): void
@@ -234,31 +271,51 @@ class SeoService
         if (filled($this->global['twitter_site'] ?? null)) {
             TwitterCard::setSite($this->sanitizeTwitterHandle((string) $this->global['twitter_site']));
         }
-
-        $this->applyOrganizationJsonLd();
     }
 
-    protected function applyOrganizationJsonLd(): void
+    /**
+     * Site-wide LITUS Group Organization and WebSite, emitted once per page.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function siteGraph(): array
     {
         $homeUrl = url('/');
-        $logo = $this->defaultOgImage;
+        $description = filled($this->global['meta_description'] ?? null)
+            ? (string) $this->global['meta_description']
+            : null;
 
-        JsonLdMulti::newJsonLd();
-        JsonLdMulti::setType('Organization');
-        JsonLdMulti::setTitle($this->siteName);
-        JsonLdMulti::setUrl($homeUrl);
-        JsonLdMulti::addImage($logo);
-        if (filled($this->global['meta_description'] ?? null)) {
-            JsonLdMulti::setDescription((string) $this->global['meta_description']);
-        }
+        return [
+            array_filter([
+                '@type' => 'Organization',
+                '@id' => $this->organizationId(),
+                'name' => $this->siteName,
+                'description' => $description,
+                'url' => $homeUrl,
+                'image' => $this->defaultOgImage,
+            ]),
+            array_filter([
+                '@type' => 'WebSite',
+                '@id' => $this->websiteId(),
+                'name' => $this->siteName,
+                'description' => $description,
+                'url' => $homeUrl,
+                'publisher' => ['@id' => $this->organizationId()],
+            ]),
+        ];
+    }
 
-        JsonLdMulti::newJsonLd();
-        JsonLdMulti::setType('WebSite');
-        JsonLdMulti::setTitle($this->siteName);
-        JsonLdMulti::setUrl($homeUrl);
-        if (filled($this->global['meta_description'] ?? null)) {
-            JsonLdMulti::setDescription((string) $this->global['meta_description']);
-        }
+    /**
+     * @param  array<int, array<string, mixed>>  $graph
+     */
+    protected function jsonLdGraphHtml(array $graph): string
+    {
+        $json = json_encode(
+            ['@context' => 'https://schema.org', '@graph' => $graph],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG
+        );
+
+        return '<script type="application/ld+json">'.$json.'</script>';
     }
 
     protected function analyticsScriptHtml(): string

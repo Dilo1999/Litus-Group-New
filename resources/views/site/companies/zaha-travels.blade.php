@@ -114,40 +114,52 @@
 
   $offices = ['Malé · Headquarters', 'Colombo · Sri Lanka office', 'Dubai · Support office'];
 
+  // JSON-LD: one @graph (with the site Organization/WebSite from SeoService), linked by @id.
+  $seo = app(\App\Services\SeoService::class);
   $pageUrl = route('site.company', ['slug' => 'zaha-travels']);
-  $schema = [
-    '@context' => 'https://schema.org',
-    '@graph' => [
-      [
-        '@type' => 'TravelAgency',
-        '@id' => $site.'/#organization',
-        'name' => $name,
-        'url' => $site.'/',
-        'logo' => $site.'/images/logo-web.png',
-        'slogan' => $tagline,
-        'description' => 'A destination management company within LITUS Group, specialising in Maldives and Sri Lanka travel for individual travellers, travel agencies and tour operators.',
-        'parentOrganization' => ['@type' => 'Organization', 'name' => 'LITUS Group', 'url' => url('/')],
-        'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Malé', 'addressCountry' => 'MV'],
-        'areaServed' => [
-          ['@type' => 'Country', 'name' => 'Maldives'],
-          ['@type' => 'Country', 'name' => 'Sri Lanka'],
-        ],
-      ],
-      [
-        '@type' => 'BreadcrumbList',
-        'itemListElement' => [
-          ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-          ['@type' => 'ListItem', 'position' => 2, 'name' => 'Our Entities', 'item' => route('site.our-companies')],
-          ['@type' => 'ListItem', 'position' => 3, 'name' => $name, 'item' => $pageUrl],
-        ],
+  $zahaId = $site.'/#organization';
+  $seo->setPageGraph([
+    [
+      '@type' => 'TravelAgency',
+      '@id' => $zahaId,
+      'name' => $name,
+      'url' => $site.'/',
+      'logo' => $site.'/images/logo-web.png',
+      'slogan' => $tagline,
+      'description' => 'A destination management company within LITUS Group, specialising in Maldives and Sri Lanka travel for individual travellers, travel agencies and tour operators.',
+      'parentOrganization' => ['@id' => $seo->organizationId()],
+      'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Malé', 'addressCountry' => 'MV'],
+      'areaServed' => [
+        ['@type' => 'Country', 'name' => 'Maldives'],
+        ['@type' => 'Country', 'name' => 'Sri Lanka'],
       ],
     ],
-  ];
+    array_filter([
+      '@type' => 'AboutPage',
+      '@id' => $pageUrl.'#webpage',
+      'url' => $pageUrl,
+      'name' => \Artesaos\SEOTools\Facades\SEOMeta::getTitleSession(),
+      'description' => \Artesaos\SEOTools\Facades\SEOMeta::getDescription(),
+      'inLanguage' => 'en',
+      'isPartOf' => ['@id' => $seo->websiteId()],
+      'about' => ['@id' => $zahaId],
+      'publisher' => ['@id' => $seo->organizationId()],
+      'breadcrumb' => ['@id' => $pageUrl.'#breadcrumb'],
+    ]),
+    [
+      '@type' => 'BreadcrumbList',
+      '@id' => $pageUrl.'#breadcrumb',
+      'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Our Entities', 'item' => route('site.our-companies')],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $name, 'item' => $pageUrl],
+      ],
+    ],
+  ]);
 @endphp
 
 @push('head')
   <link rel="preload" as="image" href="{{ $heroImageUrl ?? $maldivesImg }}" fetchpriority="high">
-  <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 @endpush
 
 @section('content')

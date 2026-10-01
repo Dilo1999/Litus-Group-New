@@ -22,7 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // One instance per request so the controller and the layout share SEO state
+        // (otherwise site-wide JSON-LD is emitted twice).
+        $this->app->singleton(\App\Services\SeoService::class);
     }
 
     /**
