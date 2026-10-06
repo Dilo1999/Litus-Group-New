@@ -12,7 +12,7 @@
       ['name' => 'LITUS Connect', 'slug' => 'litus-connect'],
       ['name' => 'LITUS Constructions', 'slug' => 'litus-constructions'],
     ],
-    'Zaha & Al Zaha' => [
+    'Zaha' => [
       ['name' => 'Zaha Residence & Hotels', 'slug' => 'zaha-residence-hotels'],
       ['name' => 'Zaha Travels', 'slug' => 'zaha-travels'],
       ['name' => 'Al Zaha General Trading', 'slug' => 'al-zaha-general-trading'],
