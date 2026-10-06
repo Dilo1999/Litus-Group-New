@@ -20,6 +20,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -176,10 +177,16 @@ class CompanyResource extends Resource
                 ->required()
                 ->helperText('Lower numbers appear first in listings.')
                 ->columnSpan(1),
+            Toggle::make('is_active')
+                ->label('Active (visible on website)')
+                ->helperText('When off, this company is hidden everywhere on the public website.')
+                ->default(true)
+                ->inline(false)
+                ->columnSpan(1),
             Toggle::make('featured')
                 ->label('Featured on homepage')
                 ->inline(false)
-                ->columnSpanFull(),
+                ->columnSpan(1),
         ];
     }
 
@@ -299,22 +306,10 @@ class CompanyResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('slug')
-                    ->toggleable(),
-                TextColumn::make('division')
-                    ->formatStateUsing(function (?string $state): string {
-                        if ($state === null || $state === '') {
-                            return '';
-                        }
-                        $div = SiteData::divisions()[$state] ?? null;
-
-                        return $div['title'] ?? $state;
-                    })
-                    ->sortable(),
                 IconColumn::make('featured')
                     ->boolean(),
-                TextColumn::make('updated_at')
-                    ->dateTime()
+                ToggleColumn::make('is_active')
+                    ->label('Active')
                     ->sortable(),
             ])
             ->defaultSort('sort_order')

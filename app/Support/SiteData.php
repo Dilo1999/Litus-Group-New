@@ -64,7 +64,9 @@ class SiteData
             return self::legacyCompanies();
         }
 
+        // Companies switched off in the admin are hidden from every public page.
         return Company::query()
+            ->where('is_active', true)
             ->orderBy('sort_order')
             ->orderBy('id')
             ->get()

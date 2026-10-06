@@ -30,6 +30,16 @@
     ],
   ];
 
+  // Drop links to companies that are switched off (or missing) in the admin.
+  $activeSlugs = array_column(\App\Support\SiteData::companies(), 'slug');
+  foreach ($footerLinks as $heading => $links) {
+    $footerLinks[$heading] = array_values(array_filter(
+      $links,
+      fn ($link) => empty($link['slug']) || in_array($link['slug'], $activeSlugs, true)
+    ));
+  }
+  $footerLinks = array_filter($footerLinks);
+
   $socials = [
     ['label' => 'LinkedIn', 'href' => 'https://www.linkedin.com/company/litus-group-maldives/', 'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>'],
     ['label' => 'X', 'href' => 'https://x.com/LITUSmv', 'svg' => '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" class="fill-current"><path d="M21.742 21.75l-7.563-11.179 7.056-8.321h-2.456l-5.691 6.714-4.54-6.714H2.359l7.29 10.776L2.25 21.75h2.456l6.035-7.118 4.818 7.118h6.191-.008zM7.739 3.818L18.81 20.182h-2.447L5.29 3.818h2.447z"></path></svg>'],

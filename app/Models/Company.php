@@ -48,6 +48,7 @@ class Company extends Model
         'services',
         'strengths',
         'featured',
+        'is_active',
         'sort_order',
         'meta_title',
         'meta_description',
@@ -65,6 +66,7 @@ class Company extends Model
         'services' => 'array',
         'strengths' => 'array',
         'featured' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -92,6 +94,7 @@ class Company extends Model
             'services' => $this->services ?? [],
             'strengths' => $this->strengths ?? [],
             'featured' => (bool) $this->featured,
+            'is_active' => (bool) $this->is_active,
         ];
     }
 }
