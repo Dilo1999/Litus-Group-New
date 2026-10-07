@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\MediaAssetController;
 use App\Http\Controllers\LlmsController;
 use App\Models\MediaAsset;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\SitemapController;
 
 // Serve storage files when symlink doesn't work (e.g. shared hosting / cPanel)
 Route::match(['get', 'head'], 'storage/{path}', function () {
@@ -39,6 +40,7 @@ Route::middleware(['auth', 'can:viewAny,'.MediaAsset::class])->prefix('admin/api
 });
 
 // AI assistants / LLM crawlers (https://llmstxt.org), built from live admin data
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/llms.txt', [LlmsController::class, 'index'])->name('llms.index');
 Route::get('/llms-full.txt', [LlmsController::class, 'full'])->name('llms.full');
 
