@@ -15,15 +15,6 @@
             >
                 Remove hero image
             </x-filament::button>
-
-            <x-filament::button
-                type="button"
-                color="danger"
-                outlined
-                wire:click="removeBusinessPartnershipImage"
-            >
-                Remove all images
-            </x-filament::button>
         </div>
     </form>
 </x-filament::page>

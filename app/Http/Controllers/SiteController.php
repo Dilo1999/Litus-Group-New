@@ -92,8 +92,8 @@ class SiteController extends Controller
     public function about(SeoService $seo)
     {
         $seo->applyForPage('site.about', [
-            'meta_title' => 'About Us | LITUS Group',
-            'meta_description' => 'Learn about LITUS Group—our mission, values, divisions, and commitment to excellence across the industries we serve.',
+            'meta_title' => 'About LITUS Group | Business Group in the Maldives',
+            'meta_description' => 'Explore LITUS Group, a Maldives-based business group serving individuals, businesses and resorts through automotive, logistics, engineering, trading and more.',
         ]);
 
         return view('site.about');

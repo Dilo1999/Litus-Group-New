@@ -258,45 +258,6 @@ document.addEventListener('alpine:init', () => {
     },
   }));
 
-  Alpine.data('aboutPartnershipSlider', (slides = []) => ({
-    slides: Array.isArray(slides) ? slides.filter((url) => url && String(url).trim()) : [],
-    activeIndex: 0,
-    _interval: null,
-    get slideTransform() {
-      if (this.slides.length <= 1) {
-        return 'translateX(0)';
-      }
-
-      return `translateX(-${this.activeIndex * 100}%)`;
-    },
-    init() {
-      if (this.slides.length < 2) {
-        return;
-      }
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return;
-      }
-      this._interval = window.setInterval(() => this.next(), 5000);
-    },
-    destroy() {
-      if (this._interval) {
-        window.clearInterval(this._interval);
-      }
-    },
-    goTo(index) {
-      if (index < 0 || index >= this.slides.length) {
-        return;
-      }
-      this.activeIndex = index;
-    },
-    next() {
-      if (this.slides.length < 2) {
-        return;
-      }
-      this.activeIndex = (this.activeIndex + 1) % this.slides.length;
-    },
-  }));
-
   Alpine.data('heroSpotlight', (items, fallbackHeroImage = null) => ({
     items: Array.isArray(items) ? items : [],
     fallbackHeroImage: fallbackHeroImage || null,
@@ -497,3 +458,60 @@ document.addEventListener('alpine:init', () => {
 
 window.Alpine = Alpine;
 Alpine.start();
+
+/** About page: scroll reveals, hero parallax and card spotlight (see "About page — motion" in app.css). */
+function initAboutPage() {
+  const root = document.querySelector('[data-about-page]');
+  if (!root || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  if (root.classList.contains('about-js')) {
+    root.dataset.revealBound = 'true';
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+    );
+    root.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+  }
+
+  // Soft glow that follows the pointer inside each service card.
+  root.querySelectorAll('.about-card').forEach((card) => {
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+      card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+    });
+  });
+
+  // Hero parallax: progress 0 → 1 while the hero scrolls out of view.
+  const hero = root.querySelector('[data-about-hero]');
+  if (hero) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const progress = Math.min(Math.max(window.scrollY / hero.offsetHeight, 0), 1);
+      hero.style.setProperty('--about-scroll', progress.toFixed(3));
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+}
+
+initAboutPage();

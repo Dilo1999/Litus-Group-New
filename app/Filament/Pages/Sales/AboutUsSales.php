@@ -37,13 +37,12 @@ class AboutUsSales extends Page implements HasForms
             'hero_image_position_y' => (int) SiteSetting::getValue('about.hero.position_y', 50),
             'intro_paragraph_1' => SiteSetting::getValue(
                 'about.intro.paragraph_1',
-                'LITUS Group is a diversified business conglomerate with a strong presence across multiple sectors including hospitality, construction, automotive, technology, and trading. Our commitment to excellence drives everything we do.'
+                'LITUS Group brings together businesses in automotive, building materials, logistics, engineering, currency exchange, travel, hospitality, construction and technology. Based in the Maldives, we serve individuals, businesses, resorts and project teams through companies specialising in their respective industries.'
             ),
             'intro_paragraph_2' => SiteSetting::getValue(
                 'about.intro.paragraph_2',
-                'With a portfolio spanning from luxury hotels and resorts to cutting-edge technology solutions, we deliver comprehensive services that meet the evolving needs of our clients. Our diverse businesses work in synergy to create value and drive sustainable growth.'
+                'From motorcycle spare parts and home improvements to freight movements and resort engineering support, our businesses provide practical products and services that help customers keep everyday life and business moving.'
             ),
-            'business_partnership_image_paths' => SiteSetting::aboutPartnershipImagePaths(),
         ]);
     }
 
@@ -63,8 +62,8 @@ class AboutUsSales extends Page implements HasForms
                 'site/about/hero',
                 'Upload, replace, or remove the hero image shown at the top of the public About Us page.'
             ),
-            Forms\Components\Section::make('About LITUS Group — intro text')
-                ->description('Two paragraphs shown beside the image under “About LITUS Group” on the public About Us page.')
+            Forms\Components\Section::make('Who we are — intro text')
+                ->description('Two paragraphs shown beside “A diversified business group in the Maldives.” on the public About Us page.')
                 ->schema([
                     Forms\Components\Textarea::make('intro_paragraph_1')
                         ->label('First paragraph')
@@ -76,23 +75,6 @@ class AboutUsSales extends Page implements HasForms
                         ->rows(4)
                         ->required()
                         ->columnSpanFull(),
-                ])
-                ->columns(1),
-            Forms\Components\Section::make('Business partnership images')
-                ->description('Images shown beside “About LITUS Group” on the public About Us page. Multiple images display as a slideshow.')
-                ->schema([
-                    Forms\Components\FileUpload::make('business_partnership_image_paths')
-                        ->label('Section images')
-                        ->disk('public')
-                        ->directory('site/about/business-partnership')
-                        ->visibility('public')
-                        ->preserveFilenames()
-                        ->image()
-                        ->multiple()
-                        ->enableReordering()
-                        ->imagePreviewHeight('180')
-                        ->maxSize(4096)
-                        ->helperText('PNG/JPG/WebP. Recommended: 1200×900 or similar landscape. Upload one or more; multiple images rotate automatically on the site.'),
                 ])
                 ->columns(1),
         ];
@@ -115,22 +97,8 @@ class AboutUsSales extends Page implements HasForms
         SiteSetting::setValue('about.hero.image_path', $nextHero);
         SiteSetting::setValue('about.hero.position_y', (int) ($state['hero_image_position_y'] ?? 50));
 
-        $previousPaths = SiteSetting::aboutPartnershipImagePaths();
-        $nextPaths = array_values(array_filter(
-            (array) ($state['business_partnership_image_paths'] ?? []),
-            fn ($path) => is_string($path) && $path !== ''
-        ));
-
-        foreach ($previousPaths as $path) {
-            if (! in_array($path, $nextPaths, true)) {
-                Storage::disk('public')->delete($path);
-            }
-        }
-
         SiteSetting::setValue('about.intro.paragraph_1', $state['intro_paragraph_1'] ?? '');
         SiteSetting::setValue('about.intro.paragraph_2', $state['intro_paragraph_2'] ?? '');
-        SiteSetting::setValue('about.business_partnership.image_paths', $nextPaths);
-        SiteSetting::setValue('about.business_partnership.image_path', null);
 
         $this->notify('success', 'About Us page updated.');
     }
@@ -147,18 +115,5 @@ class AboutUsSales extends Page implements HasForms
         $this->form->fill(['hero_image_path' => null]);
 
         $this->notify('success', 'Hero image removed.');
-    }
-
-    public function removeBusinessPartnershipImage(): void
-    {
-        foreach (SiteSetting::aboutPartnershipImagePaths() as $path) {
-            Storage::disk('public')->delete($path);
-        }
-
-        SiteSetting::setValue('about.business_partnership.image_paths', []);
-        SiteSetting::setValue('about.business_partnership.image_path', null);
-        $this->form->fill(['business_partnership_image_paths' => []]);
-
-        $this->notify('success', 'Images removed.');
     }
 }

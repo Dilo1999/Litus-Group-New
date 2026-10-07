@@ -167,20 +167,23 @@
               :class="careersInView ? '!translate-x-0 !translate-y-0 !opacity-100' : ''"
             >
               <div
-                class="group rounded-3xl border bg-white shadow-[0_1px_2px_rgba(6,22,52,0.04),0_8px_24px_-12px_rgba(6,22,52,0.08)] transition-all duration-300 ease-out outline-none focus-visible:ring-4 focus-visible:ring-brand-500/20 @if($hasDescription) cursor-pointer md:hover:border-brand-200 md:hover:shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)] @endif"
+                class="group rounded-3xl border bg-white shadow-[0_1px_2px_rgba(6,22,52,0.04),0_8px_24px_-12px_rgba(6,22,52,0.08)] transition-all duration-300 ease-out @if($hasDescription) md:hover:border-brand-200 md:hover:shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)] @endif"
                 :class="activeJobIndex === {{ $index }} ? 'border-brand-200 shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)]' : 'border-ink-100'"
-                @if($hasDescription)
-                  role="button"
-                  tabindex="0"
-                  :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
-                  @click="toggleJob({{ $index }})"
-                  @keydown.enter.prevent="toggleJob({{ $index }})"
-                  @keydown.space.prevent="toggleJob({{ $index }})"
-                @else
-                  role="article"
-                @endif
+                role="article"
               >
-                <div class="flex flex-col gap-5 p-5 sm:p-7 lg:flex-row lg:items-center lg:gap-8">
+                {{-- Only the header row toggles the role details, so clicks/text selection inside the details don't collapse them. --}}
+                <div
+                  class="flex flex-col gap-5 rounded-3xl p-5 outline-none focus-visible:ring-4 focus-visible:ring-brand-500/20 sm:p-7 lg:flex-row lg:items-center lg:gap-8 @if($hasDescription) cursor-pointer @endif"
+                  @if($hasDescription)
+                    role="button"
+                    tabindex="0"
+                    aria-controls="job-details-{{ $index }}"
+                    :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
+                    @click="toggleJob({{ $index }})"
+                    @keydown.enter.self.prevent="toggleJob({{ $index }})"
+                    @keydown.space.self.prevent="toggleJob({{ $index }})"
+                  @endif
+                >
                   <span class="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sand-100 text-sm font-bold text-ink-500 tabular-nums transition-colors duration-300 group-hover:bg-brand-50 group-hover:text-brand-600 lg:flex">
                     {{ sprintf('%02d', $index + 1) }}
                   </span>
@@ -255,6 +258,7 @@
 
                 @if($hasDescription)
                   <div
+                    id="job-details-{{ $index }}"
                     x-show="activeJobIndex === {{ $index }}"
                     x-collapse.duration.400ms
                     x-cloak
