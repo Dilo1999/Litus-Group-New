@@ -456,6 +456,8 @@ class SiteData
             ->get()
             ->map(fn (JobOpening $j) => [
                 'id' => (string) $j->id,
+                'slug' => $j->slug,
+                'url' => route('site.careers.show', $j->slug),
                 'title' => $j->title,
                 'company' => $j->company,
                 'location' => $j->location,

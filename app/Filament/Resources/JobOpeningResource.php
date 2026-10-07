@@ -61,6 +61,12 @@ class JobOpeningResource extends Resource
                         ->required()
                         ->maxLength(255)
                         ->columnSpanFull(),
+                    TextInput::make('slug')
+                        ->label('URL slug')
+                        ->prefix(url('/careers').'/')
+                        ->helperText('Leave blank to generate it from the title. Changing it changes the job page link.')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
                     TextInput::make('company')
                         ->required()
                         ->maxLength(255),

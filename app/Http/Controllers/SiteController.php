@@ -6,6 +6,7 @@ use App\Mail\JobApplicationMail;
 use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
+use App\Models\JobOpening;
 use App\Services\SeoService;
 use App\Support\SiteData;
 use Illuminate\Http\Request;
@@ -120,6 +121,29 @@ class SiteController extends Controller
 
         return view('site.careers', [
             'jobOpenings' => SiteData::careerOpenings(),
+        ]);
+    }
+
+    public function careerJob(SeoService $seo, string $slug)
+    {
+        $job = JobOpening::query()->where('slug', $slug)->first();
+        abort_if(! $job, 404);
+
+        // Closed roles send visitors (and search engines) back to the openings list.
+        if (! $job->is_active) {
+            return redirect()->route('site.careers', [], 301);
+        }
+
+        $seo->applyForJobOpening($job);
+
+        $otherOpenings = array_values(array_filter(
+            SiteData::careerOpenings(),
+            fn (array $j) => $j['id'] !== (string) $job->id,
+        ));
+
+        return view('site.career-job', [
+            'job' => collect(SiteData::careerOpenings())->firstWhere('id', (string) $job->id),
+            'otherOpenings' => array_slice($otherOpenings, 0, 3),
         ]);
     }
 
@@ -266,8 +290,7 @@ class SiteController extends Controller
                 ->withErrors(['cv' => 'We could not send your application. Please try again later or contact HR directly.']);
         }
 
-        return redirect()
-            ->route('site.careers')
+        return back()
             ->with('job_apply_success', 'Thank you! Your application has been submitted. We will get back to you shortly.');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BlogPost;
 use App\Models\Company;
 use App\Models\GalleryEvent;
+use App\Models\JobOpening;
 use App\Models\PageSeo;
 use App\Support\GlobalSeo;
 use Artesaos\SEOTools\Facades\JsonLdMulti;
@@ -189,6 +190,26 @@ class SeoService
         ]);
     }
 
+    public function applyForJobOpening(JobOpening $job): void
+    {
+        // e.g. "Senior Automotive Technician – LITUS Service Center, Maldives | LITUS Group"
+        $where = implode(', ', array_filter([$job->company, $job->location]));
+        $metaTitle = $job->title.($where !== '' ? ' – '.$where : '').' | '.$this->siteName;
+
+        $intro = implode(' ', array_filter([
+            $job->company ? $job->company.' is hiring' : 'We are hiring',
+            'a '.($job->type ? Str::lower($job->type).' ' : '').$job->title,
+            $job->location ? 'in '.$job->location.'.' : '.',
+        ]));
+        $metaDesc = Str::limit(trim(str_replace(' .', '.', $intro).' '.$this->plainDescription($job->description)), 157);
+
+        $this->applyForPage('site.careers.show', [
+            'meta_title' => $metaTitle,
+            'meta_description' => $metaDesc,
+            'canonical' => route('site.careers.show', $job->slug),
+        ]);
+    }
+
     public function applyForGalleryEvent(GalleryEvent $event): void
     {
         // Gallery event pages also use the static Page SEO record for
@@ -349,7 +370,8 @@ HTML;
     protected function applyCoreMeta(?string $metaTitle, ?string $metaDesc, string $canonical, ?string $robots): void
     {
         if ($metaTitle) {
-            SEOMeta::setTitle($metaTitle);
+            // Titles that already end in the site name must not get " | LITUS Group" appended again.
+            SEOMeta::setTitle($metaTitle, ! Str::contains($metaTitle, $this->siteName));
         }
         if ($metaDesc) {
             SEOMeta::setDescription($metaDesc);

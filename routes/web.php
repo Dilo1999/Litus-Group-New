@@ -50,6 +50,7 @@ Route::get('/about', [SiteController::class, 'about'])->name('site.about');
 Route::get('/team', [SiteController::class, 'team'])->name('site.team');
 Route::get('/careers', [SiteController::class, 'careers'])->name('site.careers');
 Route::post('/careers/apply', [SiteController::class, 'jobApplicationSubmit'])->name('site.careers.apply');
+Route::get('/careers/{slug}', [SiteController::class, 'careerJob'])->name('site.careers.show');
 
 Route::get('/blogs', [SiteController::class, 'blogs'])->name('site.blogs');
 Route::get('/blogs/{slug}', [SiteController::class, 'blogArticle'])->name('site.blog-article');

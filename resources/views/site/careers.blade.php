@@ -160,30 +160,14 @@
 
         <div class="space-y-3 sm:space-y-4">
           @forelse($jobOpenings as $index => $job)
-            @php $hasDescription = !empty($job['description']); @endphp
             <div
               class="site-careers-job translate-y-[30px] opacity-0 transition-[opacity,transform] duration-500 ease-out max-md:will-change-auto md:-translate-x-[50px] md:translate-y-0 md:will-change-[opacity,transform]"
               style="transition-delay: {{ 300 + $index * 100 }}ms"
               :class="careersInView ? '!translate-x-0 !translate-y-0 !opacity-100' : ''"
             >
-              <div
-                class="group rounded-3xl border bg-white shadow-[0_1px_2px_rgba(6,22,52,0.04),0_8px_24px_-12px_rgba(6,22,52,0.08)] transition-all duration-300 ease-out @if($hasDescription) md:hover:border-brand-200 md:hover:shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)] @endif"
-                :class="activeJobIndex === {{ $index }} ? 'border-brand-200 shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)]' : 'border-ink-100'"
-                role="article"
-              >
-                {{-- Only the header row toggles the role details, so clicks/text selection inside the details don't collapse them. --}}
-                <div
-                  class="flex flex-col gap-5 rounded-3xl p-5 outline-none focus-visible:ring-4 focus-visible:ring-brand-500/20 sm:p-7 lg:flex-row lg:items-center lg:gap-8 @if($hasDescription) cursor-pointer @endif"
-                  @if($hasDescription)
-                    role="button"
-                    tabindex="0"
-                    aria-controls="job-details-{{ $index }}"
-                    :aria-expanded="activeJobIndex === {{ $index }} ? 'true' : 'false'"
-                    @click="toggleJob({{ $index }})"
-                    @keydown.enter.self.prevent="toggleJob({{ $index }})"
-                    @keydown.space.self.prevent="toggleJob({{ $index }})"
-                  @endif
-                >
+              {{-- The title link covers the whole card (after:inset-0); the Apply button sits above it. --}}
+              <article class="group relative rounded-3xl border border-ink-100 bg-white shadow-[0_1px_2px_rgba(6,22,52,0.04),0_8px_24px_-12px_rgba(6,22,52,0.08)] transition-all duration-300 ease-out focus-within:border-brand-200 md:hover:border-brand-200 md:hover:shadow-[0_2px_4px_rgba(6,22,52,0.04),0_24px_48px_-20px_rgba(6,22,52,0.2)]">
+                <div class="flex flex-col gap-5 rounded-3xl p-5 sm:p-7 lg:flex-row lg:items-center lg:gap-8">
                   <span class="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sand-100 text-sm font-bold text-ink-500 tabular-nums transition-colors duration-300 group-hover:bg-brand-50 group-hover:text-brand-600 lg:flex">
                     {{ sprintf('%02d', $index + 1) }}
                   </span>
@@ -191,7 +175,7 @@
                   <div class="min-w-0 flex-1">
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
                       <h3 class="text-lg font-bold leading-snug tracking-tight text-ink-900 transition-colors group-hover:text-brand-600 sm:text-xl">
-                        {{ $job['title'] }}
+                        <a href="{{ $job['url'] }}" class="rounded-3xl outline-none after:absolute after:inset-0 after:rounded-3xl focus-visible:after:ring-4 focus-visible:after:ring-brand-500/20">{{ $job['title'] }}</a>
                       </h3>
                       @if(!empty($job['department']))
                         <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-700 ring-1 ring-brand-100">
@@ -230,11 +214,11 @@
                     </div>
                   </div>
 
-                  <div class="flex items-center gap-3">
+                  <div class="relative z-10 flex items-center gap-3">
                     <button
                       type="button"
                       class="ui-btn ui-btn--primary ui-btn--sm flex-1 lg:flex-none"
-                      @click.stop="openApplyModal('{{ addslashes($job['title']) }}')"
+                      @click="openApplyModal(@js($job['title']))"
                     >
                       Apply now
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -242,34 +226,17 @@
                         <path d="m12 5 7 7-7 7" />
                       </svg>
                     </button>
-                    @if($hasDescription)
-                      <span
-                        class="ui-icon-btn border border-ink-200 text-ink-700 group-hover:border-ink-900"
-                        :class="activeJobIndex === {{ $index }} ? 'rotate-180 !border-ink-900 bg-ink-900 text-white' : 'bg-white'"
-                        aria-hidden="true"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                      </span>
-                    @else
-                      <span class="hidden h-11 w-11 shrink-0 lg:block" aria-hidden="true"></span>
-                    @endif
+                    <a
+                      href="{{ $job['url'] }}"
+                      class="ui-icon-btn border border-ink-200 bg-white text-ink-700 group-hover:border-ink-900 group-hover:bg-ink-900 group-hover:text-white"
+                      aria-label="View details: {{ $job['title'] }}"
+                      tabindex="-1"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                    </a>
                   </div>
                 </div>
-
-                @if($hasDescription)
-                  <div
-                    id="job-details-{{ $index }}"
-                    x-show="activeJobIndex === {{ $index }}"
-                    x-collapse.duration.400ms
-                    x-cloak
-                  >
-                    <div class="mx-5 border-t border-ink-100 pt-5 pb-6 sm:mx-7 sm:pb-7 lg:ml-[6.75rem]">
-                      <p class="mb-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-ink-400">About the role</p>
-                      <p class="max-w-3xl whitespace-pre-line text-sm leading-relaxed text-ink-600 sm:text-base">{{ $job['description'] }}</p>
-                    </div>
-                  </div>
-                @endif
-              </div>
+              </article>
             </div>
           @empty
             <div class="ui-card flex flex-col items-center px-6 py-14 text-center">
