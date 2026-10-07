@@ -201,8 +201,15 @@ class SiteController extends Controller
 
         $recipient = config('mail.contact_to', config('mail.from.address'));
 
+        // The main contact page's dropdown posts a company slug; show its proper name in the email.
+        $companyName = $validated['company'] ?? null;
+        if ($companyName && ($siteCompany = SiteData::companyBySlug($companyName))) {
+            $companyName = $siteCompany['name'] ?? $companyName;
+        }
+
         if (! empty($validated['company_id'])) {
             $company = Company::query()->select(['id', 'name', 'email'])->find($validated['company_id']);
+            $companyName = $company?->name ?? $companyName;
             if ($company?->email) {
                 $recipient = $company->email;
             }
@@ -214,7 +221,7 @@ class SiteController extends Controller
                 senderEmail: $validated['email'],
                 senderPhone: $validated['phone'] ?? null,
                 messageBody: $validated['message'],
-                companyName: $validated['company'] ?? null,
+                companyName: $companyName,
             ));
         } catch (Throwable $e) {
             Log::error('Contact form mail failed', ['exception' => $e]);
