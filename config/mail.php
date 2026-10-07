@@ -29,7 +29,7 @@ return [
     | mailers below. You are free to add additional mailers as required.
     |
     | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
-    |            "postmark", "log", "array", "failover", "roundrobin"
+    |            "postmark", "log", "array", "failover", "roundrobin", "brevo"
     |
     */
 
@@ -45,6 +45,12 @@ return [
             'verify_peer' => env('MAIL_VERIFY_PEER', true),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+
+        'brevo' => [
+            'transport' => 'brevo',
+            'key' => env('BREVO_API_KEY'),
+            'verify_ssl' => env('BREVO_VERIFY_SSL', true),
         ],
 
         'ses' => [

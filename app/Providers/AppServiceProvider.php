@@ -11,8 +11,10 @@ use App\Models\PageSeo;
 use App\Models\SiteSetting;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Mail\Transport\BrevoTransport;
 use App\Observers\AuditableModelObserver;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +38,12 @@ class AppServiceProvider extends ServiceProvider
         // MySQL (e.g. MariaDB / older MySQL) has a 1000-byte index limit with utf8mb4.
         // Default string length 191 keeps unique indexes under that limit.
         Schema::defaultStringLength(191);
+
+        // Brevo HTTP API mail transport (MAIL_MAILER=brevo).
+        Mail::extend('brevo', fn (array $config) => new BrevoTransport(
+            (string) ($config['key'] ?? ''),
+            (bool) ($config['verify_ssl'] ?? true),
+        ));
 
         // Use current request origin for storage URLs so Filament file previews
         // work without CORS (e.g. when using 127.0.0.1:8000 vs localhost).
