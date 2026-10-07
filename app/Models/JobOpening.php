@@ -25,9 +25,11 @@ class JobOpening extends Model
 
     protected static function booted(): void
     {
-        // Every job needs a unique slug for its public /careers/{slug} page.
+        // The public /careers/{slug} URL is generated from the title (not editable in the admin).
         static::saving(function (JobOpening $job) {
-            $job->slug = static::uniqueSlug(Str::slug((string) ($job->slug ?: $job->title)) ?: 'job', $job->id);
+            if (blank($job->slug) || $job->isDirty('title')) {
+                $job->slug = static::uniqueSlug(Str::slug((string) $job->title) ?: 'job', $job->id);
+            }
         });
     }
 
