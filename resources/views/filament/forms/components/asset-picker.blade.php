@@ -53,7 +53,7 @@
             <button type="button" class="lap-btn lap-btn--primary" x-on:click.prevent="openPicker()">
                 <span x-text="multiple ? 'Add from Assets' : (paths.length ? 'Change image' : 'Choose from Assets')"></span>
             </button>
-            <button type="button" class="lap-btn" x-on:click.prevent="$refs.fileInput.click()" x-bind:disabled="busy">
+            <button type="button" class="lap-btn" x-on:click.prevent="chooseFile()" x-bind:disabled="busy">
                 <span x-text="busy ? 'Uploading…' : 'Upload new'"></span>
             </button>
             <span class="lap-hint" x-text="'Max ' + maxLabel + ' · saved to the shared Assets library'"></span>
@@ -93,7 +93,7 @@
                             x-on:keydown.enter.prevent="loadAssets(true)"
                             autocomplete="off"
                         >
-                        <button type="button" class="lap-btn lap-btn--primary" x-on:click.prevent="$refs.fileInput.click()" x-bind:disabled="busy">
+                        <button type="button" class="lap-btn lap-btn--primary" x-on:click.prevent="chooseFile()" x-bind:disabled="busy">
                             <span x-text="busy ? 'Uploading…' : 'Upload new'"></span>
                         </button>
                     </div>

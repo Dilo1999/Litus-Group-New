@@ -12,6 +12,10 @@
     }
 
     function litusAssetPicker(config) {
+        // Kept outside Alpine's reactive state. The dialog is teleported to <body>, so `$refs.fileInput`
+        // does not resolve from buttons inside it; init() grabs the input from the component root instead.
+        let fileInput = null;
+
         return {
             state: config.state,
             assetsUrl: config.assetsUrl,
@@ -32,6 +36,22 @@
             total: 0,
             hasMore: false,
             labels: {},
+
+            init() {
+                fileInput = this.$el.querySelector('input[type="file"]');
+            },
+
+            chooseFile() {
+                if (this.busy || this.disabled) {
+                    return;
+                }
+                if (!fileInput) {
+                    fileInput = this.$el.querySelector('input[type="file"]');
+                }
+                if (fileInput) {
+                    fileInput.click();
+                }
+            },
 
             get paths() {
                 const list = Array.isArray(this.state) ? this.state : (this.state ? [this.state] : []);
