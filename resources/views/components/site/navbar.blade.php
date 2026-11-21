@@ -6,7 +6,7 @@
     ['label' => 'Our Entities', 'route' => 'site.our-companies', 'dropdown' => true, 'active' => ['site.our-companies', 'site.company']],
     ['label' => 'About Us', 'route' => 'site.about', 'active' => ['site.about']],
     ['label' => 'Team', 'route' => 'site.team', 'active' => ['site.team']],
-    ['label' => 'Careers', 'route' => 'site.careers', 'active' => ['site.careers']],
+    ['label' => 'Careers', 'route' => 'site.careers', 'active' => ['site.careers', 'site.careers.show']],
     ['label' => 'News & Media', 'route' => 'site.blogs', 'active' => ['site.blogs', 'site.blog-article', 'site.event']],
     ['label' => 'Contact Us', 'route' => 'site.contact', 'active' => ['site.contact'], 'cta' => true],
   ];
@@ -28,6 +28,7 @@
     'site.about',
     'site.team',
     'site.careers',
+    'site.careers.show',
     'site.contact',
   ]);
 @endphp
