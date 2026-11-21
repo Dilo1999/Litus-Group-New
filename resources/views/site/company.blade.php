@@ -235,7 +235,12 @@
                   </span>
                   <span class="hidden font-serif text-4xl leading-none text-ink-200 italic tabular-nums transition-colors duration-500 group-hover:text-brand-400 sm:block">{{ sprintf('%02d', $index + 1) }}</span>
                 </div>
-                <h3 class="min-w-0 flex-1 text-base font-bold leading-snug tracking-[-0.01em] text-ink-900 sm:mt-8 sm:flex-none sm:text-xl">{{ $serviceDisplay['label'] }}</h3>
+                <div class="min-w-0 flex-1 sm:mt-8 sm:flex-none">
+                  <h3 class="text-base font-bold leading-snug tracking-[-0.01em] text-ink-900 sm:text-xl">{{ $serviceDisplay['label'] }}</h3>
+                  @if(filled($serviceDisplay['description']))
+                    <p class="mt-1.5 text-sm leading-relaxed text-ink-500 sm:mt-3 sm:text-base">{{ $serviceDisplay['description'] }}</p>
+                  @endif
+                </div>
                 <span class="font-serif text-2xl leading-none text-ink-200 italic tabular-nums sm:hidden" aria-hidden="true">{{ sprintf('%02d', $index + 1) }}</span>
               </div>
             </div>
@@ -295,6 +300,9 @@
                   <span class="font-serif text-3xl leading-none text-white/20 italic tabular-nums sm:text-4xl">{{ sprintf('%02d', $index + 1) }}</span>
                 </div>
                 <h3 class="relative mt-8 text-base font-bold leading-snug tracking-tight text-white sm:mt-12 sm:text-xl">{{ $strengthDisplay['label'] }}</h3>
+                @if(filled($strengthDisplay['description']))
+                  <p class="relative mt-2 text-sm leading-relaxed text-ink-300 sm:mt-3 sm:text-base">{{ $strengthDisplay['description'] }}</p>
+                @endif
               </div>
             </div>
           @endforeach
